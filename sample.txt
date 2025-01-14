@@ -1,0 +1,317 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema shoppingcart
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema shoppingcart
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `shoppingcart` DEFAULT CHARACTER SET utf8 ;
+USE `shoppingcart` ;
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblRoles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblRoles` (
+  `fldRole_ID` INT NOT NULL,
+  `fldRoleName` VARCHAR(64) NULL,
+  PRIMARY KEY (`fldRole_ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblUser`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblUser` (
+  `fldUser_ID` INT NOT NULL,
+  `fldFirstName` VARCHAR(32) NULL,
+  `fldLastName` VARCHAR(32) NULL,
+  `fldEmail` VARCHAR(100) NULL,
+  `fldPhone` VARCHAR(15) NULL,
+  `fldRoleId` INT NULL,
+  `fldHashedPassword` VARCHAR(256) NULL,
+  `fldUserSaltString` VARCHAR(32) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldUpdatedById` INT NULL,
+  `fldUpdatedDate` DATETIME NOT NULL,
+  PRIMARY KEY (`fldUser_ID`),
+  INDEX `roleId_idx` (`fldRoleId` ASC) VISIBLE,
+  INDEX `fldUpdatedById_idx` (`fldUpdatedById` ASC) VISIBLE,
+  CONSTRAINT `fldRoleId`
+    FOREIGN KEY (`fldRoleId`)
+    REFERENCES `shoppingcart`.`tblRoles` (`fldRole_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldUpdatedById`
+    FOREIGN KEY (`fldUpdatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblAddress`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblAddress` (
+  `fldAddress_ID` INT NOT NULL,
+  `fldUserId` INT NOT NULL,
+  `fldFirstName` VARCHAR(32) NULL,
+  `fldLastName` VARCHAR(32) NULL,
+  `fldAddressLine1` VARCHAR(64) NULL,
+  `fldAddressLine2` VARCHAR(64) NULL,
+  `fldCity` VARCHAR(64) NULL,
+  `fldState` VARCHAR(64) NULL,
+  `fldPincode` VARCHAR(10) NULL,
+  `fldPhoneNumber` VARCHAR(15) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldDeactivatedDate` DATETIME NULL,
+  PRIMARY KEY (`fldAddress_ID`),
+  INDEX `AddressCreatedBy_idx` (`fldUserId` ASC) VISIBLE,
+  CONSTRAINT `fldUserId`
+    FOREIGN KEY (`fldUserId`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblOrder`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblOrder` (
+  `fldOrder_ID` VARCHAR(64) NOT NULL,
+  `fldUserId` INT NOT NULL,
+  `fldAddressId` INT NULL,
+  `fldTotalPrice` DECIMAL(10,2) NULL,
+  `fldTotalTax` DECIMAL(10,2) NULL,
+  `fldCardPart` VARCHAR(4) NULL,
+  `fldOrderedDate` DATETIME NOT NULL,
+  PRIMARY KEY (`fldOrder_ID`),
+  INDEX `OrderUserid_idx` (`fldUserId` ASC) VISIBLE,
+  INDEX `fldOrderedAddressId_idx` (`fldAddressId` ASC) VISIBLE,
+  CONSTRAINT `fldOrderedById`
+    FOREIGN KEY (`fldUserId`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldAddressId`
+    FOREIGN KEY (`fldAddressId`)
+    REFERENCES `shoppingcart`.`tblAddress` (`fldAddress_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblCategory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblCategory` (
+  `fldCategory_ID` INT NOT NULL,
+  `fldCategoryName` VARCHAR(64) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedById` INT NOT NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldUpdatedById` INT NULL,
+  `fldUpdatedDate` DATETIME NULL,
+  PRIMARY KEY (`fldCategory_ID`),
+  INDEX `createdBy_idx` (`fldCreatedById` ASC) VISIBLE,
+  INDEX `updatedBy_idx` (`fldUpdatedById` ASC) VISIBLE,
+  CONSTRAINT `fldCreatedById`
+    FOREIGN KEY (`fldCreatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldUpdatedBy`
+    FOREIGN KEY (`fldUpdatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblBrands`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblBrands` (
+  `fldBrand_ID` INT NOT NULL,
+  `fldBrandName` VARCHAR(64) NULL,
+  `fldActive` TINYINT(1) NULL,
+  PRIMARY KEY (`fldBrand_ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblProduct`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblProduct` (
+  `fldProduct_ID` INT NOT NULL,
+  `fldSubCategoryId` INT NULL,
+  `fldProductName` VARCHAR(100) NULL,
+  `fldBrandId` INT NULL,
+  `fldDescription` TEXT NULL,
+  `fldPrice` DECIMAL(10,2) NULL,
+  `fldTax` DECIMAL(10,2) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedById` INT NOT NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldUpdatedById` INT NULL,
+  `fldUpdatedDate` DATETIME NULL,
+  PRIMARY KEY (`fldProduct_ID`),
+  INDEX `ProductCreatedBy_idx` (`fldCreatedById` ASC) VISIBLE,
+  INDEX `ProductCategoryId_idx` (`fldSubCategoryId` ASC) VISIBLE,
+  INDEX `ProductUpdatedById_idx` (`fldUpdatedById` ASC) VISIBLE,
+  INDEX `ProductBrandId_idx` (`fldBrandId` ASC) VISIBLE,
+  CONSTRAINT `fldCategoryId`
+    FOREIGN KEY (`fldSubCategoryId`)
+    REFERENCES `shoppingcart`.`tblCategory` (`fldCategory_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldCreatedById`
+    FOREIGN KEY (`fldCreatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldUpdatedById`
+    FOREIGN KEY (`fldUpdatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldBrandId`
+    FOREIGN KEY (`fldBrandId`)
+    REFERENCES `shoppingcart`.`tblBrands` (`fldBrand_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblOrderItems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblOrderItems` (
+  `fldOrderItem_ID` INT NOT NULL,
+  `fldOrderId` INT NULL,
+  `fldProductId` INT NULL,
+  `fldQuantity` INT NULL,
+  `fldUnitPrice` DECIMAL(10,2) NULL,
+  `fldUnitTax` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`fldOrderItem_ID`),
+  INDEX `orderId_idx` (`fldOrderId` ASC) VISIBLE,
+  INDEX `OrdItemsproductId_idx` (`fldProductId` ASC) VISIBLE,
+  CONSTRAINT `fldOrderId`
+    FOREIGN KEY (`fldOrderId`)
+    REFERENCES `shoppingcart`.`tblOrder` (`fldOrder_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldProductId`
+    FOREIGN KEY (`fldProductId`)
+    REFERENCES `shoppingcart`.`tblProduct` (`fldProduct_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblSubCategory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblSubCategory` (
+  `fldSubCategory_ID` INT NOT NULL,
+  `fldCategoryId` INT NULL,
+  `fldSubCategoryName` VARCHAR(64) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedById` INT NOT NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldUpdatedById` INT NULL,
+  `fldUpdatedDate` DATETIME NULL,
+  PRIMARY KEY (`fldSubCategory_ID`),
+  INDEX `SubCategoryId_idx` (`fldCategoryId` ASC) VISIBLE,
+  INDEX `SubCreatedby_idx` (`fldCreatedById` ASC) VISIBLE,
+  INDEX `SubUpdatedById_idx` (`fldUpdatedById` ASC) VISIBLE,
+  CONSTRAINT `fldCategoryId`
+    FOREIGN KEY (`fldCategoryId`)
+    REFERENCES `shoppingcart`.`tblCategory` (`fldCategory_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldCreatedbyId`
+    FOREIGN KEY (`fldCreatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldUpdatedById`
+    FOREIGN KEY (`fldUpdatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblProductImages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblProductImages` (
+  `fldProductImage_ID` INT NOT NULL,
+  `fldProductId` INT NULL,
+  `fldImageFileName` VARCHAR(128) NULL,
+  `fldDefaultImage` TINYINT(1) NULL,
+  `fldActive` TINYINT(1) NULL,
+  `fldCreatedById` INT NOT NULL,
+  `fldCreatedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fldDeactivatedById` INT NULL,
+  `fldDeactivatedDate` DATETIME NULL,
+  PRIMARY KEY (`fldProductImage_ID`),
+  INDEX `ImagesProductId_idx` (`fldProductId` ASC) VISIBLE,
+  INDEX `ImagesCreatedById_idx` (`fldCreatedById` ASC) VISIBLE,
+  INDEX `ImagesDeletedById_idx` (`fldDeactivatedById` ASC) VISIBLE,
+  CONSTRAINT `fldProductId`
+    FOREIGN KEY (`fldProductId`)
+    REFERENCES `shoppingcart`.`tblProduct` (`fldProduct_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldCreatedById`
+    FOREIGN KEY (`fldCreatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldDeletedById`
+    FOREIGN KEY (`fldDeactivatedById`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shoppingcart`.`tblCart`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shoppingcart`.`tblCart` (
+  `fldCart_ID` INT NOT NULL,
+  `fldUserId` INT NOT NULL,
+  `fldProductId` INT NULL,
+  `fldQuantity` INT NULL,
+  `fldCreatedDate` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fldCart_ID`),
+  INDEX `CartCreatedBy_idx` (`fldUserId` ASC) VISIBLE,
+  INDEX `CartProductId_idx` (`fldProductId` ASC) VISIBLE,
+  CONSTRAINT `fldUserId`
+    FOREIGN KEY (`fldUserId`)
+    REFERENCES `shoppingcart`.`tblUser` (`fldUser_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fldProductId`
+    FOREIGN KEY (`fldProductId`)
+    REFERENCES `shoppingcart`.`tblProduct` (`fldProduct_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
