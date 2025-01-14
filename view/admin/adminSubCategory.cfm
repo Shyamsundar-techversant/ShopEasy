@@ -141,6 +141,30 @@
                   </select>
                 </div>
               </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <cfset categoryValues = application.cateContObj.getCategory() >
+                  <select class = "form-select" id = "categorySelect">
+                    <cfoutput query = "categoryValues" >
+                      <cfset encryptCategID = encrypt(
+                                                        categoryValues.fldCategory_ID,
+                                                        application.encryptionKey,
+                                                        "AES",
+                                                        "Hex"
+                                                    )
+                      
+                      >
+                      <option value = "#encryptCategID#"
+                        <!--- <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
+                          selected
+                        </cfif> --->
+                      >
+                        #categoryValues.fldCategoryName#  
+                      </option>
+                    </cfoutput> 
+                  </select>
+                </div>
+              </div>
 
               <div class = "row mb-3">
                 <div class = "col">
