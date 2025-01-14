@@ -1,8 +1,17 @@
-<cfif structKeyExists(form, "categSubmit")>
-  <cfdump var = "#form#">
-</cfif>
 
 <cfset variables.getCategory = application.cateContObj.getCategory()>
+
+<!---  
+<cfset variables.categoryList = valueList(variables.getCategory.fldCategory_ID)>
+<cfset a = 67>
+<cfset categoryExistCheck = listFind(variables.categoryList, a)>
+
+<cfif NOT categoryExistCheck>
+  <cfoutput>
+    Haii
+  </cfoutput>
+</cfif> --->
+
 
 <!DOCTYPE html>
 <html lang = "en">

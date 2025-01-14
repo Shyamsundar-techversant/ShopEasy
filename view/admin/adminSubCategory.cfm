@@ -6,7 +6,7 @@
                                                                         )
 
     >
-    <cfdump var = "#variables.getSubCategoryById#">
+    <cfset variables.getCategoryById = application.cateContObj.getCategory(categoryId = url.categId)>
 <!---     <cfset variables.getAllSubCategory = application.cateContObj.getSubCategory(
                                                                                     categoryId = url.categId
                                                                             )
@@ -45,7 +45,7 @@
                 </span>
                 <span>
                     <button type="button" class="category-btn" data-bs-toggle="modal" 
-                              data-bs-target="#subCategoryAddEditModal" id = "subCategoryButton"                              
+                              data-bs-target="#productAddEditModal" id = "productButton"                              
                     >
                         +  
                     </button>
@@ -108,8 +108,8 @@
       </div>
     </section>
 
-    <!--Product Add Edit Modal -->
-    <div class="modal fade" id="subCategoryAddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Product Add Edit Modal -->
+    <div class="modal fade" id="productAddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categAddModalHead">
@@ -120,6 +120,7 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <cfset categoryValues = application.cateContObj.getCategory() >
+                  <lablel for = "categorySelect" class = "form-label">Category Name </label>
                   <select class = "form-select" id = "categorySelect">
                     <cfoutput query = "categoryValues" >
                       <cfset encryptCategID = encrypt(
@@ -131,9 +132,9 @@
                       
                       >
                       <option value = "#encryptCategID#"
-                        <!--- <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
+                        <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
                           selected
-                        </cfif> --->
+                        </cfif> 
                       >
                         #categoryValues.fldCategoryName#  
                       </option>
@@ -143,23 +144,27 @@
               </div>
               <div class = "row mb-3">
                 <div class = "col">
-                  <cfset categoryValues = application.cateContObj.getCategory() >
-                  <select class = "form-select" id = "categorySelect">
-                    <cfoutput query = "categoryValues" >
-                      <cfset encryptCategID = encrypt(
-                                                        categoryValues.fldCategory_ID,
+                  <cfset subCategoryValues = application.cateContObj.getSubCategory(
+                                                                             categoryId = url.categId
+                                                                            ) 
+                  >
+                  <lablel for = "subCategorySelect" class = "form-label">SubCategory Name</label>
+                  <select class = "form-select" id = "subCategorySelect">
+                    <cfoutput query = "subCategoryValues" >
+                      <cfset encryptedSubCategoryID = encrypt(
+                                                        subCategoryValues.fldSubCategory_ID,
                                                         application.encryptionKey,
                                                         "AES",
                                                         "Hex"
                                                     )
                       
                       >
-                      <option value = "#encryptCategID#"
-                        <!--- <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
+                      <option value = "#encryptedSubCategoryID#"
+                        <cfif subCategoryValues.fldSubCategory_ID EQ variables.getSubCategoryById.fldSubCategory_ID>
                           selected
-                        </cfif> --->
+                        </cfif>
                       >
-                        #categoryValues.fldCategoryName#  
+                        #subCategoryValues.fldSubCategoryName#  
                       </option>
                     </cfoutput> 
                   </select>
@@ -168,18 +173,58 @@
 
               <div class = "row mb-3">
                 <div class = "col">
-                  <label for = "subCategName" class = "form-label">Enter Subcategory Name </label>
-                  <input type = "text" class = "form-control" id = "subCategName" name = "subCategName"
-                    placeholder = "Enter the subcategory name you want to add"
+                  <label for = "productName" class = "form-label">Product Name </label>
+                  <input type = "text" class = "form-control" id = "productName" name = "productName"
+                    placeholder = "Enter the product name you want to add"
                   >
+                </div>
+              </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <label for = "productBrand" class = "form-label">Product Brand </label>
+                  <input type = "text" class = "form-control" id = "productBrand" name = "productBrand"
+                    placeholder = "Enter the product brand "
+                  >
+                </div>
+              </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <label for = "productDescription" class = "form-label">Product Description </label>
+                  <input type = "text" class = "form-control" id = "productDescription" name = "productDescription"
+                    placeholder = "Description about the product"
+                  >
+                </div>
+              </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <label for = "productPrice" class = "form-label">Product Price </label>
+                  <input type = "number" class = "form-control" id = "productPrice" name = "productPrice"
+                    placeholder = "Enter the price of the product" min = "0"
+                  >
+                </div>
+              </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <label for = "productTax" class = "form-label">Product Tax </label>
+                  <input type = "number" class = "form-control" id = "productTax" name = "productTax"
+                    placeholder = "Enter the product name you want to add" min = "0"
+                  >
+                </div>
+              </div>
+              <div class = "row mb-3">
+                <div class = "col">
+                  <label for = "productImages" class = "form-label">Product Images </label>
+                  <input type = "file" class = "form-control" id = "productImages" name = "productImages"
+                                multiple
+                  >                 
                 </div>
               </div>
 
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategAddBtn">Add SubCategory</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategEditBtn">Edit SubCategory</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productAddBtn">Add Product</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productEditBtn">Edit Product</button>
                 </div>
               </div>  
               <div class = "row mb-3 ">
@@ -214,6 +259,6 @@
 
     <script src = "../../assets/js/bootstrap.bundle.js"></script>
     <script src = "../../assets/js/jquery-3.7.1.min.js"></script>
-    <script src = "../../assets/js/admin.js"></script>
+    <script src = "../../assets/js/adminProduct.js"></script>
   </body>
 </html>
