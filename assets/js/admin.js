@@ -163,7 +163,7 @@ $(document).ready(function(){
             formData.append('categoryId',categoryId);
             console.log(categoryId);
             $.ajax({
-                url : "../../controller/category.cfc?method=validateSubCategoryName",
+                url : "../../controller/category.cfc?method=validateSubCategory",
                 method : 'POST' ,
                 data : formData ,
                 processData : false,
@@ -223,7 +223,7 @@ $(document).ready(function(){
             formData.append('subCategName',subCategoryName);
 
             $.ajax({
-                url : "../../controller/category.cfc?method=validateSubCategoryName",
+                url : "../../controller/category.cfc?method=validateSubCategory",
                 method : 'POST' ,
                 data : formData ,
                 processData : false,

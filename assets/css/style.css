@@ -137,3 +137,11 @@ tbody tr{
   border-radius : 10px !important;
   border:1px solid #db4444 !important;
 }
+
+/* Product */
+.product-name{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

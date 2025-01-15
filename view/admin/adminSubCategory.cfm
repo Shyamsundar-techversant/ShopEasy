@@ -7,11 +7,12 @@
 
     >
     <cfset variables.getCategoryById = application.cateContObj.getCategory(categoryId = url.categId)>
-<!---     <cfset variables.getAllSubCategory = application.cateContObj.getSubCategory(
-                                                                                    categoryId = url.categId
-                                                                            )
-    > --->
+    <cfset variables.allProducts = application.productContObj.getProduct(
+                                                                          subCategoryId = url.subCategID
+                                                                        )
+    > 
 </cfif>
+
 <!DOCTYPE html>
 <html lang = "en">
   <head>
@@ -55,24 +56,29 @@
           <div class = "card-body">
             <table class="table">
               <tbody>
-                <cfif structKeyExists(variables, "getAllSubCategory")>
-                  <cfoutput query = "variables.getAllSubCategory">
-                    <cfset encryptedId = encrypt(
-                                            variables.getAllSubCategory.fldSubCategory_ID,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                          )
-                    >
-                    <tr class = "table-danger">
-                      <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
+                <cfif structKeyExists(variables, 'allProducts')>
+                  <cfoutput query = "variables.allProducts">
+                    <tr class = "table-success">
                       <td>
-                        <button type = "button" 
-                                  class = "categ-alt-btn subcateg-edit-btn"
-                                  data-bs-toggle = "modal"
-                                  data-bs-target = "##subCategoryAddEditModal"
-                                  data-id = "#encryptedId#"
-                                  data-categId = "#url.categId#"
+                        <div class = "product-name">
+                          <h5>#variables.allProducts.fldProductName#</h5>
+                          <cfset brandName = application.productContObj.getBrands(
+                                                                   
+                                                                    brandId = variables.allProducts.fldBrandId
+                                                                    
+                                                                  )
+                          >
+                          <h6>#brandName.fldBrandName#</h6>
+                        </div>
+                  
+                      </td>
+                      <td>
+                        <button  type = "button" 
+                                class = "categ-alt-btn subcateg-edit-btn"
+                                data-bs-toggle = "modal"
+                                data-bs-target = "##subCategoryAddEditModal"
+                                data-id = ""
+                                data-categId = "#url.categId#"
                         >
                           EDIT
                         </button>
@@ -82,7 +88,7 @@
                                 class = "categ-alt-btn sub-cat-dlt-btn"
                                 data-bs-toggle = "modal"
                                 data-bs-target = "##categoryDeleteModal"
-                                data-id = "#encryptedId#"
+                                data-id = ""
                                 data-categId = "#url.categId#"
                         >
                           DELETE
@@ -91,16 +97,14 @@
                       <td>
                         <button type = "button"
                                 class = "categ-subCateg-btn categ-dlt-btn"
-                                data-id = "#encryptedId#"
+                                data-id = ""
                         >       
-                          PRODUCTS
+                          VIEW
                         </button>             
                       </td>
-                    </tr>   
-                  </cfoutput>                 
-
+                    </tr>  
+                  </cfoutput> 
                 </cfif>
-
               </tbody>
             </table>           
           </div>
@@ -113,7 +117,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categAddModalHead">
-            <h5 class="modal-title" id = "prodTitle">Add Product</h5>
+            <h5 class="modal-title" id = "productTitle">Add Product</h5>
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
@@ -123,15 +127,7 @@
                   <lablel for = "categorySelect" class = "form-label">Category Name </label>
                   <select class = "form-select" id = "categorySelect">
                     <cfoutput query = "categoryValues" >
-                      <cfset encryptCategID = encrypt(
-                                                        categoryValues.fldCategory_ID,
-                                                        application.encryptionKey,
-                                                        "AES",
-                                                        "Hex"
-                                                    )
-                      
-                      >
-                      <option value = "#encryptCategID#"
+                      <option value = "#categoryValues.fldCategory_ID#"
                         <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
                           selected
                         </cfif> 
@@ -151,15 +147,7 @@
                   <lablel for = "subCategorySelect" class = "form-label">SubCategory Name</label>
                   <select class = "form-select" id = "subCategorySelect">
                     <cfoutput query = "subCategoryValues" >
-                      <cfset encryptedSubCategoryID = encrypt(
-                                                        subCategoryValues.fldSubCategory_ID,
-                                                        application.encryptionKey,
-                                                        "AES",
-                                                        "Hex"
-                                                    )
-                      
-                      >
-                      <option value = "#encryptedSubCategoryID#"
+                      <option value = "#subCategoryValues.fldSubCategory_ID#"
                         <cfif subCategoryValues.fldSubCategory_ID EQ variables.getSubCategoryById.fldSubCategory_ID>
                           selected
                         </cfif>
@@ -181,10 +169,15 @@
               </div>
               <div class = "row mb-3">
                 <div class = "col">
+                  <cfset brandValues = application.productContObj.getBrands()>
                   <label for = "productBrand" class = "form-label">Product Brand </label>
-                  <input type = "text" class = "form-control" id = "productBrand" name = "productBrand"
-                    placeholder = "Enter the product brand "
-                  >
+                  <select class = "form-select" id = "productBrand">
+                    <cfoutput query = "brandValues" >
+                      <option value = "#brandValues.fldBrand_ID#">
+                        #brandValues.fldBrandName#  
+                      </option>
+                    </cfoutput> 
+                  </select>
                 </div>
               </div>
               <div class = "row mb-3">

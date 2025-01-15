@@ -115,7 +115,7 @@
 
 
     <!---  SUBCATEGORY VALIDATION   --->
-    <cffunction  name="validateSubCategoryName" access = "remote" returntype = "any" returnformat = "json">
+    <cffunction  name="validateSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategName" type = "string" required = "true">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
         <cfargument name = "categoryId" type = "string" required = "true" >
@@ -136,7 +136,7 @@
 
         <!---     Category Validation     --->
         <cfset local.allCategory = application.categModObj.getCategory()>
-        <cfset local.categoryList = local.allCategory.fldCategory_ID >
+        <cfset local.categoryList = valueList(local.allCategory.fldCategory_ID) >
         <cfset local.categoryExist = listFind(local.categoryList,arguments.categoryId)>
         <cfif NOT local.categoryExist>
             <cfset arrayAppend(local.errors, "*Category does not exist")>
@@ -148,13 +148,13 @@
 		        <cfset arrayAppend(local.errors,"*Enter the category name")>
 		    </cfif>
             <cfif local.decryptedCategoryId NEQ 0>
-                <cfset  local.categExist = application.categModObj.checkSubCategory(
+                <cfset  local.subCategExist = application.categModObj.checkSubCategory(
                                             subCategoryName = trim(arguments.subCategName),
                                             categoryId = arguments.categoryId
                                         )
 
                 >
-                <cfif local.categExist EQ "true">
+                <cfif local.subCategExist EQ "true">
                     <cfset arrayAppend(local.errors,"*SubCategory already exist")>
                 </cfif>
             </cfif>
