@@ -161,12 +161,38 @@
     </cffunction>
 
     <!--- GET PRODUCTS     --->
-    <cffunction name = "getProduct" access = "public" returntype = "query">
+    <cffunction name = "getProduct" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">
         <cfargument name = "productId" type = "integer" required = "false">
         <cfset arguments.subCategoryId = decryptionFunction(arguments.subCategoryId)>
         <cfif structKeyExists(arguments, "productId")>
+            <cfset local.productData = application.productModObj.getProduct(
+                                                                    subCategoryId = arguments.subCategoryId ,
+                                                                    productId = arguments.productId   
+                                                                )         
+            >
+            <cfset local.productImages = application.productModObj.getProductImages(productId = arguments.productId)>
+            <cfset local.productArr = []>
+            <cfloop query = "local.productImages" >
+                <cfset local.imgData = {
+                                            'imageId' : local.productImages.fldProductImage_ID,
+                                            'imageFile' : local.productImages.fldImageFileName,
+                                            'defaultValue' : local.productImages.fldDefaultImage
+                                        }
+                >
+                <cfset arrayAppend(local.productArr, local.imgData)>
+            </cfloop>
+            <cfset local.productDataById = {
 
+                                                'productName' : local.productData.fldProductName,
+                                                'productBrand' : local.productData.fldBrandId,
+                                                'productDescription' : local.productData.fldDescription,
+                                                'productPrice' : local.productData.fldPrice,
+                                                'productTax' : local.productData.fldTax
+                                            }
+            >
+            <cfset arrayAppend(local.productArr, local.productDataById)>
+            <cfreturn local.productArr>
         <cfelse>
             <cfset local.productData = application.productModObj.getProduct(
                                                                     subCategoryId = arguments.subCategoryId     

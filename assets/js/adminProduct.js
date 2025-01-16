@@ -4,7 +4,7 @@ $(document).ready(function(){
 		window.history.replaceState(null,null,window.location.href);
 	}
     
-    let categoryId,subCategoryId;
+    let categoryId,subCategoryId,productId;
     let categorySelected = $('#categorySelect'),
         subCategorySelected = $('#subCategorySelect'),
         productName = $('#productName'),
@@ -74,4 +74,66 @@ $(document).ready(function(){
         });
     })
 
+    $('#productEditButton').on('click',function(){
+        $('#productTitle').text('Edit Product');
+        $('#productAddEditModal').trigger('reset');
+        $('#productAddBtn').hide();
+        $('#productEditBtn').show();       
+        productId = $(this).data('id');
+        subCategoryId = $(this).attr('data-subCategId');
+        let formData = new FormData();
+        formData.append('productId',productId);
+        formData.append('subCategoryId',subCategoryId);
+        $.ajax({
+            url : "../../controller/product.cfc?method=getProduct",
+            method : 'POST' ,
+            data : formData ,
+            processData : false,
+            contentType : false,
+            success : function(response){
+                    let data = JSON.parse(response);
+                    productName.val(data[3].productName);
+                    productBrand.val(data[3].productBrand);
+                    productDescription.val(data[3].productDescription);
+                    productPrice.val(data[3].productPrice);
+                    productTax.val(data[3].productTax);
+                    let row = $('#product-img-container');
+                    var ulList = $('<ul>', { class: 'product-img-list' }).css({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px'   
+                    });
+                    for (let i = 0 ;i<data.length - 1; i++){                       
+                        var liItem = $('<li>').css({
+                            display: 'flex',
+                            justifyContent: 'space-between', 
+                            alignItems: 'center',
+                        });
+                        var spanImg = $('<span>', { class: 'image-container' }).append(
+                            $('<img>', { 
+                                        src: `../../uploadImg/${data[i].imageFile}`, 
+                                        alt: 'prodimg' ,
+                                        width : 30,
+                                        height : 30
+                                    }
+                            ),
+                            $('<span>', {  
+                                text: data[i].imageFile,
+                                class: [`image_${i}_name`, 'image_names'].join(' ')  
+                            })
+                        );
+                        var spanClose = $('<span>').append(
+                            $('<i>', { class: 'fa-solid fa-x' })  // Font Awesome 'X' icon
+                        );
+                        liItem.append(spanImg).append(spanClose);
+                        ulList.append(liItem);
+                    }
+                    row.append(ulList);
+
+            },
+            error : function(){
+                console.log("Request failed") ;
+            }
+        });
+    })
 });

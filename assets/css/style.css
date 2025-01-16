@@ -145,3 +145,12 @@ tbody tr{
   justify-content: center;
   align-items: center;
 }
+
+/* Product image */
+.image-container{
+  display:flex;
+  gap : 8px;
+}
+.image_names{
+  align-self: flex-end;
+}

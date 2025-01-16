@@ -191,31 +191,59 @@
     <cffunction name = "getProduct" access = "public" returntype = "query">
         <cfargument name = "subCategoryId" type = "integer" required = "true">
         <cfargument name = "productId" type = "integer" required = "false">
-
-        <cfif structKeyExists(arguments, "productId")>
-
-        <cfelse>
-            <cftry>
-                <cfquery name = "local.qryGetProduct" datasource = "shoppingcart">
-                    SELECT 
+        <cftry>
+            <cfquery name = "local.qryGetProduct" datasource = "shoppingcart">
+                SELECT
+                    <cfif NOT structKeyExists(arguments, "productId") >
                         fldProduct_ID,
-                        fldProductName,
-                        fldBrandId,
-                        fldDescription,
-                        fldPrice,
-                        fldTax
-                    FROM 
-                        tblProduct
-                    WHERE
-                        fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
-                </cfquery>
-                <cfif local.qryGetProduct.recordCount GT 0>
-                    <cfreturn local.qryGetProduct>
+                    </cfif>
+                    fldProductName,
+                    fldBrandId,
+                    fldDescription,
+                    fldPrice,
+                    fldTax
+                FROM 
+                    tblProduct
+                WHERE
+                    fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
+                <cfif structKeyExists(arguments, "productId")>
+                    AND fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer"> 
                 </cfif>
+            </cfquery>
+            <cfif local.qryGetProduct.recordCount GT 0>
+                <cfreturn local.qryGetProduct>
+            </cfif>
             <cfcatch type="exception">
                 <cfdump var = "#cfcatch#" >
             </cfcatch>
-            </cftry>
-        </cfif>
+        </cftry>
+    </cffunction>
+
+    <!---  GET IMAGES    --->
+    <cffunction name = "getProductImages" access = "public" returntype = "any">
+        <cfargument name = "productId" type = "integer" required = "true">
+        <cfargument name = "productImgId" type = "integer" required = "false" >
+
+        <cftry>
+            <cfquery name = "local.qryGetProductImages" datasource = "shoppingcart">
+                SELECT 
+                    fldProductImage_ID,
+                    fldImageFileName,
+                    fldDefaultImage
+                FROM 
+                    tblProductImages
+                WHERE
+                    fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+            </cfquery>
+            <cfif local.qryGetProductImages.recordCount EQ 3>
+                <cfreturn local.qryGetProductImages>
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry>
+
     </cffunction>
 </cfcomponent>

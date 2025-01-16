@@ -21,6 +21,10 @@
     <title>ShopEasy</title>
     <link rel = "stylesheet" href = "../../assets/css/style.css" />
     <link rel = "stylesheet" href = "../../assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
   </head>
   <body>
 
@@ -76,9 +80,10 @@
                         <button  type = "button" 
                                 class = "categ-alt-btn subcateg-edit-btn"
                                 data-bs-toggle = "modal"
-                                data-bs-target = "##subCategoryAddEditModal"
-                                data-id = ""
-                                data-categId = "#url.categId#"
+                                data-bs-target = "##productAddEditModal"
+                                data-id = "#variables.allProducts.fldProduct_ID#"
+                                data-subCategId = "#url.subCategID#"
+                                id = "productEditButton"
                         >
                           EDIT
                         </button>
@@ -88,8 +93,9 @@
                                 class = "categ-alt-btn sub-cat-dlt-btn"
                                 data-bs-toggle = "modal"
                                 data-bs-target = "##categoryDeleteModal"
-                                data-id = ""
-                                data-categId = "#url.categId#"
+                                data-id = "#variables.allProducts.fldProduct_ID#"
+                                data-subCategId = "#url.subCategID#"
+                                 id = "productDeleteBtn"
                         >
                           DELETE
                         </button>
@@ -212,7 +218,10 @@
                   >                 
                 </div>
               </div>
-
+              <div class = "row mb-3" id = "product-img-container">
+                <ul class ='product-image-list'
+                </ul>
+              </div>
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
