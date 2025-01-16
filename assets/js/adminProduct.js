@@ -187,9 +187,10 @@ $(document).ready(function(){
     //IMAGE DELETE
     $('#img-list').on('click','.img-dlt-btn',function(){
         imageId = $(this).attr('img_id');
+        let button = $(this);
         let formData = new FormData();
         formData.append('imageId',imageId);
-        console.log(imageId);
+        formData.append('productId',productId)
         $.ajax({
             url : "../../controller/product.cfc?method=deleteImage",
             method : 'POST' ,
@@ -197,10 +198,9 @@ $(document).ready(function(){
             processData : false,
             contentType : false,
             success : function(response){
-                    console.log("Success");
                     let data = JSON.parse(response);
                     if(data === "Success"){
-                        $(this).closest('li').remove();
+                        button.closest('li').remove();
                     }
                     else{
                         addError(data);
@@ -212,5 +212,28 @@ $(document).ready(function(){
         })
     });
 
-
+    //DELETE PRODUCT
+    $('.product-dlt-btn').on('click',function(){
+        productId = $(this).data('id');
+    })
+    $('#productDeleteBtn').on('click',function(){
+        $.ajax({
+            url : "../../controller/product.cfc?method=deleteProduct",
+            method : 'POST',
+            data : {productId},
+            success : function (response){
+                        let data = JSON.parse(response);
+                        if(data === "Success"){
+                            $('productDeleteModal').modal('hide');
+                            location.reload();                                
+                        }
+                        else{
+                            alert("Product deletion failed");
+                        }
+            },
+            error : function (){
+                console.log("Request Failed");
+            }                
+        });
+    })
 });

@@ -62,6 +62,13 @@
               <tbody>
                 <cfif structKeyExists(variables, 'allProducts')>
                   <cfoutput query = "variables.allProducts">
+                    <cfset encryptedId = encrypt(
+                                                  variables.allProducts.fldProduct_ID,
+                                                  application.encryptionKey,
+                                                  "AES",
+                                                  "Hex"
+                                                )
+                    >
                     <tr class = "table-success">
                       <td>
                         <div class = "product-name">
@@ -91,7 +98,7 @@
                         <button type = "button"
                                 class = "categ-alt-btn product-dlt-btn"
                                 data-bs-toggle = "modal"
-                                data-bs-target = "##categoryDeleteModal"
+                                data-bs-target = "##productDeleteModal"
                                 data-id = "#variables.allProducts.fldProduct_ID#"
                                 data-subCategId = "#url.subCategID#"
                         >
@@ -101,7 +108,8 @@
                       <td>
                         <button type = "button"
                                 class = "categ-subCateg-btn categ-dlt-btn"
-                                data-id = ""
+                                data-id = "#variables.allProducts.fldProduct_ID#"
+                                onclick = "window.location.href = 'adminProduct.cfm?productId=#encryptedId#&subCategID=#url.subCategID#' "
                         >       
                           VIEW
                         </button>             
@@ -240,18 +248,18 @@
     </div>
 
     <!-- SubCategory Delete Modal -->
-    <div class="modal fade" id="categoryDeleteModal" tabindex="-1" aria-labelledby="categoryDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="productDeleteModal" tabindex="-1" aria-labelledby="productDeleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categDeleteModalHead">
-            <h5 class="modal-title" id = "categTitle">Delete SubCategory</h5>
+            <h5 class="modal-title" id = "categTitle">Delete Product</h5>
           </div>
           <div class="modal-body">
-            Do you want to delete this sub category ?
+            Do you want to delete this product ?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id = "subCategoryDeleteBtn">Delete Category</button>
+            <button type="button" class="btn btn-primary" id = "productDeleteBtn">Delete product</button>
           </div>      
         </div>
       </div>

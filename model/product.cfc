@@ -159,12 +159,37 @@
         </cfif>
     </cffunction>
 
+    <!---  GET PRODUCT IMAGE COUNT    --->
+    <cffunction  name="getProductImageCount" access = "private" returntype = "any">
+        <cfargument  name="productId" type = "integer" required = "true">
+        <cftry>
+            <cfquery name = "local.qryGetProductImageCount" datasource = "shoppingcart">
+                SELECT 
+                    fldProductImage_ID
+                FROM 
+                    tblProductImages
+                WHERE
+                    fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfif local.qryGetProductImageCount.recordCount GT 0>
+                <cfreturn local.qryGetProductImageCount.recordCount>
+            <cfelse>
+                <cfreturn 0>
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump  var="#cfcatch#">
+        </cfcatch>
+        </cftry>       
+    </cffunction>
+
+
     <!---  ADD IMAGE  --->
     <cffunction name = "addImage" access = "private" returntype = "string">
         <cfargument  name = "productId" type = "integer" required = "true">
         <cfargument name = "productImages" type = "array" required = "true">
         <cfset local.insertedCount = 0>
         <cftry>
+            <cfset local.productImageCount = getProductImageCount(productId = arguments.productId)>
             <cfloop array = "#arguments.productImages#" index = "i" item = "image">
                 <cfquery datasource = "shoppingcart" result = "local.qryAddImage">
                     INSERT INTO
@@ -180,7 +205,7 @@
                     VALUES(
                             <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#image#" cfsqltype = "cf_sql_varchar">,
-                            <cfif #i# EQ 1>
+                            <cfif #i# EQ 1 AND local.productImageCount LT 3>
                                 <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
                             <cfelse>
                                 <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
@@ -223,6 +248,8 @@
                     tblProduct
                 WHERE
                     fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                 <cfif structKeyExists(arguments, "productId")>
                     AND fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer"> 
                 </cfif>
@@ -239,7 +266,7 @@
     <!---  GET IMAGES    --->
     <cffunction name = "getProductImages" access = "public" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
-        <cfargument name = "productImgId" type = "integer" required = "false" >
+        <cfargument name = "defaultImg" type = "integer" required = "false" >
         <cftry>
             <cfquery name = "local.qryGetProductImages" datasource = "shoppingcart">
                 SELECT 
@@ -252,10 +279,40 @@
                     fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
                 AND 
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                <cfif structKeyExists(arguments, "defaultImg") >
+                    AND 
+                        fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                </cfif>
             </cfquery>
-            <cfif local.qryGetProductImages.recordCount GE 3>
-                <cfreturn local.qryGetProductImages>
+            <cfif NOT structKeyExists(arguments, "defaultImg")>
+                <cfif local.qryGetProductImages.recordCount GE 3>
+                    <cfreturn local.qryGetProductImages>
+                </cfif>
+            <cfelse>
+                <cfif local.qryGetProductImages.recordCount EQ 1>
+                    <cfreturn local.qryGetProductImages>
+                </cfif>              
             </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry>
+    </cffunction>
+
+
+    <!--- DELETE IMAGE SUB FUNCTION --->
+    <cffunction  name="imageDeleteFunction" access = "private" returntype = "any">
+        <cfargument name = "imageId" type = "integer" required = "true">
+        <cftry>
+            <cfquery result = "local.qryImageDelete" datasource = "shoppingcart">
+                DELETE FROM 
+                    tblProductImages
+                WHERE
+                    fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+            </cfquery> 
+            <cfreturn local.qryImageDelete.recordCount >      
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
         </cfcatch>
@@ -265,20 +322,46 @@
     <!---  DELETE IMAGE    --->
     <cffunction  name="deleteImage" access = "public" returntype = "string">
         <cfargument  name="imageId" type = "integer" required = "true">
-        <cfdump var = "#arguments#" abort>
+        <cfargument  name="productId" type = "integer" required = "true">
         <cftry>
-            <cfquery result = "local.qryImageDelete" datasource = "coldfusion">
-                DELETE FROM 
-                        tblProductImages
-                WHERE
-                    fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
-            </cfquery>
-            <cfif local.qryImageDelete.recordCount EQ 1>
-                <cfreturn "Success">
+            <cfset local.productImageCount  = getProductImageCount(productId = arguments.productId) >
+            <cfif local.productImageCount LE 3 >
+                <cfreturn "*Atleast 3 Images required" >
             <cfelse>
-                <cfreturn "Failed">
+                <cfquery name = "local.qryCheckDefaultImg" datasource = "shoppingcart">
+                    SELECT
+                        fldDefaultImage
+                    FROM 
+                        tblProductImages
+                    WHERE
+                        fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_varchar">
+                </cfquery>
+                <cfif local.qryCheckDefaultImg.fldDefaultImage EQ 1>
+                    <cfset local.imageDeleteResult = imageDeleteFunction(imageId = arguments.imageId )>
+                    <cfif local.imageDeleteResult EQ 1>
+                        <cfset local.newDafaultImageId = arguments.imageId + 1 >
+                        <cfquery name = "local.qryChangeDefaultImage" datasource = "shoppingcart">
+                            UPDATE 
+                                tblProductImages
+                            SET 
+                                fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                            WHERE
+                                fldProductImage_ID = <cfqueryparam value = "#local.newDafaultImageId#" cfsqltype = "cf_sql_tinyint">
+                            AND 
+                                fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        </cfquery>  
+                        <cfreturn "Success">                    
+                    <cfelse>
+                        <cfreturn  "Image edit Failed">
+                    </cfif>
+                <cfelse>
+                    <cfset local.imageDeleteResult = imageDeleteFunction(imageId = arguments.imageId )>
+                    <cfif local.imageDeleteResult EQ 1>
+                        <cfreturn "Success">
+                    <cfelse>
+                        <cfreturn "Image edit Failed" >
+                    </cfif>              
+                </cfif>
             </cfif>
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#">
@@ -286,4 +369,28 @@
         </cftry>
     </cffunction>
 
+    <!--- DELETE PRODUCT --->
+    <cffunction  name="deleteProduct" access = "public" returntype = "string">
+        <cfargument name = "productId" type = "integer" required = "true">
+        <cftry>
+            <cfquery result = "local.qryDeleteProduct" datasource = "shoppingcart">
+                UPDATE 
+                    tblProduct
+                SET 
+                    fldActive = <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">
+                WHERE
+                    fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfif local.qryDeleteProduct.recordCount EQ 1 >
+                <cfreturn "Success">
+            <cfelse>
+                <cfreturn "Failed" >
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump  var="#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>

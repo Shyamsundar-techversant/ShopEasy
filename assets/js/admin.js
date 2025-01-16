@@ -250,7 +250,6 @@ $(document).ready(function(){
             subCategoryId = $(this).data('id');         
         });
         $('#subCategoryDeleteBtn').on('click',function(){
-            console.log(subCategoryId);
             $.ajax({
                 url : "../../controller/category.cfc?method=subCategoryDelete",
                 method : 'POST',

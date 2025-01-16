@@ -205,13 +205,26 @@
         </cfif>
     </cffunction>
 
+    <!---   GET PRODUCT IMAGES  --->
+    <cffunction  name = "getDefaultProductImage" access = "public" returntype = "any">
+        <cfargument  name = "productId" type = "integer" required = "true">
+        <cfset arguments['defaultImg'] = 1>
+
+        <cfset local.defaultProductImg = application.productModObj.getProductImages(
+                                                                    argumentCollection = arguments
+                                                                )   
+        >
+        <cfreturn local.defaultProductImg >
+    </cffunction>
+
     <!---  DELETE IMAGE    --->
-    <cffunction  name="deleteImage" access = "remote" returntype = "any" returnformat = "json">
-        <cfargument  name="imageId" type = "integer" required = "true">
+    <cffunction  name = "deleteImage" access = "remote" returntype = "any" returnformat = "json">
+        <cfargument  name = "imageId" type = "integer" required = "true">
+        <cfargument  name = "productId" type = "integer" required = "true">        
         <cfset local.errors = []>
         <cfset local.deleteImageResult = application.productModObj.deleteImage(
-                                                                                imageId = arguments.imageId
-
+                                                                                imageId = arguments.imageId,
+                                                                                productId = arguments.productId
                                                                             )
         >
         <cfif local.deleteImageResult EQ "Success">
@@ -219,6 +232,20 @@
         <cfelse>
             <cfset arrayAppend(local.errors, local.deleteImageResult)>
             <cfreturn local.errors>
+        </cfif>
+    </cffunction>
+
+    <!--- DELETE PRODUCT --->
+    <cffunction  name="deleteProduct" access = "remote" returntype = "string" returnformat = "json">
+        <cfargument name = "productId" type = "integer" required = "true">
+        <cfset local.productDeleteResult = application.productModObj.deleteProduct(
+                                                                                    productId = arguments.productId
+                                                                                )
+        >
+        <cfif local.productDeleteResult EQ "Success">
+            <cfreturn "Success">
+        <cfelse>
+            <cfreturn "Failed">
         </cfif>
     </cffunction>
 </cfcomponent>

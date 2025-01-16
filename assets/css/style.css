@@ -166,3 +166,13 @@ tbody tr{
 .img-dlt-btn:hover{
   background: rgb(231, 183, 183) !important;
 }
+
+/*  Individual product*/
+.product-details-container{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.product-image{
+  max-width: 200px;
+}
