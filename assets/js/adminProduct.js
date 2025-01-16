@@ -4,7 +4,7 @@ $(document).ready(function(){
 		window.history.replaceState(null,null,window.location.href);
 	}
     
-    let categoryId,subCategoryId,productId;
+    let categoryId,subCategoryId,productId,imageId,imageIdArray;
     let categorySelected = $('#categorySelect'),
         subCategorySelected = $('#subCategorySelect'),
         productName = $('#productName'),
@@ -12,7 +12,7 @@ $(document).ready(function(){
         productDescription = $('#productDescription'),
         productPrice = $('#productPrice'),
         productTax = $('#productTax');
-
+        
 
 
     // Error function 
@@ -26,14 +26,19 @@ $(document).ready(function(){
         });
     }
 
+    //PRODUCT ADD
     $('#productButton').on('click',function(){
         $('#productAddBtn').show();
         $('#productEditBtn').hide();
         $('.error').text('');
         $('#productTitle').text('Add Product');
+        $('#img-list').empty();
+        $('#productAddForm').trigger('reset');
     });
 
+   
     $('#productAddBtn').on('click',function(){
+        $('#img-list').empty();
         let formData = new FormData();
         formData.append('categoryId',categorySelected.val());
         formData.append('subCategoryId',subCategorySelected.val());
@@ -72,11 +77,13 @@ $(document).ready(function(){
                 console.log("Request failed") ;
             }
         });
-    })
+    });
 
-    $('#productEditButton').on('click',function(){
+    //PRODUCT EDIT
+    $('.product-edit-btn').on('click',function(){
+        $('#img-list').empty();
         $('#productTitle').text('Edit Product');
-        $('#productAddEditModal').trigger('reset');
+        $('#productAddForm').trigger('reset');
         $('#productAddBtn').hide();
         $('#productEditBtn').show();       
         productId = $(this).data('id');
@@ -92,13 +99,13 @@ $(document).ready(function(){
             contentType : false,
             success : function(response){
                     let data = JSON.parse(response);
-                    productName.val(data[3].productName);
-                    productBrand.val(data[3].productBrand);
-                    productDescription.val(data[3].productDescription);
-                    productPrice.val(data[3].productPrice);
-                    productTax.val(data[3].productTax);
-                    let row = $('#product-img-container');
-                    var ulList = $('<ul>', { class: 'product-img-list' }).css({
+                    productName.val(data[data.length - 1].productName);
+                    productBrand.val(data[data.length - 1].productBrand);
+                    productDescription.val(data[data.length - 1].productDescription);
+                    productPrice.val(data[data.length - 1].productPrice);
+                    productTax.val(data[data.length - 1].productTax);
+                    let imgList = $('#img-list');
+                    imgList.css({
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '10px'   
@@ -122,18 +129,88 @@ $(document).ready(function(){
                                 class: [`image_${i}_name`, 'image_names'].join(' ')  
                             })
                         );
-                        var spanClose = $('<span>').append(
-                            $('<i>', { class: 'fa-solid fa-x' })  // Font Awesome 'X' icon
+                        var spanClose = $('<button>',{class : 'img-dlt-btn',img_id : data[i].imageId,type : 'button'}).append(
+                            $('<i>', { class: 'fa-solid fa-x'})  
                         );
                         liItem.append(spanImg).append(spanClose);
-                        ulList.append(liItem);
+                        imgList.append(liItem);
+                      
                     }
-                    row.append(ulList);
-
             },
             error : function(){
                 console.log("Request failed") ;
             }
         });
-    })
+    });
+
+    $('#productEditBtn').on('click',function(){
+        let formData = new FormData();
+        formData.append('categoryId',categorySelected.val());
+        formData.append('subCategoryId',subCategorySelected.val());
+        formData.append('productName',productName.val());
+        formData.append('productBrand',productBrand.val());
+        formData.append('productDescription',productDescription.val());
+        formData.append('productPrice',productPrice.val());
+        formData.append('productTax',productTax.val());
+        formData.append('productId',productId);
+        let productImages = $('#productImages')[0].files;
+        if(productImages.length > 0){
+            for(i=0 ; i<productImages.length;i++){
+                formData.append('productImages',productImages[i]);
+            }            
+        }
+        $.ajax({
+            url : "../../controller/product.cfc?method=validateProduct",
+            method : 'POST' ,
+            data : formData ,
+            processData : false,
+            contentType : false,
+            success : function(response){
+                    let data = JSON.parse(response);
+                    if(data === "Success"){
+                        $('#productAddEditModal').modal('hide');
+                        location.reload();
+                    }
+                    else{
+                        addError(data);
+                    }
+            },
+            error : function(){
+                console.log("Request failed") ;
+            }
+        });     
+    });
+
+
+
+
+    //IMAGE DELETE
+    $('#img-list').on('click','.img-dlt-btn',function(){
+        imageId = $(this).attr('img_id');
+        let formData = new FormData();
+        formData.append('imageId',imageId);
+        console.log(imageId);
+        $.ajax({
+            url : "../../controller/product.cfc?method=deleteImage",
+            method : 'POST' ,
+            data : formData ,
+            processData : false,
+            contentType : false,
+            success : function(response){
+                    console.log("Success");
+                    let data = JSON.parse(response);
+                    if(data === "Success"){
+                        $(this).closest('li').remove();
+                    }
+                    else{
+                        addError(data);
+                    }
+            },
+            error : function(){
+                console.log("Request failed") ;
+            }           
+        })
+    });
+
+
 });

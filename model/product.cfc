@@ -64,8 +64,7 @@
         <cfargument name = "productDescription" type = "string" required = "true">
         <cfargument name = "productPrice" type = "numeric" required = "true">
         <cfargument name = "productTax" type = "numeric" required = "true" >
-        <cfargument name = "uploadedImgPath" type = "array" required = "true">
-
+        <cfargument name = "uploadedImgPath" type = "array" required = "false">
         <cfset local.result = "">
         <cfif NOT structKeyExists(arguments, "productId")>
             <cftry>          
@@ -117,22 +116,40 @@
             </cftry>
         <cfelse>
             <cftry>
-                <cfquery result = "local.editCateg" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditProduct" datasource = "shoppingcart">
                     UPDATE
-                        tblCategory
+                        tblProduct
                     SET 
-                        fldCategoryName = <cfqueryparam value = "#arguments.categName#" cfsqltype = "cf_sql_varchar">,
+                        fldProductName = <cfqueryparam value = "#arguments.productName#" cfsqltype = "cf_sql_varchar">,
+                        fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">,
+                        fldBrandId = <cfqueryparam value = "#arguments.productBrand#" cfsqltype = "cf_sql_integer">,
+                        fldDescription = <cfqueryparam value = "#arguments.productDescription#" cfsqltype = "cf_sql_varchar">,
+                        fldPrice = <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
+                        fldTax = <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
                         fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
-                        fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
+                        fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
                     AND 
                         fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
-                <cfif local.editCateg.recordCount EQ 1>
-                    <cfset local.result = "Success">
+                <cfif local.qryEditProduct.recordCount EQ 1>
+                    <cfif structKeyExists(arguments, 'uploadedImgPath')>
+                        <cfset local.newAddedImg = addImage(
+                                                            productId = arguments.productId,
+                                                            productImages = arguments.uploadedImgPath                                                           
+                                                        )
+                        >
+                        <cfif local.newAddedImg EQ "Success">
+                            <cfset local.result = "Success">
+                        <cfelse>
+                            <cfset local.result = "Failed">
+                        </cfif>
+                    <cfelse>
+                        <cfset local.result = "Success">
+                    </cfif>
                 <cfelse>
-                    <cfset local.result = "Faileld">
+                    <cfset local.result = "Product Update Faileld">
                 </cfif>
                 <cfreturn local.result>
             <cfcatch type="exception">
@@ -142,7 +159,7 @@
         </cfif>
     </cffunction>
 
-    <!---   ADD IMAGE   --->
+    <!---  ADD IMAGE  --->
     <cffunction name = "addImage" access = "private" returntype = "string">
         <cfargument  name = "productId" type = "integer" required = "true">
         <cfargument name = "productImages" type = "array" required = "true">
@@ -176,7 +193,7 @@
                 </cfquery>
                 <cfset local.insertedCount = local.insertedCount + 1>
             </cfloop>
-            <cfif local.insertedCount EQ 3 >
+            <cfif local.insertedCount GT 0 >
                 <cfreturn "Success">
             <cfelse>
                 <cfreturn "Failed">
@@ -223,7 +240,6 @@
     <cffunction name = "getProductImages" access = "public" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
         <cfargument name = "productImgId" type = "integer" required = "false" >
-
         <cftry>
             <cfquery name = "local.qryGetProductImages" datasource = "shoppingcart">
                 SELECT 
@@ -237,13 +253,37 @@
                 AND 
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
             </cfquery>
-            <cfif local.qryGetProductImages.recordCount EQ 3>
+            <cfif local.qryGetProductImages.recordCount GE 3>
                 <cfreturn local.qryGetProductImages>
             </cfif>
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
         </cfcatch>
         </cftry>
-
     </cffunction>
+
+    <!---  DELETE IMAGE    --->
+    <cffunction  name="deleteImage" access = "public" returntype = "string">
+        <cfargument  name="imageId" type = "integer" required = "true">
+        <cfdump var = "#arguments#" abort>
+        <cftry>
+            <cfquery result = "local.qryImageDelete" datasource = "coldfusion">
+                DELETE FROM 
+                        tblProductImages
+                WHERE
+                    fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfif local.qryImageDelete.recordCount EQ 1>
+                <cfreturn "Success">
+            <cfelse>
+                <cfreturn "Failed">
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+
 </cfcomponent>

@@ -40,7 +40,7 @@
         <cfargument name = "productDescription" type = "string" required = "true">
         <cfargument name = "productPrice" type = "string" required = "true">
         <cfargument name = "productTax" type = "string" required = "true" >
-        <cfargument name = "productImages" type = "any" required = "true">
+        <cfargument name = "productImages" type = "any" required = "false">
        
 
         <cfset local.errors = [] >
@@ -93,7 +93,9 @@
 
                 >
                 <cfif local.productExist EQ "true">
-                    <cfset arrayAppend(local.errors,"*SubCategory already exist")>
+                    <cfif NOT structKeyExists(arguments, "productId")>
+                        <cfset arrayAppend(local.errors,"*SubCategory already exist")>
+                    </cfif>
                 </cfif>
             </cfif>
         </cfif>
@@ -120,26 +122,27 @@
         </cfif>
 
         <!--- VALIDATE   PRODUCT IMAGES    --->
-		<cfset local.maxImgSize = 5*1024*1024>
-		<cfset local.allowedExtensions = "jpeg,jpg,png,gif">
-        <cfset local.uploadedImagePath = [] >
-        <cffile  action = "uploadAll"
-                fileField = "arguments.productImages"
-                destination = "#application.imageSavePath#"
-                nameconflict = "makeunique"
-                result = "local.uploadedImage"
-        >
-        <cfloop array = "#local.uploadedImage#" index = "i" item = "image">
-            <cfif image.fileSize GT local.maxImgSize>
-                <cfset arrayAppend(local.errors, "*The size of  image #i# is greater")>
-            </cfif>
-            <cfif NOT listFindNoCase(local.allowedExtensions,"#image.CLIENTFILEEXT#")>
-                <cfset arrayAppend(local.errors,"*Image #image.CLIENTFILE# should be jpeg or png or gif format")>
-            </cfif>
-            <cfset arrayAppend(local.uploadedImagePath, image.SERVERFILE)>
-        </cfloop>
-        <cfset arguments['uploadedImgPath'] = local.uploadedImagePath>
-
+        <cfif structKeyExists(arguments, 'productImages')>
+		    <cfset local.maxImgSize = 5*1024*1024>
+		    <cfset local.allowedExtensions = "jpeg,jpg,png,gif">
+            <cfset local.uploadedImagePath = [] >
+            <cffile  action = "uploadAll"
+                    fileField = "arguments.productImages"
+                    destination = "#application.imageSavePath#"
+                    nameconflict = "makeunique"
+                    result = "local.uploadedImage"
+            >
+            <cfloop array = "#local.uploadedImage#" index = "i" item = "image">
+                <cfif image.fileSize GT local.maxImgSize>
+                    <cfset arrayAppend(local.errors, "*The size of  image #i# is greater")>
+                </cfif>
+                <cfif NOT listFindNoCase(local.allowedExtensions,"#image.CLIENTFILEEXT#")>
+                    <cfset arrayAppend(local.errors,"*Image #image.CLIENTFILE# should be jpeg or png or gif format")>
+                </cfif>
+                <cfset arrayAppend(local.uploadedImagePath, image.SERVERFILE)>
+            </cfloop>
+            <cfset arguments['uploadedImgPath'] = local.uploadedImagePath>
+        </cfif>
 
 
         <cfif arrayLen(local.errors) GT 0 >
@@ -154,7 +157,7 @@
                 <cfset local.result = "Success">
                 <cfreturn local.result>
             <cfelse>
-                <cfset arrayAppend(local.errors,"Invalid data") >
+                <cfset arrayAppend(local.errors,local.subCategAddEditResult) >
                 <cfreturn local.errors >
             </cfif> 
         </cfif> 
@@ -200,6 +203,22 @@
             >
             <cfreturn local.productData>
         </cfif>
+    </cffunction>
 
+    <!---  DELETE IMAGE    --->
+    <cffunction  name="deleteImage" access = "remote" returntype = "any" returnformat = "json">
+        <cfargument  name="imageId" type = "integer" required = "true">
+        <cfset local.errors = []>
+        <cfset local.deleteImageResult = application.productModObj.deleteImage(
+                                                                                imageId = arguments.imageId
+
+                                                                            )
+        >
+        <cfif local.deleteImageResult EQ "Success">
+            <cfreturn "Success">
+        <cfelse>
+            <cfset arrayAppend(local.errors, local.deleteImageResult)>
+            <cfreturn local.errors>
+        </cfif>
     </cffunction>
 </cfcomponent>

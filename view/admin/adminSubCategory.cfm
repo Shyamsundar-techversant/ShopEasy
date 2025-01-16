@@ -78,24 +78,22 @@
                       </td>
                       <td>
                         <button  type = "button" 
-                                class = "categ-alt-btn subcateg-edit-btn"
+                                class = "categ-alt-btn product-edit-btn"
                                 data-bs-toggle = "modal"
                                 data-bs-target = "##productAddEditModal"
                                 data-id = "#variables.allProducts.fldProduct_ID#"
                                 data-subCategId = "#url.subCategID#"
-                                id = "productEditButton"
                         >
                           EDIT
                         </button>
                       </td>
                       <td>
                         <button type = "button"
-                                class = "categ-alt-btn sub-cat-dlt-btn"
+                                class = "categ-alt-btn product-dlt-btn"
                                 data-bs-toggle = "modal"
                                 data-bs-target = "##categoryDeleteModal"
                                 data-id = "#variables.allProducts.fldProduct_ID#"
                                 data-subCategId = "#url.subCategID#"
-                                 id = "productDeleteBtn"
                         >
                           DELETE
                         </button>
@@ -126,7 +124,7 @@
             <h5 class="modal-title" id = "productTitle">Add Product</h5>
           </div>
           <div class="modal-body">
-            <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
+            <form action = "" class = "categAddForm" method = "post" id = "productAddForm">
               <div class = "row mb-3">
                 <div class = "col">
                   <cfset categoryValues = application.cateContObj.getCategory() >
@@ -219,7 +217,7 @@
                 </div>
               </div>
               <div class = "row mb-3" id = "product-img-container">
-                <ul class ='product-image-list'
+                <ul class ='product-image-list' id = "img-list">
                 </ul>
               </div>
               <div class = "row mb-3 ">
