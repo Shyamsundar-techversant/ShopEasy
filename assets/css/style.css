@@ -79,8 +79,9 @@ body {
 .sign-link:hover{
   text-decoration: underline !important;
 }
-.errors{
-  color:red;
+.errors,.error li{
+  color:red !important;
+  font-size: 14px !important;
 }
 
 /* Admin Dashboard */

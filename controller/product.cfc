@@ -199,7 +199,7 @@
                                                                                 subCategoryId = arguments.subCategoryId     
                                                                             )
             >
-            <cfreturn local.productData>
+            <cfreturn local.productData> --->
         </cfif>
     </cffunction>
 

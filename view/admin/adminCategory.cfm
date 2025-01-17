@@ -96,6 +96,11 @@
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
+              <div class = "row mb-3 ">
+                <div class = "error">
+
+                </div>
+              </div>
               <div class = "row mb-3">
                 <div class = "col">
                   <cfset categoryValues = application.cateContObj.getCategory() >
@@ -136,13 +141,7 @@
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryAddButton">Add SubCategory</button>
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryEditButton">Edit SubCategory</button>
                 </div>
-              </div>  
-              <div class = "row mb-3 ">
-                <div class = "error">
-
-                </div>
-              </div>  
-                      
+              </div>                         
             </form>
           </div>       
         </div>

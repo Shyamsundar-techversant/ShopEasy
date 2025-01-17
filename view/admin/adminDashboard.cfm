@@ -94,6 +94,11 @@
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
+              <div class = "row mb-3 ">
+                <div class = "error">
+
+                </div>
+              </div>
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "categoryName" class = "form-label">Enter category Name </label>
@@ -108,14 +113,8 @@
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryAddBtn">Add Category</button>
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryEditButton">Edit Category</button>
                 </div>
-              </div>  
-              <div class = "row mb-3 ">
-                <div class = "error">
-
-                </div>
-              </div>  
-                      
-            </form>
+              </div>                     
+           </form>
           </div>       
         </div>
       </div>

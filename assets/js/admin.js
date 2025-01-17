@@ -184,8 +184,8 @@ $(document).ready(function () {
         $("#categoryAddForm").trigger('reset');
         $('.error').text('');
         $('#categTitle').text('Edit SubCategory');
-        $('#subCategAddBtn').hide();
-        $('#subCategEditBtn').show();
+        $('#subCategoryAddButton').hide();
+        $('#subCategoryEditButton').show();
         subCategoryId = $(this).data('id');
         categoryId = $(this).attr('data-categId');
         let formData = new FormData();

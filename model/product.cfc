@@ -225,7 +225,7 @@
     </cffunction>
 
         <!--- GET PRODUCTS     --->
-    <cffunction name = "getProduct" access = "public" returntype = "query">
+    <cffunction name = "getProduct" access = "public" returntype = "any">
         <cfargument name = "subCategoryId" type = "integer" required = "true">
         <cfargument name = "productId" type = "integer" required = "false">
         <cftry>
@@ -250,6 +250,8 @@
             </cfquery>
             <cfif local.qryGetProduct.recordCount GT 0>
                 <cfreturn local.qryGetProduct>
+            <cfelse>
+                <cfreturn "No products Exist">
             </cfif>
             <cfcatch type="exception">
                 <cfdump var = "#cfcatch#" >

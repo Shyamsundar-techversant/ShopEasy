@@ -9,14 +9,6 @@
   >
 </cfif>
 
-<!--- <cfset pass = "Shyam@123">
-<cfset salt = "q1Y9Ls/IoY5RUVY3oojjOQ==">
-<cfset saltPass = pass & salt>
-<cfset hashPass = hash(saltPass,"SHA-256","UTF-8")>
-<cfdump var = #hashPass# > 
- 037FC62C2202B4FBB97D55652E329D91419987E12E6B6A7210832F70908EA464  --->
-
-
 <!DOCTYPE html>
 <html lang = "en">
   <head>
@@ -49,8 +41,15 @@
           <div class = "card">
             <h5 class = "card-head">LogIn</h5>
             <form action = "" class = "user-reg-form" method = "post">
-
-              
+              <div class = "row">
+                <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
+                  <cfoutput>
+                    <cfloop array = "#variables.logResult#" index = "error">
+                      <span class = "errors" >#error#</span><br>
+                    </cfloop>
+                  </cfoutput>
+                </cfif>
+              </div>            
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "username" class = "form-label">Username </label>
@@ -89,15 +88,6 @@
               </div>
               <div class = "row mb-3" >
                 <a href = "signup.cfm" class = "sign-link"> Don't have any account? Please SignUp</a>
-              </div>
-              <div class = "row">
-                <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
-                  <cfoutput>
-                    <cfloop array = "#variables.logResult#" index = "error">
-                      <span class = "errors" >#error#</span><br>
-                    </cfloop>
-                  </cfoutput>
-                </cfif>
               </div>
             </form>
           </div>						
