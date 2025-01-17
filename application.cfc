@@ -24,12 +24,12 @@
         <cfif NOT structKeyExists(session,"roleId") 
                 AND arrayFindNoCase(local.restrictedPages, listLast(CGI.SCRIPT_NAME,'/'))
         >
-            <cflocation  url="../log.cfm" addToken = "false">
+            <cflocation  url="../logIn.cfm" addToken = "false">
         <cfelseif structKeyExists(session, "roleId") 
             AND session.roleId NEQ 1
             AND arrayFindNoCase(local.restrictedPages, listLast(CGI.SCRIPT_NAME,'/'))
         >
-            <cflocation url = "../log.cfm" addToken = "false">
+            <cflocation url = "../logIn.cfm" addToken = "false">
         </cfif> 
     </cffunction>
 </cfcomponent>

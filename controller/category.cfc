@@ -1,16 +1,15 @@
 <cfcomponent>
-
     <!---  DECRYPTION FUNCTION    --->
     <cffunction name = "decryptionFunction" access = "private" returntype = "numeric">
-        <cfargument name = "objId" type = "string" required = "false">
+        <cfargument name = "encryptedId" type = "string" required = "false">
         <cfset local.testVar = 0 >
-        <cfif arguments.objId NEQ "" AND len(arguments.objId) MOD 16 EQ 0>
+        <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
-                                            arguments.objId,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                        )
+                                                arguments.encryptedId,
+                                                application.encryptionKey,
+                                                "AES",
+                                                "Hex"
+                                            )
         
             >
             <cfreturn local.decryptedId>
@@ -18,11 +17,10 @@
             <cfreturn local.testVar>
         </cfif>
     </cffunction>
-
-    <cffunction  name="validateCategName" access = "remote" returntype = "any" returnformat = "json">
-        <cfargument name = "categName" type = "string" required = "true">
+    <!---  VALIDATE CATEGORY  --->
+    <cffunction  name="validateCategoryName" access = "remote" returntype = "any" returnformat = "json">
+        <cfargument name = "categoryName" type = "string" required = "true">
         <cfargument name = "categoryId" type = "string" required = "false" >
-
             <cfset local.errors = [] >
 
             <!---      VALIDATE CATEGORY ID        --->
@@ -33,14 +31,14 @@
                 </cfif>
             </cfif>
 
-            <!---       Validating Category Name       --->
-            <cfif structKeyExists(arguments, "categName")>
-                <cfif len(trim(arguments.categName)) EQ 0>
+            <!---       VALIDATE CATEGORY NAME        --->
+            <cfif structKeyExists(arguments, "categoryName")>
+                <cfif len(trim(arguments.categoryName)) EQ 0>
 		            <cfset arrayAppend(local.errors,"*Enter the category name")>
 		        </cfif>
                 <cfset  local.categExist = application.categModObj.checkCategory(
-                                                categoryName = trim(arguments.categName)
-                                            )
+                                                                                    categoryName = trim(arguments.categoryName)
+                                                                                )
 
                 >
                 <cfif local.categExist EQ "true">
@@ -55,8 +53,8 @@
                     <cfset arguments.categoryId = local.decryptedCategoryId >
                 </cfif>               
                 <cfset local.categAddEditResult = application.categModObj.categoryAddEdit(
-                                                    argumentCollection = arguments
-                                                )
+                                                                                            argumentCollection = arguments
+                                                                                        )
                 >
                 <cfif local.categAddEditResult EQ "Success">
                     <cfset local.result = "Success">
@@ -75,20 +73,19 @@
             <cfif structKeyExists(arguments, "categoryId")>
                 <cfset local.decryptedCategoryId = decryptionFunction(arguments.categoryId)>
                 <cfset local.categoryData = application.categModObj.getCategory(
-                                                            categoryId = local.decryptedCategoryId
-                                                        )
+                                                                                    categoryId = local.decryptedCategoryId
+                                                                                )
                 >
                 <cfset local.categoryDataById = {
-                                                'fldCategoryName' = local.categoryData.fldCategoryName,
-                                                'fldCategory_ID' = local.categoryData.fldCategory_ID
-                                            }           
+                                                    'fldCategoryName' = local.categoryData.fldCategoryName,
+                                                    'fldCategory_ID' = local.categoryData.fldCategory_ID
+                                                }           
                 >
                 <cfreturn local.categoryDataById>
             <cfelse>
                 <cfset local.categoryData = application.categModObj.getCategory()>
                 <cfreturn local.categoryData >
             </cfif>
-
             <cfdump var = "#local.categoryData#" >
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
@@ -113,19 +110,16 @@
         <cfreturn local.result>
     </cffunction>
 
-
     <!---  SUBCATEGORY VALIDATION   --->
     <cffunction  name="validateSubCategory" access = "remote" returntype = "any" returnformat = "json">
-        <cfargument name = "subCategName" type = "string" required = "true">
+        <cfargument name = "subCategoryName" type = "string" required = "true">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
-        <cfargument name = "categoryId" type = "string" required = "true" >
-        
+        <cfargument name = "categoryId" type = "string" required = "true" >       
         <cfset local.errors = [] >
-
         <!---    VALIDATE CATEGORY ID      --->
         <cfset local.decryptedCategoryId = decryptionFunction(
-                                                    arguments.categoryId
-                                                )
+                                                                arguments.categoryId
+                                                            )
 
         >
         <cfif local.decryptedCategoryId EQ 0>
@@ -134,7 +128,7 @@
             <cfset arguments.categoryId = local.decryptedCategoryId>
         </cfif>
 
-        <!---     Category Validation     --->
+        <!---     CATEGORY VALIDATION     --->
         <cfset local.allCategory = application.categModObj.getCategory()>
         <cfset local.categoryList = valueList(local.allCategory.fldCategory_ID) >
         <cfset local.categoryExist = listFind(local.categoryList,arguments.categoryId)>
@@ -142,16 +136,16 @@
             <cfset arrayAppend(local.errors, "*Category does not exist")>
         </cfif>
 
-        <!---    Sub Category Name validation      --->
-        <cfif structKeyExists(arguments, "subCategName")>
-            <cfif len(trim(arguments.subCategName)) EQ 0>
+        <!---    SUBCATEGORY NAME VALIDATION      --->
+        <cfif structKeyExists(arguments, "subCategoryName")>
+            <cfif len(trim(arguments.subCategoryName)) EQ 0>
 		        <cfset arrayAppend(local.errors,"*Enter the category name")>
 		    </cfif>
             <cfif local.decryptedCategoryId NEQ 0>
                 <cfset  local.subCategExist = application.categModObj.checkSubCategory(
-                                            subCategoryName = trim(arguments.subCategName),
-                                            categoryId = arguments.categoryId
-                                        )
+                                                                                        subCategoryName = trim(arguments.subCategoryName),
+                                                                                        categoryId = arguments.categoryId
+                                                                                    )
 
                 >
                 <cfif local.subCategExist EQ "true">
@@ -168,8 +162,8 @@
 
             </cfif>
             <cfset local.subCategAddEditResult = application.categModObj.subCategoryAddEdit(
-                                                argumentCollection = arguments
-                                            )
+                                                                                             argumentCollection = arguments
+                                                                                            )
             > 
             <cfif local.subCategAddEditResult EQ "Success">
                 <cfset local.result = "Success">
@@ -185,27 +179,25 @@
     <cffunction name = "getSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
         <cfargument name = "categoryId" type = "string" required = "true" >
-
         <cfset arguments.categoryId = decryptionFunction(arguments.categoryId)>
         <cftry>
             <cfif structKeyExists(arguments, "subCategoryId")>
                 <cfset local.decryptedSubCategoryId = decryptionFunction(arguments.subCategoryId)>
-
                 <cfset local.subCategoryData = application.categModObj.getSubCategory(
-                                                            subCategoryId = local.decryptedSubCategoryId,
-                                                            categoryId = arguments.categoryId
-                                                        )
+                                                                                        subCategoryId = local.decryptedSubCategoryId,
+                                                                                        categoryId = arguments.categoryId
+                                                                                    )
                 >
                 <cfset local.subCategoryDataById = {
-                                                    'fldSubCategoryName' = local.subCategoryData.fldSubCategoryName,
-                                                    'fldSubCategory_ID' = local.subCategoryData.fldSubCategory_ID
-                                                }           
+                                                        'fldSubCategoryName' = local.subCategoryData.fldSubCategoryName,
+                                                        'fldSubCategory_ID' = local.subCategoryData.fldSubCategory_ID
+                                                    }           
                 >
                 <cfreturn local.subCategoryDataById>
             <cfelse>
                 <cfset local.subCategoryData = application.categModObj.getSubCategory(
-                                                                categoryId = arguments.categoryId
-                                                            )
+                                                                                        categoryId = arguments.categoryId
+                                                                                    )
                 
                 >
                 <cfreturn local.subCategoryData >
@@ -222,8 +214,8 @@
         <cfset local.result = " " >
         <cfset local.decryptedSubCategoryId = decryptionFunction(arguments.subCategoryId)> 
         <cfset local.deleteResult = application.categModObj.deleteSubCategory(
-                                                                            subCategoryId = local.decryptedSubCategoryId
-                                                                        )
+                                                                                subCategoryId = local.decryptedSubCategoryId
+                                                                            )
         >
         <cfif local.deleteResult EQ "Success">
             <cfset local.result = "Success">
@@ -231,9 +223,5 @@
             <cfset local.result = "Failed">
         </cfif>
         <cfreturn local.result>
-    </cffunction>  
-
-
-
-    
+    </cffunction>     
 </cfcomponent>

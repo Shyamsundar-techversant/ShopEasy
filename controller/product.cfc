@@ -5,12 +5,11 @@
         <cfset local.testVar = 0 >
         <cfif arguments.objId NEQ "" AND len(arguments.objId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
-                                            arguments.objId,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                        )
-        
+                                                arguments.objId,
+                                                application.encryptionKey,
+                                                "AES",
+                                                "Hex"
+                                            )       
             >
             <cfreturn local.decryptedId>
         <cfelse>
@@ -59,8 +58,8 @@
         <!--- SUB CATEGORY VALIDATION --->
         <cfif local.checkCategVar NEQ 0>
             <cfset local.allSubCategory = application.categModObj.getSubCategory(
-                                                                            categoryId = arguments.categoryId
-                                                                        )
+                                                                                    categoryId = arguments.categoryId
+                                                                                )
             >
             <cfset local.subCategoryList = valueList(local.allSubCategory.fldSubCategory_ID) >
             <cfset local.subCategoryExist = listFind(local.subCategoryList,arguments.subCategoryId) >
@@ -86,10 +85,10 @@
 		    </cfif>
             <cfif local.checkSubCategVar NEQ 0 AND local.checkBrandVar NEQ 0>
                 <cfset  local.productExist = application.productModObj.checkProductExist(
-                                            subCategoryId= trim(arguments.subCategoryId),
-                                            brandId = arguments.productBrand,
-                                            productName = arguments.productName
-                                        )
+                                                                                            subCategoryId= trim(arguments.subCategoryId),
+                                                                                            brandId = arguments.productBrand,
+                                                                                            productName = arguments.productName
+                                                                                        )
 
                 >
                 <cfif local.productExist EQ "true">
@@ -150,8 +149,8 @@
         <cfelse>
             <!---     PRODUCT ADD EDIT FUNCTION CALL     --->
             <cfset local.subCategAddEditResult = application.productModObj.productAddEdit(
-                                                argumentCollection = arguments
-                                            )
+                                                                                            argumentCollection = arguments
+                                                                                        )
             > 
             <cfif local.subCategAddEditResult EQ "Success">
                 <cfset local.result = "Success">
@@ -170,9 +169,9 @@
         <cfset arguments.subCategoryId = decryptionFunction(arguments.subCategoryId)>
         <cfif structKeyExists(arguments, "productId")>
             <cfset local.productData = application.productModObj.getProduct(
-                                                                    subCategoryId = arguments.subCategoryId ,
-                                                                    productId = arguments.productId   
-                                                                )         
+                                                                                subCategoryId = arguments.subCategoryId ,
+                                                                                productId = arguments.productId   
+                                                                            )         
             >
             <cfset local.productImages = application.productModObj.getProductImages(productId = arguments.productId)>
             <cfset local.productArr = []>
@@ -186,7 +185,6 @@
                 <cfset arrayAppend(local.productArr, local.imgData)>
             </cfloop>
             <cfset local.productDataById = {
-
                                                 'productName' : local.productData.fldProductName,
                                                 'productBrand' : local.productData.fldBrandId,
                                                 'productDescription' : local.productData.fldDescription,
@@ -198,8 +196,8 @@
             <cfreturn local.productArr>
         <cfelse>
             <cfset local.productData = application.productModObj.getProduct(
-                                                                    subCategoryId = arguments.subCategoryId     
-                                                                )
+                                                                                subCategoryId = arguments.subCategoryId     
+                                                                            )
             >
             <cfreturn local.productData>
         </cfif>
@@ -211,8 +209,8 @@
         <cfset arguments['defaultImg'] = 1>
 
         <cfset local.defaultProductImg = application.productModObj.getProductImages(
-                                                                    argumentCollection = arguments
-                                                                )   
+                                                                                        argumentCollection = arguments
+                                                                                    )   
         >
         <cfreturn local.defaultProductImg >
     </cffunction>

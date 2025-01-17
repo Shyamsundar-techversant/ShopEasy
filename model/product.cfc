@@ -12,8 +12,7 @@
                 WHERE
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 <cfif structKeyExists(arguments, 'brandId')>
-                    AND 
-                        fldBrand_ID = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
+                    AND fldBrand_ID = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
                 </cfif>
             </cfquery>
             <cfreturn local.qryGetBrands>
@@ -36,12 +35,9 @@
                     tblProduct
                 WHERE 
                     fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldBrandId = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND  
-                    fldProductName = <cfqueryparam value = "#arguments.productName#" cfsqltype = "cf_sql_varchar" >
+                    AND fldBrandId = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
+                    AND fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    AND fldProductName = <cfqueryparam value = "#arguments.productName#" cfsqltype = "cf_sql_varchar" >
             </cfquery>
             <cfif local.qryCheckProduct.recordCount GT 0 >
                 <cfreturn "true">
@@ -97,9 +93,9 @@
                 </cfquery>
                 <cfif local.qryAddProduct.recordCount EQ 1>
                     <cfset local.imageAddResult = addImage(
-                                                        productId = local.qryAddProduct.GENERATEDKEY,
-                                                        productImages = arguments.uploadedImgPath
-                                                 )
+                                                            productId = local.qryAddProduct.GENERATEDKEY,
+                                                            productImages = arguments.uploadedImgPath
+                                                        )
                     >
                     <cfif local.imageAddResult EQ "Success">
                         <cfset local.result = "Success">
@@ -130,14 +126,13 @@
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND 
-                        fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditProduct.recordCount EQ 1>
                     <cfif structKeyExists(arguments, 'uploadedImgPath')>
                         <cfset local.newAddedImg = addImage(
-                                                            productId = arguments.productId,
-                                                            productImages = arguments.uploadedImgPath                                                           
+                                                                productId = arguments.productId,
+                                                                productImages = arguments.uploadedImgPath                                                           
                                                         )
                         >
                         <cfif local.newAddedImg EQ "Success">
@@ -248,8 +243,7 @@
                     tblProduct
                 WHERE
                     fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                    AND fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                 <cfif structKeyExists(arguments, "productId")>
                     AND fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer"> 
                 </cfif>
@@ -277,11 +271,9 @@
                     tblProductImages
                 WHERE
                     fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    AND fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 <cfif structKeyExists(arguments, "defaultImg") >
-                    AND 
-                        fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    AND fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 </cfif>
             </cfquery>
             <cfif NOT structKeyExists(arguments, "defaultImg")>
@@ -309,8 +301,7 @@
                     tblProductImages
                 WHERE
                     fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery> 
             <cfreturn local.qryImageDelete.recordCount >      
         <cfcatch type="exception">
@@ -347,8 +338,7 @@
                                 fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                             WHERE
                                 fldProductImage_ID = <cfqueryparam value = "#local.newDafaultImageId#" cfsqltype = "cf_sql_tinyint">
-                            AND 
-                                fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                         </cfquery>  
                         <cfreturn "Success">                    
                     <cfelse>
@@ -380,8 +370,7 @@
                     fldActive = <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">
                 WHERE
                     fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfif local.qryDeleteProduct.recordCount EQ 1 >
                 <cfreturn "Success">

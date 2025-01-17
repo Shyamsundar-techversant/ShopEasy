@@ -26,7 +26,7 @@
           <div class = "header-content">
             <div class = "brand-name">ShopEasy</div>
             <div class = "sign-buttons">
-              <button class = "log-btn btn" onclick = "window.location.href = 'log.cfm' "
+              <button class = "log-btn btn" onclick = "window.location.href = 'logIn.cfm' "
               >
                 LogIn
               </button>

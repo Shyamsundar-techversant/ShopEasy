@@ -13,31 +13,7 @@
 </cfif> --->
 
 
-<!DOCTYPE html>
-<html lang = "en">
-  <head>
-    <meta charset = "UTF-8" />
-    <meta name = "viewport" content= "width = device-width, initial-scale = 1.0" />
-    <title>ShopEasy</title>
-    <link rel = "stylesheet" href = "../../assets/css/style.css" />
-    <link rel = "stylesheet" href = "../../assets/css/bootstrap.css" />
-  </head>
-  <body>
-
-    <!-- Header -->
-    <section class = "header-section">
-      <header class = "header">
-        <div class = "container">
-          <div class = "header-content">
-            <div class = "brand-name">ShopEasy</div>
-            <div class = "sign-buttons">
-              <button class = "reg-btn btn" onclick = "window.location.href = '../log.cfm?logOut=1' ">LogOut</button>
-            </div>
-          </div>
-        </div>
-      </header>
-    </section>
-
+<cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
         <div class = "card">
@@ -114,14 +90,14 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categAddModalHead">
-            <h5 class="modal-title" id = "categTitle">Add Category</h5>
+            <h5 class="modal-title" id = "categoryTitle">Add Category</h5>
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
               <div class = "row mb-3">
                 <div class = "col">
-                  <label for = "categName" class = "form-label">Enter category Name </label>
-                  <input type = "text" class = "form-control" id = "categName" name = "categName"
+                  <label for = "categoryName" class = "form-label">Enter category Name </label>
+                  <input type = "text" class = "form-control" id = "categoryName" name = "categoryName"
                     placeholder = "Enter the category name you want to add"
                   >
                 </div>
@@ -129,8 +105,8 @@
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categAddBtn">Add Category</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categEditBtn">Edit Category</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryAddBtn">Add Category</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryEditButton">Edit Category</button>
                 </div>
               </div>  
               <div class = "row mb-3 ">

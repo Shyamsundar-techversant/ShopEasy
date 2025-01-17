@@ -11,29 +11,7 @@
                                                                             )
     >
 </cfif>
-<!DOCTYPE html>
-<html lang = "en">
-  <head>
-    <meta charset = "UTF-8" />
-    <meta name = "viewport" content= "width = device-width, initial-scale = 1.0" />
-    <title>ShopEasy</title>
-    <link rel = "stylesheet" href = "../../assets/css/style.css" />
-    <link rel = "stylesheet" href = "../../assets/css/bootstrap.css" />
-  </head>
-  <body>
-
-    <!-- Header -->
-    <section class = "header-section">
-      <header class = "header">
-        <div class = "container">
-          <div class = "header-content">
-            <div class = "brand-name">ShopEasy</div>
-            <div></div>
-          </div>
-        </div>
-      </header>
-    </section>
-
+<cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
         <div class = "card">
@@ -67,7 +45,7 @@
                       <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
                       <td>
                         <button type = "button" 
-                                  class = "categ-alt-btn subcateg-edit-btn"
+                                  class = "categ-alt-btn subcategory-edit-btn"
                                   data-bs-toggle = "modal"
                                   data-bs-target = "##subCategoryAddEditModal"
                                   data-id = "#encryptedId#"
@@ -78,7 +56,7 @@
                       </td>
                       <td>
                         <button type = "button"
-                                class = "categ-alt-btn sub-cat-dlt-btn"
+                                class = "categ-alt-btn subcategory-delete-btn"
                                 data-bs-toggle = "modal"
                                 data-bs-target = "##categoryDeleteModal"
                                 data-id = "#encryptedId#"
@@ -89,7 +67,7 @@
                       </td>
                       <td>
                         <button type = "button"
-                                class = "categ-subCateg-btn categ-dlt-btn"
+                                class = "categ-subCateg-btn product-btn"
                                 data-id = "#encryptedId#"
                                 onclick = 
                                 "window.location.href = 'adminSubcategory.cfm?subCategID=#encryptedId#&categId=#url.categId#'"
@@ -114,7 +92,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categAddModalHead">
-            <h5 class="modal-title" id = "categTitle">Add SubCategory</h5>
+            <h5 class="modal-title" id = "categoryTitle">Add SubCategory</h5>
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
@@ -155,8 +133,8 @@
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategAddBtn">Add SubCategory</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategEditBtn">Edit SubCategory</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryAddButton">Add SubCategory</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryEditButton">Edit SubCategory</button>
                 </div>
               </div>  
               <div class = "row mb-3 ">

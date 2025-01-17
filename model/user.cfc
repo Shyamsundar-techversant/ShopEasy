@@ -10,12 +10,12 @@
     </cffunction>
 
     <!---  Log User    --->
-    <cffunction name = "logUser" access = "public" returntype = "any" >
+    <cffunction name = "userLogIn" access = "public" returntype = "any" >
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
         
         <cftry>
-            <cfquery name = "local.userLog" datasource = "shoppingcart">
+            <cfquery name = "local.qryUserLogIn" datasource = "shoppingcart">
                 SELECT 
                     fldUser_ID,
                     fldEmail,
@@ -27,18 +27,16 @@
                     tblUser
                 WHERE
                     fldEmail = <cfqueryparam value = "#arguments.userName#" cfsqltype = "cf_sql_varchar">
-                OR 
-                    fldPhone = <cfqueryparam value = "#arguments.userName#" cfsqltype = "cf_sql_varchar">
-                    
+                    OR fldPhone = <cfqueryparam value = "#arguments.userName#" cfsqltype = "cf_sql_varchar">                   
             </cfquery>
             
-            <cfif local.userLog.recordCount EQ 1>
-                <cfset local.salt = local.userLog.fldUserSaltString>
+            <cfif local.qryUserLogIn.recordCount EQ 1>
+                <cfset local.salt = local.qryUserLogIn.fldUserSaltString>
                 <cfset local.hashPass = hashPassword(arguments.password,local.salt)>
-                <cfif local.hashPass EQ local.userLog.fldHashedPassword>
+                <cfif local.hashPass EQ local.qryUserLogIn.fldHashedPassword>
                     <cfset local.result = "LogIn Successful" >
-                    <cfset session['adminId'] = local.userLog.fldUser_ID >
-                    <cfset session['roleId'] = local.userLog.fldRoleId>                
+                    <cfset session['adminId'] = local.qryUserLogIn.fldUser_ID >
+                    <cfset session['roleId'] = local.qryUserLogIn.fldRoleId>                
                     <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">
                 <cfelse>
                     <cfset local.result = "Invalid Data" >
