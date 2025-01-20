@@ -17,6 +17,7 @@
     <title>ShopEasy</title>
     <link rel = "stylesheet" href = "../assets/css/style.css" />
     <link rel = "stylesheet" href = "../assets/css/bootstrap.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   </head>
   <body>
     <!-- Header -->
@@ -33,12 +34,13 @@
       </header>
     </section>
 
-
     <!--- LogIn Form --->
     <section class = "form-section">
       <div class = "container">
         <div class = "user-registration">         
-          <div class = "card">
+          <div class = "card user-reg-card" data-aos="flip-left" data-aos-easing="ease-out-cubic"
+                        data-aos-duration="1000"        
+          >
             <h5 class = "card-head">LogIn</h5>
             <form action = "" class = "user-reg-form" method = "post">
               <div class = "row">
@@ -96,5 +98,9 @@
 		</section>
   
     <script src = "../assets/js/bootstrap.bundle.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
   </body>
 </html>

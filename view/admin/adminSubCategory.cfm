@@ -15,7 +15,7 @@
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
-        <div class = "card">
+        <div class = "card category-card" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="300">
           <div class = "card-head">
             <div class = "cardhead-content">
                 <span class = "category-head">
@@ -42,7 +42,7 @@
                                                   "Hex"
                                                 )
                     >
-                    <tr class = "table-success">
+                    <tr class = "table-light">
                       <td>
                         <div class = "product-name">
                           <h5>#variables.allProducts.fldProductName#</h5>
@@ -210,9 +210,9 @@
               </div>
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productAddBtn">Add Product</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productEditBtn">Edit Product</button>
+                  <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productAddBtn">Add </button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "productEditBtn">Update</button>
                 </div>
               </div>                       
             </form>
@@ -232,15 +232,14 @@
             Do you want to delete this product ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id = "productDeleteBtn">Delete product</button>
+            <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary delete-items" id = "productDeleteBtn">Delete</button>
           </div>      
         </div>
       </div>
     </div>
 
-    <script src = "../../assets/js/bootstrap.bundle.js"></script>
-    <script src = "../../assets/js/jquery-3.7.1.min.js"></script>
+    <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/adminProduct.js"></script>
   </body>
 </html>

@@ -14,7 +14,7 @@
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
-        <div class = "card">
+        <div class = "card category-card" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="300">
           <div class = "card-head">
             <div class = "cardhead-content">
                 <span class = "category-head">
@@ -41,7 +41,7 @@
                                             "Hex"
                                           )
                     >
-                    <tr class = "table-danger">
+                    <tr class = "table-light">
                       <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
                       <td>
                         <button type = "button" 
@@ -72,7 +72,7 @@
                                 onclick = 
                                 "window.location.href = 'adminSubcategory.cfm?subCategID=#encryptedId#&categId=#url.categId#'"
                         >       
-                          PRODUCTS
+                          VIEW
                         </button>             
                       </td>
                     </tr>   
@@ -135,9 +135,9 @@
 
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryAddButton">Add SubCategory</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryEditButton">Edit SubCategory</button>
+                  <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryAddButton">Add </button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "subCategoryEditButton">Update</button>
                 </div>
               </div>                         
             </form>
@@ -157,15 +157,15 @@
             Do you want to delete this sub category ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id = "subCategoryDeleteBtn">Delete Category</button>
+            <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary delete-items" id = "subCategoryDeleteBtn">Delete</button>
           </div>      
         </div>
       </div>
     </div>
 
-    <script src = "../../assets/js/bootstrap.bundle.js"></script>
-    <script src = "../../assets/js/jquery-3.7.1.min.js"></script>
+
+    <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/admin.js"></script>
   </body>
 </html>

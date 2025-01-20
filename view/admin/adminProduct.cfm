@@ -47,10 +47,7 @@
         </div>
     </section>
 
-
-
-    <script src = "../../assets/js/bootstrap.bundle.js"></script>
-    <script src = "../../assets/js/jquery-3.7.1.min.js"></script>
+    <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/adminProduct.js"></script>
   </body>
 </html>
