@@ -12,7 +12,6 @@
                                                                         )
     > 
 </cfif>
-
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
@@ -34,7 +33,7 @@
           <div class = "card-body">
             <table class="table">
               <tbody>
-                <cfif structKeyExists(variables, 'allProducts')>
+                <cfif structKeyExists(variables, 'allProducts') AND isQuery(variables.allProducts)>
                   <cfoutput query = "variables.allProducts">
                     <cfset encryptedId = encrypt(
                                                   variables.allProducts.fldProduct_ID,
@@ -90,6 +89,8 @@
                       </td>
                     </tr>  
                   </cfoutput> 
+                <cfelse>
+                    <cfdump var = "#variables.allProducts#">
                 </cfif>
               </tbody>
             </table>           
@@ -107,7 +108,12 @@
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "productAddForm">
-              <div class = "row mb-3">
+              <div class = "row mb-3 ">
+                <div class = "error">
+
+                </div>
+              </div> 
+              <div class = "row mb-2">
                 <div class = "col">
                   <cfset categoryValues = application.cateContObj.getCategory() >
                   <lablel for = "categorySelect" class = "form-label">Category Name </label>
@@ -208,13 +214,7 @@
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "productAddBtn">Add Product</button>
                   <button type="button" class="btn btn-primary" name = "categSubmit" id = "productEditBtn">Edit Product</button>
                 </div>
-              </div>  
-              <div class = "row mb-3 ">
-                <div class = "error">
-
-                </div>
-              </div>  
-                      
+              </div>                       
             </form>
           </div>       
         </div>

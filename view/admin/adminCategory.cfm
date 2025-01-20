@@ -32,7 +32,7 @@
           <div class = "card-body">
             <table class="table">
               <tbody>
-                <cfif structKeyExists(variables, "getAllSubCategory")>
+                <cfif structKeyExists(variables, "getAllSubCategory")  AND isQuery(variables.getAllSubCategory)>
                   <cfoutput query = "variables.getAllSubCategory">
                     <cfset encryptedId = encrypt(
                                             variables.getAllSubCategory.fldSubCategory_ID,
@@ -77,9 +77,7 @@
                       </td>
                     </tr>   
                   </cfoutput>                 
-
                 </cfif>
-
               </tbody>
             </table>           
           </div>

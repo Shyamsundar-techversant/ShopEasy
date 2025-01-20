@@ -18,7 +18,7 @@ $(document).ready(function () {
     // Error function 
     function addError(error) {
         let errorList = $('.error');
-        errorList.innerHTML = "";
+        errorList.html("") ;
         error.forEach((error) => {
             let li = document.createElement('li');
             li.textContent = error;

@@ -262,7 +262,7 @@
     <!---  GET IMAGES    --->
     <cffunction name = "getProductImages" access = "public" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
-        <cfargument name = "defaultImg" type = "integer" required = "false" >
+        <cfargument name = "defaultImg" type = "integer" required = "false" >   
         <cftry>
             <cfquery name = "local.qryGetProductImages" datasource = "shoppingcart">
                 SELECT 
