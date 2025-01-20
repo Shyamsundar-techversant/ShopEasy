@@ -206,8 +206,6 @@
     <!---   GET PRODUCT IMAGES  --->
     <cffunction  name = "getDefaultProductImage" access = "public" returntype = "any">
         <cfargument  name = "productId" type = "integer" required = "true">
-        <cfset arguments['defaultImg'] = 1>
-
         <cfset local.defaultProductImg = application.productModObj.getProductImages(
                                                                                         argumentCollection = arguments
                                                                                     )   
