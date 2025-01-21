@@ -1,6 +1,5 @@
 
 <cfset variables.getCategory = application.cateContObj.getCategory()>
-
 <!---  
 <cfset variables.categoryList = valueList(variables.getCategory.fldCategory_ID)>
 <cfset a = 67>

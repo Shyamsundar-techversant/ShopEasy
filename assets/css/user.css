@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+15&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jersey+15&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style-type: none;
+    font-family: "Montserrat", serif ;
+}
+body{
+    height: 100vh !important;
+    background: #ffeded !important
+}
+button {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+section{
+    width:100%;
+}
+/* Header */
+/* .header-section{
+    background: #ffe8e8;
+} */
+.container {
+    max-width:1300px !important;
+    margin-left:auto !important;
+    margin-right: auto !important;
+    padding: 10px !important;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.brand-name {
+    font-family: "Jersey 15", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px;
+    color: #db4444;
+    flex:1;
+}
+
+.user-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex:1;
+}
+
+.btn {
+    font-size: 16px !important;
+    border: none;
+    background: none;
+}
+
+.log-btn:hover,
+.reg-btn:hover {
+    background: #db4444;
+    color: #fff !important;
+}
+.prdouct-search-form{
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    border:1px solid #db4444;
+    border-radius:16px;
+    padding:3px;
+    background: #fff !important;
+}
+/* .category-navigation-section{
+    background: #ffe8e8 !important;
+} */
+.search-icon{
+    padding:3px;
+}
+.search-icon i{
+    color:#db4444;
+}
+.search-text{
+    padding:3px;
+}
+#serach-product{
+    border:none;
+    padding:3px 5px;
+}
+#serach-product:focus{
+    border: 1px solid white !important;
+    box-shadow:none !important;
+    outline : none !important;
+}
+
+/* Category listing */
+.category-navigation{
+    background: #db4444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.category-list-btn{
+    font-size:16px !important;
+    font-weight: 500 !important;
+}
+.dropdown-menu{
+    display: none !important;
+}
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+.category-list-btn{
+    background: #db4444 !important;
+    color:#fff !important;
+}
+
+.subcategory-link:hover{
+    background: #db4444 !important;
+    color:#ffff !important;
+}
+.subcategory-link:focus .dropdown-menu li{
+    background: #db4444 !important;
+}
+/* .banner-section{
+    background : #ffe8e8;
+} */
+.banner-img{
+    max-width:100%;
+}

@@ -64,9 +64,14 @@
             <cfreturn local.errors>
         <cfelse>
             <cfif structKeyExists(arguments, "userName")>
-                <cfset local.logResult = application.userModObj.userLogIn(
+                <cfset local.userLogInResult = application.userModObj.userLogIn(
                                                                             argumentCollection = arguments
                                                                         )
+                >
+            <cfelse>
+                <cfset local.userRegisterResult = application.userModObj.userRegister(
+                                                                                        argumentCollection = arguments
+                                                                                    )
                 >
             </cfif>
         </cfif>      

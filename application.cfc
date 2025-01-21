@@ -16,6 +16,7 @@
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>
             <cfset onApplicationStart()>
         </cfif>
+        <!---
         <cfset local.pages = ["signup.cfm","log.cfm"] >
         <cfset local.restrictedPages = [    "adminDashboard.cfm","adminCategory.cfm",
                                             "adminSubCategory.cfm","adminProduct.cfm"
@@ -30,6 +31,40 @@
             AND arrayFindNoCase(local.restrictedPages, listLast(CGI.SCRIPT_NAME,'/'))
         >
             <cflocation url = "../logIn.cfm" addToken = "false">
-        </cfif> 
+        </cfif> --->
+        <cfset local.adminPages = [
+                                    "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm",
+                                    "adminProduct.cfm"
+                                  ]
+        >
+        <cfset local.userPages = ["userHome.cfm", "userProfile.cfm", "userOrders.cfm"]>
+        <cfset local.authenticationPages = ["logIn.cfm","signup.cfm"]>
+
+
+        <cfif NOT structKeyExists(session, "roleId") 
+            AND (NOT structKeyExists(session, "adminId") 
+            AND NOT structKeyExists(session, "userId"))
+            AND NOT arrayFindNoCase(local.authenticationPages,  listLast(CGI.SCRIPT_NAME, '/'))
+        >
+            <cflocation url = "../logIn.cfm" addToken = "false">
+        <cfelseif structKeyExists(session, "roleId") 
+            AND session.roleId NEQ 1 
+            AND arrayFindNoCase(local.adminPages, listLast(CGI.SCRIPT_NAME, '/'))
+        >
+            <cflocation url = "../logIn.cfm" addToken = "false">
+
+        <cfelseif 
+                structKeyExists(session, "roleId")
+                AND session.roleId NEQ 0 
+                AND session.roleId NEQ 1
+                AND arrayFindNoCase(local.userPages, listLast(CGI.SCRIPT_NAME, '/'))
+        >
+            <cflocation url = "../logIn.cfm" addToken = "false">
+        </cfif>
     </cffunction>
 </cfcomponent>
+
+
+
+
+

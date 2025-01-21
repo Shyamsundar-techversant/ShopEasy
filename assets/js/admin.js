@@ -64,6 +64,7 @@ $(document).ready(function () {
         $('#categoryEditButton').show();
 
         categoryId = $(this).data('id');
+        console.log(categoryId);
         let formData = new FormData();
         formData.append('categoryId', categoryId);
         $.ajax({
