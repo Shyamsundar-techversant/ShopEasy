@@ -335,12 +335,25 @@
                         <cfset local.newDafaultImageId = arguments.imageId + 1 >
                         <cfquery name = "local.qryChangeDefaultImage" datasource = "shoppingcart">
                             UPDATE 
-                                tblProductImages
+                                tblProductImages AS targetTable
+                            INNER JOIN(
+                                        SELECT fldProductImage_ID AS maxImgId
+                                        FROM
+                                            tblProductImages
+                                        WHERE
+                                            fldProductId =  <cfqueryparam 
+                                                                value = "#arguments.productId#" 
+                                                                cfsqltype = "cf_sql_integer"
+                                                            >
+                                        ORDER BY 
+                                            fldProductImage_ID DESC 
+                                        LIMIT 1                                   
+                                    ) AS subQuery 
+                            ON targetTable.fldProductImage_ID = subQuery.maxImgId
                             SET 
-                                fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                                targetTable.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                             WHERE
-                                fldProductImage_ID = <cfqueryparam value = "#local.newDafaultImageId#" cfsqltype = "cf_sql_tinyint">
-                                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                                targetTable.fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                         </cfquery>  
                         <cfreturn "Success">                    
                     <cfelse>

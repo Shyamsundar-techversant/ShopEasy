@@ -133,8 +133,8 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <cfset subCategoryValues = application.cateContObj.getSubCategory(
-                                                                             categoryId = url.categId
-                                                                            ) 
+                                                                                      categoryId = url.categId
+                                                                                    ) 
                   >
                   <lablel for = "subCategorySelect" class = "form-label">SubCategory Name</label>
                   <select class = "form-select" id = "subCategorySelect">

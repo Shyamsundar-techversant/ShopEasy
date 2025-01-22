@@ -244,4 +244,41 @@
             <cfreturn "Failed">
         </cfif>
     </cffunction>
+
+    <!--- GET RANDOM PRODUCTS   --->
+    <cffunction name = "getRandomProducts" access = "public" returntype = "query">
+        <cftry>
+            <cfquery name = "local.qryGetRandomProducts" datasource = "shoppingcart">
+                SELECT 
+                    p.fldProduct_ID AS idProduct,
+                    p.fldProductName,
+                    p.fldBrandId,
+                    sc.fldSubCategoryName,
+                    b.fldBrandName,
+                    p.fldPrice,
+                    img.fldDefaultImage,
+                    img.fldImageFileName
+                FROM
+                    tblProduct AS p
+                INNER JOIN 
+                    tblSubCategory AS sc
+                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                INNER JOIN 
+                    tblBrands AS b
+                ON b.fldBrand_ID = p.fldBrandId
+                INNER JOIN 
+                    tblProductImages AS img
+                ON img.fldProductId = p.fldProduct_ID
+                WHERE
+                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                ORDER BY RAND()
+                LIMIT 4
+            </cfquery>
+            <cfreturn local.qryGetRandomProducts>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry> 
+    </cffunction>
 </cfcomponent>
