@@ -514,12 +514,13 @@
                 ON img.fldProductId = p.fldProduct_ID
                 WHERE
                     p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 AND
                 <cfloop array = "#arguments.searchWords#" index = "local.word">
+                    <cfset local.word = trim(local.word)>
                     p.fldProductName LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
                     OR p.fldDescription LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
-                </cfloop>
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">  
+                </cfloop>                
             </cfquery>
             <cfreturn local.qrySearchProduct>
         <cfcatch type="exception">
