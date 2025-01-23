@@ -22,7 +22,7 @@
     <section class = "random-product-section">
         <div class = "container random-products-container">
             <h5 class = "product-section-head pb-2">Random Products</h5>
-            <div class = "random-products">
+            <div class = "row">
                 <cfset randomProducts = application.productContObj.getRandomProducts()>
                 <cfoutput query = "randomProducts">
                     <cfset encryptedProductId = encrypt(
@@ -32,31 +32,26 @@
                                                             "Hex"
                                                         )
                     >
-                    <div class = "product-card">
-                        <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                            <img src = "../../uploadImg/#randomProducts.fldImageFileName#" alt = "ProductImage" 
-                                class = "product-image-default"
-                            >
-                        </a>
-                        <a class = "product-names" href = "userProduct.cfm?productId=#encryptedProductId#">
-                            #randomProducts.fldProductName#
-                        </a>
-                        <a href = "userProduct.cfm?productId=#encryptedProductId#" class = "product-price">
-                            <h6>$#randomProducts.fldPrice#</h6>
-                        </a>
+                    <div class = "col-md-3" data-aos="zoom-in-down">
+                        <div class = "product-card">
+                            <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
+                                <img src = "../../uploadImg/#randomProducts.fldImageFileName#" alt = "ProductImage" 
+                                    class = "product-image-default"
+                                >
+                            </a>
+                            <a class = "product-names" href = "userProduct.cfm?productId=#encryptedProductId#">
+                                #randomProducts.fldProductName#
+                            </a>
+                            <a href = "userProduct.cfm?productId=#encryptedProductId#" class = "product-price">
+                                <h6>$#randomProducts.fldPrice#</h6>
+                            </a>
+                        </div>
                     </div>
                 </cfoutput>
             </div>
         </div>
     </section>
-    <!---  FOOTER SECTION    --->
-    <section class = "footer-section">
-        <div class = "container">
-            
-        </div>
-    </section>
 <cfinclude template = "footer.cfm">
-    </body>
-</html>
+
 
 

@@ -199,7 +199,7 @@
                                                                                 subCategoryId = arguments.subCategoryId     
                                                                             )
             >
-            <cfreturn local.productData> --->
+            <cfreturn local.productData> 
         </cfif>
     </cffunction>
 
@@ -246,39 +246,44 @@
     </cffunction>
 
     <!--- GET RANDOM PRODUCTS   --->
-    <cffunction name = "getRandomProducts" access = "public" returntype = "query">
-        <cftry>
-            <cfquery name = "local.qryGetRandomProducts" datasource = "shoppingcart">
-                SELECT 
-                    p.fldProduct_ID AS idProduct,
-                    p.fldProductName,
-                    p.fldBrandId,
-                    sc.fldSubCategoryName,
-                    b.fldBrandName,
-                    p.fldPrice,
-                    img.fldDefaultImage,
-                    img.fldImageFileName
-                FROM
-                    tblProduct AS p
-                INNER JOIN 
-                    tblSubCategory AS sc
-                ON sc.fldSubCategory_ID = p.fldSubCategoryId
-                INNER JOIN 
-                    tblBrands AS b
-                ON b.fldBrand_ID = p.fldBrandId
-                INNER JOIN 
-                    tblProductImages AS img
-                ON img.fldProductId = p.fldProduct_ID
-                WHERE
-                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                ORDER BY RAND()
-                LIMIT 4
-            </cfquery>
-            <cfreturn local.qryGetRandomProducts>
-        <cfcatch type="exception">
-            <cfdump var = "#cfcatch#" >
-        </cfcatch>
-        </cftry> 
+    <cffunction name = "getRandomProducts" access = "public" returntype = "any">
+        <cfset local.randomProducts = application.productModObj.getRandomProducts()>
+        <cfreturn local.randomProducts >
+    </cffunction>
+
+    <!---  GET PRODUCT WITH DEFAULT IMAGE    --->
+    <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
+        <cfargument name = 'subCategoryID' type = "string" required = "false">
+        <cfargument name = "productId" type = "string" requird = "false">
+        <cfif structKeyExists(arguments,'subCategoryID')>
+            <cfset arguments.subCategoryID = decryptionFunction(arguments.subCategoryID)>
+            <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
+                                                                                            subCategoryID = arguments.subCategoryID
+                                                                                        )       
+            >
+        <cfelseif structKeyExists(arguments,"productId")>
+            <cfset arguments.productId = decryptionFunction(arguments.productId)>
+            <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
+                                                                                            productId = arguments.productId
+                                                                                        )       
+            >           
+        </cfif>
+        <cfreturn local.getProduct>
+    </cffunction>
+
+    <!--- PRODUCT SEARCH    --->
+    <cffunction name = "getSearchedProduct" access = "public">
+        <cfargument name = "searchText" type = "string" required = "true">
+        <cfset local.searchWords = listToArray(arguments.searchText," ")>
+        <cfset local.searchResult = application.productModObj.getSearchedProduct(
+                                                                                    searchWords = local.searchWords
+                                                                                )
+        >
+        <cfif local.searchResult.recordCount GT 0>
+            <cfset session.searchResult = local.searchResult>
+            <cflocation url = "searchProductResult.cfm" addToken = "false">
+        <cfelse>
+            <cfreturn "No product Exist">
+        </cfif>
     </cffunction>
 </cfcomponent>

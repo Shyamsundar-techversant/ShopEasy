@@ -1,4 +1,17 @@
 <cfset variables.getCategory = application.cateContObj.getCategory()>
+<cfif structKeyExists(form, 'searchProduct')>
+    <cfset variables.searchResult = application.productContObj.getSearchedProduct(
+                                                                                    searchText = form.searchProduct
+                                                                                 )
+    >
+    <cfif structKeyExists(variables, 'searchResult')>
+        <cfoutput>
+            <div class="alert alert-danger alertInfo" role="alert">
+                #variables.searchResult#
+            </div>
+        </cfoutput>
+    </cfif>
+</cfif>
 
 <!DOCTYPE html>
 <html lang = "en">
@@ -23,7 +36,7 @@
                         <div class = "brand-name">ShopEasy</div>
                         <div class = "user-content">
                             <div class = "search-container">
-                                <form class = "prdouct-search-form">
+                                <form class = "prdouct-search-form" method = "post">
                                     <div class = "search-icon">
                                         <label for = "serach-product">
                                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -51,16 +64,47 @@
         <section class = "app-section category-navigation-section">
             <div class = "container">
                 <nav class = "category-navigation">
+                    <div class = "home-page">
+                        <button class = "category-list-btn" onclick = "window.location.href ='userHome.cfm'">
+                            <i class="fa-solid fa-house"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn category-list-btn dropdown-toggle" type="button" id="dropdownMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
+                            <cfif structKeyExists(variables, "getCategory")>
+                                <cfoutput query = "variables.getCategory">
+                                    <cfset encryptedCategoryId_1 = encrypt(
+                                                                            variables.getCategory.fldCategory_ID,
+                                                                            application.encryptionKey,
+                                                                            "AES",
+                                                                            "Hex"
+                                                                        )
+                                    >
+                                    <li>
+                                        <a class="dropdown-item subcategory-link" 
+                                            href="userCategory.cfm?categoryID=#encryptedCategoryId_1#"
+                                        >
+                                            #variables.getCategory.fldCategoryName#
+                                        </a>                                   
+                                    </li>                               
+                                </cfoutput>
+                            </cfif>
+                        </ul>
+                    </div>
                     <cfset count = 1>
-                    <cfoutput query = "variables.getCategory">
-                        <div class="dropdown">
-                            <button class="btn category-list-btn dropdown-toggle" type="button" id="dropdownMenuButton#count#"
-                                    data-bs-toggle="dropdown" aria-expanded="false" 
-                                    data-id = "#variables.getCategory.fldCategory_ID#"
-                            >
-                                #variables.getCategory.fldCategoryName#
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <cfif structKeyExists(variables, "getCategory")>
+                        <cfoutput query = "variables.getCategory">
+                            <div class="dropdown">
+                                <button class="btn category-list-btn dropdown-toggle" type="button" 
+                                        id="dropdownMenuButton#count#"
+                                        data-bs-toggle="dropdown" aria-expanded="false" 
+                                        data-id = "#variables.getCategory.fldCategory_ID#"
+                                >
+                                    #variables.getCategory.fldCategoryName#
+                                </button>
                                 <cfset encryptedCategoryId = encrypt(
                                                                         variables.getCategory.fldCategory_ID,
                                                                         application.encryptionKey,
@@ -68,18 +112,31 @@
                                                                         "Hex"
                                                                     )
                                 >
-                                <cfset variables.getSubCategory = application.cateContObj.getSubCategory(categoryId = encryptedCategoryId )>
-                                <cfloop query = "variables.getSubCategory">
-                                    <li>
-                                        <a class="dropdown-item subcategory-link" href="userCategory.cfm?categoryID=#encryptedCategoryId#">
-                                            #variables.getSubCategory.fldSubCategoryName#
-                                        </a>
-                                    </li>
-                                </cfloop>
-                            </ul>
-                        </div> 
-                        <cfset count  = count + 1 >
-                    </cfoutput>                      
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <cfset variables.getSubCategory = application.cateContObj.getSubCategory(categoryId = encryptedCategoryId )>
+                                    <cfif structKeyExists(variables,"getSubCategory")>
+                                        <cfloop query = "variables.getSubCategory">
+                                            <cfset encryptedSubCategoryId = encrypt(
+                                                                                    variables.getSubCategory.fldSubCategory_ID,
+                                                                                    application.encryptionKey,
+                                                                                    "AES",
+                                                                                    "Hex"
+                                                                                )
+                                            >
+                                            <li>
+                                                <a class="dropdown-item subcategory-link" 
+                                                    href="userSubCategory.cfm?subCategoryID=#encryptedSubCategoryId#"
+                                                >
+                                                    #variables.getSubCategory.fldSubCategoryName#
+                                                </a>
+                                            </li>
+                                        </cfloop>
+                                    </cfif>
+                                </ul>
+                            </div> 
+                            <cfset count  = count + 1 >
+                        </cfoutput>   
+                    </cfif>                   
                 </nav>
             </div>
         </section>

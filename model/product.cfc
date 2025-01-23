@@ -397,4 +397,134 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
+        <!--- GET RANDOM PRODUCTS   --->
+    <cffunction name = "getRandomProducts" access = "public" returntype = "any">
+        <cftry>
+            <cfquery name = "local.qryGetRandomProducts" datasource = "shoppingcart">
+                SELECT 
+                    p.fldProduct_ID AS idProduct,
+                    p.fldProductName,
+                    p.fldBrandId,
+                    sc.fldSubCategoryName,
+                    b.fldBrandName,
+                    p.fldPrice,
+                    img.fldDefaultImage,
+                    img.fldImageFileName
+                FROM
+                    tblProduct AS p
+                INNER JOIN 
+                    tblSubCategory AS sc
+                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                INNER JOIN 
+                    tblBrands AS b
+                ON b.fldBrand_ID = p.fldBrandId
+                INNER JOIN 
+                    tblProductImages AS img
+                ON img.fldProductId = p.fldProduct_ID
+                WHERE
+                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                ORDER BY RAND()
+                LIMIT 4
+            </cfquery>
+            <cfif local.qryGetRandomProducts.recordCount GT 0 >
+                <cfreturn local.qryGetRandomProducts>
+            <cfelse>
+                <cfreturn "No product exist">
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry> 
+    </cffunction>
+
+        <!---  GET PRODUCT WITH DEFAULT IMAGE    --->
+    <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
+        <cfargument name = 'subCategoryID' type = "integer" required = "false">
+        <cfargument name = "productId" type = "integer" required = "false">
+        <cftry>
+            <cfquery name = "local.qryGetProductWithDefaultImage" datasource = "shoppingcart">
+                SELECT 
+                    p.fldProduct_ID AS idProduct,
+                    p.fldProductName,
+                    p.fldDescription,
+                    p.fldBrandId,
+                    sc.fldSubCategoryName,
+                    b.fldBrandName,
+                    p.fldPrice,
+                    img.fldDefaultImage,
+                    img.fldImageFileName
+                FROM
+                    tblProduct AS p
+                INNER JOIN 
+                    tblSubCategory AS sc
+                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                INNER JOIN 
+                    tblBrands AS b
+                ON b.fldBrand_ID = p.fldBrandId
+                INNER JOIN 
+                    tblProductImages AS img
+                ON img.fldProductId = p.fldProduct_ID
+                WHERE
+                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                <cfif structKeyExists(arguments, 'subCategoryID')>
+                    AND p.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">
+                <cfelseif structKeyExists(arguments, 'productId')>
+                    AND p.fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                </cfif>
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">               
+            </cfquery>
+            <cfif local.qryGetProductWithDefaultImage.recordCount GT 0>
+                <cfreturn local.qryGetProductWithDefaultImage>
+            <cfelse>
+                <cfreturn "No products exist">
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry>
+    </cffunction>
+
+    <!--- PRODUCT SEARCH    --->
+    <cffunction name = "getSearchedProduct" access = "public" returntype = "any">
+        <cfargument name = "searchWords" type = "array" required = "true">
+        <cftry>
+            <cfquery name = "local.qrySearchProduct" datasource = "shoppingcart">
+                SELECT 
+                    p.fldProduct_ID AS idProduct,
+                    p.fldProductName,
+                    p.fldDescription,
+                    p.fldBrandId,
+                    img.fldDefaultImage,
+                    sc.fldSubCategoryName,
+                    b.fldBrandName,
+                    p.fldPrice,
+                    img.fldImageFileName
+                FROM
+                    tblProduct AS p
+                INNER JOIN 
+                    tblSubCategory AS sc
+                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                INNER JOIN 
+                    tblBrands AS b
+                ON b.fldBrand_ID = p.fldBrandId
+                INNER JOIN 
+                    tblProductImages AS img
+                ON img.fldProductId = p.fldProduct_ID
+                WHERE
+                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND
+                <cfloop array = "#arguments.searchWords#" index = "local.word">
+                    p.fldProductName LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
+                    OR p.fldDescription LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
+                </cfloop>
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">  
+            </cfquery>
+            <cfreturn local.qrySearchProduct>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>
