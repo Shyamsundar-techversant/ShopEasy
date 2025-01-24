@@ -294,7 +294,6 @@ section{
 /* User category,subcategory page */
 
 .subcategory-section{
-    padding-top:50px;
     padding-bottom:100px;
 }
 
@@ -369,4 +368,28 @@ section{
 .alertInfo{
     padding-bottom:0px !important;
     margin-bottom: 0px !important;
+}
+
+.filter{
+    display: flex;
+    gap:10px;
+}
+.filter-btn{
+    background: #db4444 !important;
+    padding:8px 10px !important;
+    border-radius:16px !important;
+    color:#fff !important;
+    font-size: 16px !important;
+    font-weight: 500 !important; 
+}
+.modal-close-btn{
+    background:#ededec !important;
+    color:black !important;
+}
+.form-control{
+    border:1px solid #dadada !important;
+}
+.form-control:focus{
+    outline: none !important;
+    box-shadow: none !important;
 }

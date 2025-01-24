@@ -2,8 +2,15 @@
 <cfinclude  template="header.cfm">
     <section class = "subcategory-section">
         <div class = "container">
+            <cfif structKeyExists(session,'searchText') AND structKeyExists(session, "searchResult")
+               AND NOT structKeyExists(variables, 'searchResult')
+            >
+                <cfoutput><h6>Showing Result for '#session.searchText#'</h6></cfoutput>
+            </cfif>
             <div class = "row">              
-                <cfif structKeyExists(session, "searchResult") >
+                <cfif structKeyExists(session, "searchResult") AND isQuery(session.searchResult)
+                    AND NOT structKeyExists(variables, 'searchResult')
+                >
                     <cfoutput query = "session.searchResult">
                         <cfif session.searchResult.fldDefaultImage EQ 1>
                             <cfset encryptedProductId = encrypt(

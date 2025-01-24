@@ -255,12 +255,21 @@
     <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "string" required = "false">
         <cfargument name = "productId" type = "string" requird = "false">
+        <cfargument name = "productOrder" type = "integer" required = "false">
         <cfif structKeyExists(arguments,'subCategoryID')>
             <cfset arguments.subCategoryID = decryptionFunction(arguments.subCategoryID)>
-            <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
-                                                                                            subCategoryID = arguments.subCategoryID
-                                                                                        )       
-            >
+            <cfif NOT structKeyExists(arguments, 'productOrder')>
+                <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
+                                                                                                subCategoryID = arguments.subCategoryID
+                                                                                            )       
+                >
+            <cfelse>
+                <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
+                                                                                                subCategoryID = arguments.subCategoryID,
+                                                                                                productOrder = arguments.productOrder
+                                                                                            )       
+                >
+            </cfif>
         <cfelseif structKeyExists(arguments,"productId")>
             <cfset arguments.productId = decryptionFunction(arguments.productId)>
             <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
@@ -279,11 +288,32 @@
                                                                                     searchWords = local.searchWords
                                                                                 )
         >
+        <cfset session.searchText = arguments.searchText>
         <cfif local.searchResult.recordCount GT 0>
             <cfset session.searchResult = local.searchResult>
             <cflocation url = "searchProductResult.cfm" addToken = "false">
         <cfelse>
             <cfreturn "No product Exist">
         </cfif>
+    </cffunction>
+
+    <!---   FILTER PRODUCTS  --->
+    <cffunction name = "getFilteredProduct" access = "public" returntype = "any">
+        <cfargument name = 'subCategoryID' type = "string" required = "true">
+        <cfargument name = "minPrice" type = "integer" required = "true">
+        <cfargument name = "maxPrice" type = "integer" required = "true">
+        <cfset arguments.subCategoryID = decryptionFunction(arguments.subCategoryID)>
+        <cfif arguments.maxPrice LT arguments.minPrice>
+            <cfreturn "Max price must be greater than Min price">
+        <cfelseif arguments.maxPrice LT 0 OR arguments.minPrice LT 0>
+            <cfreturn "Max and Min price must not equal to zero">
+        </cfif>
+        <cfset local.productFilterResult = application.productModObj.getFilteredProduct(
+                                                                                        subCategoryID = arguments.subCategoryID,
+                                                                                        minPrice = arguments.minPrice,
+                                                                                        maxPrice = arguments.maxPrice
+                                                                                    )      
+        >
+        <cfreturn local.productFilterResult>
     </cffunction>
 </cfcomponent>

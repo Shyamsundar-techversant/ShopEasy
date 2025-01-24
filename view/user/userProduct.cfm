@@ -9,7 +9,7 @@
 
     <section class = "product-section">
         <div class = "container">
-            <cfif structKeyExists(variables, "productData")>
+            <cfif structKeyExists(variables, "productData") AND NOT structKeyExists(variables, 'searchResult') AND isQuery(variables.productData)>
                 <cfoutput query = "variables.productData">
                     <div class = "row justify-content-center align-items-center">
                         <div class = "col d-flex justify-content-center align-items-center">
@@ -24,7 +24,9 @@
                                     </div>                                       
                                     <h5 class = "product-information">#variables.productData.fldDescription# </h5>
                                     <h5 class = "product-information product-price-info">$#variables.productData.fldPrice#</h5>
-                                    <button class = "add-to-cart">Add to Cart</button>
+                                    <button class = "add-to-cart" onclick = "window.location.href='userCart.cfm?productId=#url.productId#'">
+                                        Add to Cart
+                                    </button>
                                     <button class = "order-product">Order Now</button>
                                 </div>
                             </div>

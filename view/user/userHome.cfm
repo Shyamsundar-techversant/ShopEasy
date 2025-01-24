@@ -1,4 +1,4 @@
-<cfset variables.getCategory = application.cateContObj.getCategory()>
+<!--- <cfset variables.getCategory = application.cateContObj.getCategory()> --->
 
 <cfinclude template = "header.cfm">
     <!---   BANNER-SECTION   --->

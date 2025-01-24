@@ -443,6 +443,7 @@
     <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "integer" required = "false">
         <cfargument name = "productId" type = "integer" required = "false">
+        <cfargument name = "productOrder" type = "integer" required = "false">
         <cftry>
             <cfquery name = "local.qryGetProductWithDefaultImage" datasource = "shoppingcart">
                 SELECT 
@@ -468,12 +469,17 @@
                 ON img.fldProductId = p.fldProduct_ID
                 WHERE
                     p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 <cfif structKeyExists(arguments, 'subCategoryID')>
                     AND p.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">
+                    <cfif structKeyExists(arguments, 'productOrder') AND arguments.productOrder EQ 1>
+                        ORDER BY p.fldPrice DESC
+                    <cfelseif structKeyExists(arguments, 'productOrder') AND arguments.productOrder EQ 0>
+                        ORDER BY p.fldPrice ASC
+                    </cfif>
                 <cfelseif structKeyExists(arguments, 'productId')>
                     AND p.fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                </cfif>
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">               
+                </cfif>               
             </cfquery>
             <cfif local.qryGetProductWithDefaultImage.recordCount GT 0>
                 <cfreturn local.qryGetProductWithDefaultImage>
@@ -525,6 +531,53 @@
             <cfreturn local.qrySearchProduct>
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+
+    <!---   FILTER PRODUCTS  --->
+    <cffunction name = "getFilteredProduct" access = "public" returntype = "any">
+        <cfargument name = 'subCategoryID' type = "integer" required = "true">
+        <cfargument name = "minPrice" type = "integer" required = "true">
+        <cfargument name = "maxPrice" type = "integer" required = "true">
+        <cftry>
+            <cfquery name = "local.qryGetFilteredProduct" datasource = "shoppingcart">
+                SELECT 
+                    p.fldProduct_ID AS idProduct,
+                    p.fldProductName,
+                    p.fldDescription,
+                    p.fldBrandId,
+                    sc.fldSubCategoryName,
+                    b.fldBrandName,
+                    p.fldPrice,
+                    img.fldDefaultImage,
+                    img.fldImageFileName
+                FROM
+                    tblProduct AS p
+                INNER JOIN 
+                    tblSubCategory AS sc
+                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                INNER JOIN 
+                    tblBrands AS b
+                ON b.fldBrand_ID = p.fldBrandId
+                INNER JOIN 
+                    tblProductImages AS img
+                ON img.fldProductId = p.fldProduct_ID
+                WHERE
+                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND p.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">               
+                AND p.fldPrice BETWEEN 
+                    <cfqueryparam value = "#arguments.minPrice#" cfsqltype = "cf_sql_decimal"> 
+                    AND <cfqueryparam value = "#arguments.maxPrice#" cfsqltype = "cf_sql_decimal">
+            </cfquery>
+            <cfif local.qryGetFilteredProduct.recordCount GT 0>
+                <cfreturn local.qryGetFilteredProduct>
+            <cfelse>
+                <cfreturn "No products exist">
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
         </cfcatch>
         </cftry>
     </cffunction>
