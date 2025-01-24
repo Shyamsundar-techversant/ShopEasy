@@ -37,14 +37,16 @@
                                     "adminProduct.cfm"
                                   ]
         >
-        <cfset local.userPages = ["userHome.cfm", "userProfile.cfm", "userOrders.cfm"]>
+        <cfset local.userPages = ['useCart.cfm','userOrder.cfm','userProfile.cfm']>
         <cfset local.authenticationPages = ["logIn.cfm","signup.cfm"]>
 
 
         <cfif NOT structKeyExists(session, "roleId") 
-            AND (NOT structKeyExists(session, "adminId") 
-            AND NOT structKeyExists(session, "userId"))
-            AND NOT arrayFindNoCase(local.authenticationPages,  listLast(CGI.SCRIPT_NAME, '/'))
+            AND NOT structKeyExists(session, "adminId") 
+            AND (
+                    arrayFindNoCase(local.adminPages, listLast(CGI.SCRIPT_NAME, '/'))
+                    OR arrayFindNoCase(local.userPages, listLast(CGI.SCRIPT_NAME, '/'))
+                )
         >
             <cflocation url = "../logIn.cfm" addToken = "false">
         <cfelseif structKeyExists(session, "roleId") 
@@ -55,8 +57,6 @@
 
         <cfelseif 
                 structKeyExists(session, "roleId")
-                AND session.roleId NEQ 0 
-                AND session.roleId NEQ 1
                 AND arrayFindNoCase(local.userPages, listLast(CGI.SCRIPT_NAME, '/'))
         >
             <cflocation url = "../logIn.cfm" addToken = "false">
