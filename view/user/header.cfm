@@ -12,7 +12,9 @@
         </cfoutput>
     </cfif>
 </cfif>
-
+<cfif structKeyExists(session, 'userId')>
+    <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
+</cfif>
 <!DOCTYPE html>
 <html lang = "en">
     <head>
@@ -50,7 +52,15 @@
                                 </form>
                             </div>
                             <div class = "user-profile">
-                                sdfhsdh
+                                <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <cfif structKeyExists(variables, 'totalCartProducts')>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </cfif>
+                                </button>
                             </div>
                             <div class = "sign-buttons">
                                 <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>

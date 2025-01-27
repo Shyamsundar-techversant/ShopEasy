@@ -11,54 +11,33 @@
         <cfset application.productContObj = createObject("component","controller.product")>
         <cfset application.productModObj = createObject("component","model.product")>
         <cfset application.imageSavePath = "C:\ColdFusion2021\cfusion\wwwroot\ShopEazy\uploadImg">
+        <cfset application.cartContObj = createObject("component","controller.cart")>
+        <cfset application.cartModObj = createObject("component","model.cart")>
+
     </cffunction>
     <cffunction  name = "onRequestStart" returntype = "void">
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>
             <cfset onApplicationStart()>
         </cfif>
-        <!---
-        <cfset local.pages = ["signup.cfm","log.cfm"] >
-        <cfset local.restrictedPages = [    "adminDashboard.cfm","adminCategory.cfm",
-                                            "adminSubCategory.cfm","adminProduct.cfm"
-                                        ]
-        >     
-        <cfif NOT structKeyExists(session,"roleId") 
-                AND arrayFindNoCase(local.restrictedPages, listLast(CGI.SCRIPT_NAME,'/'))
-        >
-            <cflocation  url="../logIn.cfm" addToken = "false">
-        <cfelseif structKeyExists(session, "roleId") 
-            AND session.roleId NEQ 1
-            AND arrayFindNoCase(local.restrictedPages, listLast(CGI.SCRIPT_NAME,'/'))
-        >
-            <cflocation url = "../logIn.cfm" addToken = "false">
-        </cfif> --->
         <cfset local.adminPages = [
                                     "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm",
                                     "adminProduct.cfm"
                                   ]
         >
-        <cfset local.userPages = ['useCart.cfm','userOrder.cfm','userProfile.cfm']>
+        <cfset local.userPages = ['userCart.cfm','userOrder.cfm','userProfile.cfm']>
         <cfset local.authenticationPages = ["logIn.cfm","signup.cfm"]>
+        <cfset local.currentPage = listLast(CGI.SCRIPT_NAME, '/')>
+        <cfset local.hasRole = structKeyExists(session, 'roleId')>
+        <cfset local.isAdmin = structKeyExists(session, 'adminId')>
+        <cfset local.productId = structKeyExists(url,"productId") ? url.productId : "">
 
-
-        <cfif NOT structKeyExists(session, "roleId") 
-            AND NOT structKeyExists(session, "adminId") 
-            AND (
-                    arrayFindNoCase(local.adminPages, listLast(CGI.SCRIPT_NAME, '/'))
-                    OR arrayFindNoCase(local.userPages, listLast(CGI.SCRIPT_NAME, '/'))
-                )
+        <cfif (!local.hasRole AND !local.isAdmin AND (arrayFindNoCase(local.adminPages, local.currentPage))) 
+                OR (local.hasRole AND session.roleId NEQ 1 AND arrayFindNoCase(local.adminPages, local.currentPage))
+                OR (!local.hasRole AND arrayFindNoCase(local.userPages, local.currentPage))
         >
-            <cflocation url = "../logIn.cfm" addToken = "false">
-        <cfelseif structKeyExists(session, "roleId") 
-            AND session.roleId NEQ 1 
-            AND arrayFindNoCase(local.adminPages, listLast(CGI.SCRIPT_NAME, '/'))
-        >
-            <cflocation url = "../logIn.cfm" addToken = "false">
-
-        <cfelseif 
-                structKeyExists(session, "roleId")
-                AND arrayFindNoCase(local.userPages, listLast(CGI.SCRIPT_NAME, '/'))
-        >
+            <cfif len(local.productId)>
+                <cfset session.productId = local.productId>
+            </cfif>
             <cflocation url = "../logIn.cfm" addToken = "false">
         </cfif>
     </cffunction>

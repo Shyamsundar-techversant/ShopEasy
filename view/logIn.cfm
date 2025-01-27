@@ -1,7 +1,9 @@
+<cfdump  var="#session#">
 <cfif structKeyExists(url, "logOut")>
   <cfset structDelete(session, "roleId","true")>
   <cfset structDelete(session, "adminId","true")>
   <cfset structDelete(session, "userId","true")>
+  <cfset structDelete(session, "productId","true")>
 </cfif>
 <cfif structKeyExists(form, "userLogIn")>
   <cfset variables.logResult = application.userContObj.validateUserForm(
