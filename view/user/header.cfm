@@ -1,17 +1,4 @@
 <cfset variables.getCategory = application.cateContObj.getCategory()>
-<cfif structKeyExists(form, 'searchProduct')>
-    <cfset variables.searchResult = application.productContObj.getSearchedProduct(
-                                                                                    searchText = form.searchProduct
-                                                                                 )
-    >
-    <cfif structKeyExists(variables, 'searchResult')>
-        <cfoutput>
-            <div class="alert alert-danger alertInfo" role="alert">
-                #variables.searchResult#
-            </div>
-        </cfoutput>
-    </cfif>
-</cfif>
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
@@ -38,7 +25,7 @@
                         <div class = "brand-name">ShopEasy</div>
                         <div class = "user-content">
                             <div class = "search-container">
-                                <form class = "prdouct-search-form" method = "post">
+                                <form class = "prdouct-search-form" method = "post" action = 'searchProductResult.cfm'>
                                     <div class = "search-icon">
                                         <label for = "serach-product">
                                             <i class="fa-solid fa-magnifying-glass"></i>

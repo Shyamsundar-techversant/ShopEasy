@@ -7,17 +7,10 @@
                                         )
     >
     <cfset variables.getProductDataById = application.productContObj.getProduct(
-                                                                                    productId = decryptedProductId,
-                                                                                    subCategoryId = url.subCategID
-                                                                                )
-    >
-    <cfset variables.getProductImage = application.productContObj.getDefaultProductImage(
-                                                                                            productId = decryptedProductId 
-                                                                                        )
-    >
-
+        productId = decryptedProductId,
+        subCategoryId = url.subCategID
+    )>
 </cfif>
-
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
         <div class = "container category-container">
@@ -39,26 +32,27 @@
                                 <h6> #variables.getProductDataById[arrayLen(variables.getProductDataById)].productDescription#</h6>
                             </div>
                         </div>
-                        <!--- <div >
-                            <img src = "../../uploadImg/#variables.getProductImage.fldImageFileName#" alt = "productImg" class = "product-image">
-                        </div> --->
                         <div id = "productImageCarousel" class = "carousel slide" data-bs-ride = "carousel">
                             <div class="carousel-indicators">
                                 <cfset count = 0>
-                                <cfloop query = "variables.getProductImage">
-                                    <button type="button" data-bs-target="##productImageCarousel" data-bs-slide-to="#count#" 
-                                            <cfif variables.getProductImage.fldDefaultImage EQ 1 >class = "active" </cfif>
-                                             aria-current="true" aria-label="Slide #count#"
-                                    >
-                                    </button>
-                                    <cfset count = count +1 >
+                                <cfloop array = "#variables.getProductDataById#" index = "i" item = "image">
+                                    <cfif i LT arrayLen(variables.getProductDataById)>
+                                        <button type="button" data-bs-target="##productImageCarousel" data-bs-slide-to="#count#" 
+                                                <cfif variables.getProductDataById[i].defaultValue EQ 1 >class = "active" </cfif>
+                                                aria-current="true" aria-label="Slide #count#"
+                                        >
+                                        </button>
+                                        <cfset count = count +1 >
+                                    </cfif>
                                 </cfloop>
                             </div>
                             <div class="carousel-inner">
-                                <cfloop query = "variables.getProductImage">
-                                    <div class="carousel-item product-img-container <cfif variables.getProductImage.fldDefaultImage EQ 1 >active</cfif> ">
-                                        <img src="../../uploadImg/#variables.getProductImage.fldImageFileName#" class="d-block product-image" alt="...">
-                                    </div>
+                                <cfloop array = "#variables.getProductDataById#" index = "i" item = "image">
+                                    <cfif i LT arrayLen(variables.getProductDataById)>
+                                        <div class="carousel-item product-img-container <cfif variables.getProductDataById[i].defaultValue EQ 1 >active</cfif> ">
+                                            <img src="../../uploadImg/#variables.getProductDataById[i].imageFile#" class="d-block product-image" alt="...">
+                                        </div>
+                                    </cfif>
                                 </cfloop>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="##productImageCarousel" data-bs-slide="prev">

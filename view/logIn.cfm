@@ -1,4 +1,3 @@
-<cfdump  var="#session#">
 <cfif structKeyExists(url, "logOut")>
   <cfset structDelete(session, "roleId","true")>
   <cfset structDelete(session, "adminId","true")>

@@ -60,47 +60,46 @@
         <cfargument name = "productDescription" type = "string" required = "true">
         <cfargument name = "productPrice" type = "numeric" required = "true">
         <cfargument name = "productTax" type = "numeric" required = "true" >
-        <cfargument name = "uploadedImgPath" type = "array" required = "false">
+        <cfargument name = "productImages" type = "any" required = "false">
         <cfset local.result = "">
         <cfif NOT structKeyExists(arguments, "productId")>
             <cftry>          
                 <cfquery datasource = "shoppingcart" result ="local.qryAddProduct">
-                    INSERT INTO 
-                            tblProduct(
-                                        fldSubCategoryId,
-                                        fldProductName,
-                                        fldBrandId,
-                                        fldDescription,
-                                        fldPrice,
-                                        fldTax,
-                                        fldActive,
-                                        fldCreatedById,
-                                        fldUpdatedById,
-                                        fldUpdatedDate
-                            )
-                    VALUES(
-                            <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#arguments.productName#" cfsqltype = "cf_sql_varchar">,
-                            <cfqueryparam value = "#arguments.productBrand#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#arguments.productDescription#" cfsqltype = "cf_sql_varchar">,
-                            <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
-                            <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
-                            <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
-                        )
+                    INSERT INTO tblProduct(
+                        fldSubCategoryId,
+                        fldProductName,
+                        fldBrandId,
+                        fldDescription,
+                        fldPrice,
+                        fldTax,
+                        fldActive,
+                        fldCreatedById,
+                        fldUpdatedById,
+                        fldUpdatedDate
+                    )VALUES(
+                        <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#arguments.productName#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.productBrand#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#arguments.productDescription#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
+                        <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
+                        <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    )
                 </cfquery>
                 <cfif local.qryAddProduct.recordCount EQ 1>
                     <cfset local.imageAddResult = addImage(
-                                                            productId = local.qryAddProduct.GENERATEDKEY,
-                                                            productImages = arguments.uploadedImgPath
-                                                        )
-                    >
+                        productId = local.qryAddProduct.GENERATEDKEY,
+                        productImages = arguments.productImages
+                    )>
                     <cfif local.imageAddResult EQ "Success">
                         <cfset local.result = "Success">
-                    <cfelse>
+                    <cfelseif local.imageAddResult EQ "Failed">
                         <cfset local.result = "Failed">
+                    <cfelse>
+                        <cfreturn local.imageAddResult>
                     </cfif>
                 <cfelse>
                     <cfset local.result = "Failed">
@@ -129,18 +128,18 @@
                         AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditProduct.recordCount EQ 1>
-                    <cfif structKeyExists(arguments, 'uploadedImgPath')>
+                    <cfif structKeyExists(arguments, 'productImages')>
                         <cfset local.newAddedImg = addImage(
-                                                                productId = arguments.productId,
-                                                                productImages = arguments.uploadedImgPath                                                           
-                                                        )
-                        >
+                            productId = arguments.productId,
+                            productImages = arguments.productImages                                                           
+                        )>
                         <cfif local.newAddedImg EQ "Success">
                             <cfset local.result = "Success">
-                        <cfelse>
+                        <cfelseif local.newAddedImg EQ "Failed" >
                             <cfset local.result = "Failed">
+                        <cfelse>
+                            <cfreturn local.newAddedImg>
                         </cfif>
-                    <cfelse>
                         <cfset local.result = "Success">
                     </cfif>
                 <cfelse>
@@ -148,7 +147,7 @@
                 </cfif>
                 <cfreturn local.result>
             <cfcatch type="exception">
-                <cfdump var = "#cfcatch#" >
+                <cfdump var = "#cfcatch#">
             </cfcatch>
             </cftry>
         </cfif>
@@ -179,25 +178,48 @@
 
 
     <!---  ADD IMAGE  --->
-    <cffunction name = "addImage" access = "private" returntype = "string">
+    <cffunction name = "addImage" access = "private" returntype = "any">
         <cfargument  name = "productId" type = "integer" required = "true">
-        <cfargument name = "productImages" type = "array" required = "true">
+        <cfargument name = "productImages" type = "any" required = "true">
         <cfset local.insertedCount = 0>
         <cftry>
-            <cfset local.productImageCount = getProductImageCount(productId = arguments.productId)>
-            <cfloop array = "#arguments.productImages#" index = "i" item = "image">
-                <cfquery datasource = "shoppingcart" result = "local.qryAddImage">
-                    INSERT INTO
-                        tblProductImages(
-                                            fldProductId,
-                                            fldImageFileName,
-                                            fldDefaultImage,
-                                            fldActive,
-                                            fldCreatedById,
-                                            fldDeactivatedById,
-                                            fldDeactivatedDate
-                                        )
-                    VALUES(
+            <cfset local.errors = []>
+            <cfif structKeyExists(arguments, 'productImages')>
+		        <cfset local.maxImgSize = 5*1024*1024>
+		        <cfset local.allowedExtensions = "jpeg,jpg,png,gif">
+                <cfset local.uploadedImagePath = [] >
+                <cffile  
+                    action = "uploadAll"
+                    fileField = "arguments.productImages"
+                    destination = "#application.imageSavePath#"
+                    nameconflict = "makeunique"
+                    result = "local.uploadedImage"
+                >
+                <cfloop array = "#local.uploadedImage#" index = "i" item = "image">
+                    <cfif image.fileSize GT local.maxImgSize>
+                        <cfset arrayAppend(local.errors, "*The size of  image #i# is greater")>
+                    </cfif>
+                    <cfif NOT listFindNoCase(local.allowedExtensions,"#image.CLIENTFILEEXT#")>
+                        <cfset arrayAppend(local.errors,"*Image #image.CLIENTFILE# should be jpeg or png or gif format")>
+                    </cfif>
+                    <cfset arrayAppend(local.uploadedImagePath, image.SERVERFILE)>
+                </cfloop>
+                <cfset arguments.productImages = local.uploadedImagePath>
+            </cfif>
+            <cfif arrayLen(local.errors) GT 0>
+                <cfreturn local.errors>
+            <cfelse>
+                <cfloop array = "#arguments.productImages#" index = "i" item = "image">
+                    <cfquery datasource = "shoppingcart" result = "local.qryAddImage">
+                        INSERT INTO tblProductImages(
+                            fldProductId,
+                            fldImageFileName,
+                            fldDefaultImage,
+                            fldActive,
+                            fldCreatedById,
+                            fldDeactivatedById,
+                            fldDeactivatedDate
+                        )VALUES(
                             <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#image#" cfsqltype = "cf_sql_varchar">,
                             <cfif #i# EQ 1 AND local.productImageCount LT 3>
@@ -210,13 +232,14 @@
                             <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
-                </cfquery>
-                <cfset local.insertedCount = local.insertedCount + 1>
-            </cfloop>
-            <cfif local.insertedCount GT 0 >
-                <cfreturn "Success">
-            <cfelse>
-                <cfreturn "Failed">
+                    </cfquery>
+                    <cfset local.insertedCount = local.insertedCount + 1>
+                </cfloop>
+                <cfif local.insertedCount GT 0 >
+                    <cfreturn "Success">
+                <cfelse>
+                    <cfreturn "Failed">
+                </cfif>
             </cfif>
         <cfcatch type="exception">
             <cfdump  var="#cfcatch#">
@@ -249,7 +272,29 @@
                 </cfif>
             </cfquery>
             <cfif local.qryGetProduct.recordCount GT 0>
-                <cfreturn local.qryGetProduct>
+                <cfif structKeyExists(arguments, 'productId')>
+                    <cfset local.productImages = getProductImages(productId = arguments.productId)>
+                    <cfset local.productArr = []>
+                    <cfloop query = "local.productImages" >
+                        <cfset local.imgData = {
+                            'imageId' : local.productImages.fldProductImage_ID,
+                            'imageFile' : local.productImages.fldImageFileName,
+                            'defaultValue' : local.productImages.fldDefaultImage
+                        }>
+                        <cfset arrayAppend(local.productArr, local.imgData)>
+                    </cfloop>               
+                    <cfset local.productDataById = {
+                        'productName' : local.qryGetProduct.fldProductName,
+                        'productBrand' : local.qryGetProduct.fldBrandId,
+                        'productDescription' : local.qryGetProduct.fldDescription,
+                        'productPrice' : local.qryGetProduct.fldPrice,
+                        'productTax' : local.qryGetProduct.fldTax
+                    }>
+                    <cfset arrayAppend(local.productArr, local.productDataById)>
+                    <cfreturn local.productArr>
+                <cfelse>
+                    <cfreturn local.qryGetProduct>
+                </cfif>
             <cfelse>
                 <cfreturn "No products Exist">
             </cfif>

@@ -5,17 +5,17 @@
         <cfargument name = "userId" type = "integer" required = "true">
         <cftry>
             <cfquery result = "local.qryInsertToCart" datasource = 'shoppingcart'>
-                INSERT INTO tblCart(
-                                        fldUserId,
-                                        fldProductId,
-                                        fldQuantity
-                                    )
-                VALUES(
-                            <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
-
+                INSERT INTO 
+                        tblCart(
+                            fldUserId,
+                            fldProductId,
+                            fldQuantity
                         )
+                VALUES(
+                    <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">,
+                    <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
+                    <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                )
             </cfquery>
             <cfreturn local.qryInsertToCart>
         <cfcatch type="exception">

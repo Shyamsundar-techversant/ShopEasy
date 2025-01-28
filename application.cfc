@@ -3,6 +3,7 @@
     <cfset this.sessionManagement = "true" >
     <cfset this.sessionTimeOut = createTimespan(0, 0, 30, 0) >
     <cffunction  name = "onApplicationStart" returntype = "void">
+        <cfset application.datasource = "shoppingcart">
         <cfset application.encryptionKey = generateSecretKey('AES') >
         <cfset application.userContObj = createObject("component","controller.user")>
         <cfset application.userModObj = createObject("component", "model.user") >
@@ -13,27 +14,28 @@
         <cfset application.imageSavePath = "C:\ColdFusion2021\cfusion\wwwroot\ShopEazy\uploadImg">
         <cfset application.cartContObj = createObject("component","controller.cart")>
         <cfset application.cartModObj = createObject("component","model.cart")>
-
     </cffunction>
     <cffunction  name = "onRequestStart" returntype = "void">
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>
             <cfset onApplicationStart()>
         </cfif>
         <cfset local.adminPages = [
-                                    "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm",
-                                    "adminProduct.cfm"
-                                  ]
-        >
+            "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm","adminProduct.cfm"
+        ]>
         <cfset local.userPages = ['userCart.cfm','userOrder.cfm','userProfile.cfm']>
-        <cfset local.authenticationPages = ["logIn.cfm","signup.cfm"]>
         <cfset local.currentPage = listLast(CGI.SCRIPT_NAME, '/')>
         <cfset local.hasRole = structKeyExists(session, 'roleId')>
-        <cfset local.isAdmin = structKeyExists(session, 'adminId')>
         <cfset local.productId = structKeyExists(url,"productId") ? url.productId : "">
-
-        <cfif (!local.hasRole AND !local.isAdmin AND (arrayFindNoCase(local.adminPages, local.currentPage))) 
-                OR (local.hasRole AND session.roleId NEQ 1 AND arrayFindNoCase(local.adminPages, local.currentPage))
-                OR (!local.hasRole AND arrayFindNoCase(local.userPages, local.currentPage))
+        <cfif 
+            (
+                !local.hasRole 
+                AND 
+                (
+                    arrayFindNoCase(local.adminPages, local.currentPage) 
+                    OR arrayFindNoCase(local.userPages, local.currentPage)
+                )
+            ) 
+            OR (local.hasRole AND session.roleId NEQ 1 AND arrayFindNoCase(local.adminPages, local.currentPage))
         >
             <cfif len(local.productId)>
                 <cfset session.productId = local.productId>
@@ -42,8 +44,6 @@
         </cfif>
     </cffunction>
 </cfcomponent>
-
-
 
 
 

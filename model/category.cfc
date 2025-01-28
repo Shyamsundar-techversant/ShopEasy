@@ -82,7 +82,7 @@
     <cffunction name = "getCategory" access = "public" returntype = "any">
         <cfargument  name="categoryId" type = "integer" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldCategory_ID,
                     fldCategoryName
@@ -116,6 +116,7 @@
                 WHERE 
                     fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer" >
                     AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer" >
+                    AND fldActive = 1
             </cfquery>
             <cfif local.qryCategoryDelete.recordCount EQ 1>
                 <cfset local.result = "Success">
@@ -172,8 +173,7 @@
                                 fldActive,
                                 fldCreatedById,
                                 fldUpdatedById,
-                                fldUpdatedDate
-                                
+                                fldUpdatedDate                               
                             )
                     VALUES(
                             <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_varchar">,
@@ -183,7 +183,6 @@
                             <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
-
                 </cfquery>
                 <cfif local.qryAddSubCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
