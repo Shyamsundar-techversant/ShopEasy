@@ -42,14 +42,12 @@
     </cffunction>
 
     <!--- REGISTER USER --->
-
     <cffunction name = "userRegister" access = "public" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true" >
         <cfargument name = "lastName" type = "string" required = "true" >
         <cfargument name = "userEmail" type = "string" required = "true" >
         <cfargument name = "phone" type = "string" required = "true" >
         <cfargument name = "password" type = "string" required = "true" >   
-
         <cftry>
             <cfset local.checkUserExistResult = checkUserExist(
                 userEmail = arguments.userEmail,
@@ -65,18 +63,17 @@
                 )>
                 <cfquery result = "local.qryUserRegister" datasource = "shoppingcart">
                     INSERT INTO 
-                                tblUser(
-                                    fldFirstName,
-                                    fldLastName,
-                                    fldEmail,
-                                    fldPhone,
-                                    fldRoleId,
-                                    fldHashedPassword,
-                                    fldUserSaltString,
-                                    fldActive,
-                                    fldUpdatedDate
-                                )
-                    VALUES(
+                        tblUser(
+                            fldFirstName,
+                            fldLastName,
+                            fldEmail,
+                            fldPhone,
+                            fldRoleId,
+                            fldHashedPassword,
+                            fldUserSaltString,
+                            fldActive,
+                            fldUpdatedDate
+                    )VALUES(
                                 <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
                                 <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
                                 <cfqueryparam value = "#arguments.userEmail#" cfsqltype = "cf_sql_varchar">,
@@ -102,10 +99,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
-
-
-
 
     <!---   USER LOGIN  --->
     <cffunction name = "userLogIn" access = "public" returntype = "any" >

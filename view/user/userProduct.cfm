@@ -15,7 +15,7 @@
                         <div class = "col d-flex justify-content-center align-items-center">
                             <div class  = "product-container">
                                 <div class = "product-page-image-container">
-                                    <img src = "../../uploadImg/#variables.productData.fldImageFileName#" alt = "productImage" class = "product-page-image" >
+                                    <img src = "/uploadImg/#variables.productData.fldImageFileName#" alt = "productImage" class = "product-page-image" >
                                 </div>
                                 <div class = "product-page-content">
                                     <div class = "product-name-information">

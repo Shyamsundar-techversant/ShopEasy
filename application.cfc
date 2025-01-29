@@ -11,7 +11,7 @@
         <cfset application.categModObj  = createObject("component","model.category")> 
         <cfset application.productContObj = createObject("component","controller.product")>
         <cfset application.productModObj = createObject("component","model.product")>
-        <cfset application.imageSavePath = "C:\ColdFusion2021\cfusion\wwwroot\ShopEazy\uploadImg">
+        <cfset application.imageSavePath = "C:\ColdFusion2021\cfusion\wwwroot\uploadImg">
         <cfset application.cartContObj = createObject("component","controller.cart")>
         <cfset application.cartModObj = createObject("component","model.cart")>
     </cffunction>

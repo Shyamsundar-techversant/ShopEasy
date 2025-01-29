@@ -51,7 +51,7 @@
     </cffunction>
 
     <!---    PRODUCT ADD EDIT FUNCTION  --->
-    <cffunction name = "productAddEdit" access = "public" returntype = "string">
+    <cffunction name = "productAddEdit" access = "public" returntype = "any">
         <cfargument name = "categoryId" type = "integer" required = "true" >
         <cfargument name = "subCategoryId" type = "integer" required = "true" >
         <cfargument name = "productId" type = "integer" required = "false" >
@@ -133,19 +133,21 @@
                             productId = arguments.productId,
                             productImages = arguments.productImages                                                           
                         )>
-                        <cfif local.newAddedImg EQ "Success">
-                            <cfset local.result = "Success">
-                        <cfelseif local.newAddedImg EQ "Failed" >
-                            <cfset local.result = "Failed">
-                        <cfelse>
+                        <cfif isArray(local.newAddedImg)>
                             <cfreturn local.newAddedImg>
+                        <cfelseif local.newAddedImg EQ "Success" >
+                            <cfset local.result = "Success">
+                        <cfelse>
+                            <cfset local.result = "Failed">
                         </cfif>
                         <cfset local.result = "Success">
+                        <cfreturn local.result>
                     </cfif>
+                    <cfreturn "Success">
                 <cfelse>
-                    <cfset local.result = "Product Update Faileld">
+                    <cfset local.result = "Product Update Failed">
+                    <cfreturn local.result>
                 </cfif>
-                <cfreturn local.result>
             <cfcatch type="exception">
                 <cfdump var = "#cfcatch#">
             </cfcatch>
@@ -164,6 +166,7 @@
                     tblProductImages
                 WHERE
                     fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                AND fldActive = 1
             </cfquery>
             <cfif local.qryGetProductImageCount.recordCount GT 0>
                 <cfreturn local.qryGetProductImageCount.recordCount>
@@ -209,6 +212,7 @@
             <cfif arrayLen(local.errors) GT 0>
                 <cfreturn local.errors>
             <cfelse>
+                <cfset local.productImageCount  = getProductImageCount(productId = arguments.productId) >
                 <cfloop array = "#arguments.productImages#" index = "i" item = "image">
                     <cfquery datasource = "shoppingcart" result = "local.qryAddImage">
                         INSERT INTO tblProductImages(
@@ -216,9 +220,7 @@
                             fldImageFileName,
                             fldDefaultImage,
                             fldActive,
-                            fldCreatedById,
-                            fldDeactivatedById,
-                            fldDeactivatedDate
+                            fldCreatedById
                         )VALUES(
                             <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#image#" cfsqltype = "cf_sql_varchar">,
@@ -228,9 +230,7 @@
                                 <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
                             </cfif>
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                         )
                     </cfquery>
                     <cfset local.insertedCount = local.insertedCount + 1>
@@ -337,19 +337,63 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
-
+    <!--- CHANGE DEFAULT IMAGE --->
+    <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
+        <cfargument  name = "defaultImageId" type = "integer" required = "true">
+        <cfargument name = "previousSelectedImageId" type = "integer" required = "true">
+        <cftry>
+            <cfquery result = "local.qryChangeDefaultImage" datasource = "shoppingcart">
+                UPDATE 
+                    tblProductImages 
+                SET 
+                    fldDefaultImage = 1
+                WHERE 
+                    fldProductImage_ID = <cfqueryparam value = "#arguments.defaultImageId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfquery result = "local.qryChangePreviousDefaultImage" datasource = "shoppingcart">
+                UPDATE 
+                    tblProductImages 
+                SET 
+                    fldDefaultImage = 0
+                WHERE 
+                    fldProductImage_ID = <cfqueryparam value = "#arguments.previousSelectedImageId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfreturn "Success">
+        <cfcatch type="exception">
+            <cfdump  var="#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
     <!--- DELETE IMAGE SUB FUNCTION --->
     <cffunction  name="imageDeleteFunction" access = "private" returntype = "any">
         <cfargument name = "imageId" type = "integer" required = "true">
         <cftry>
             <cfquery result = "local.qryImageDelete" datasource = "shoppingcart">
-                DELETE FROM 
+                UPDATE 
                     tblProductImages
-                WHERE
+                SET 
+                    fldActive = 0,
+                    fldDefaultImage = 0,
+                    fldDeactivatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                    fldDeactivatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                WHERE 
                     fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
                 AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
-            </cfquery> 
+            </cfquery>
+            <cfquery name = "local.qryGetProductImageName" datasource = "shoppingcart">
+                SELECT
+                    fldImageFileName
+                FROM 
+                    tblProductImages 
+                WHERE
+                    fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cffile  
+                action="delete" 
+                file = "#application.imageSavePath#\#local.qryGetProductImageName.fldImageFileName#"
+            >
             <cfreturn local.qryImageDelete.recordCount >      
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
@@ -358,7 +402,7 @@
     </cffunction>
 
     <!---  DELETE IMAGE    --->
-    <cffunction  name="deleteImage" access = "public" returntype = "string">
+    <cffunction  name="deleteImage" access = "public" returntype = "any" returnformat = "json">
         <cfargument  name="imageId" type = "integer" required = "true">
         <cfargument  name="productId" type = "integer" required = "true">
         <cftry>
@@ -377,28 +421,34 @@
                 <cfif local.qryCheckDefaultImg.fldDefaultImage EQ 1>
                     <cfset local.imageDeleteResult = imageDeleteFunction(imageId = arguments.imageId )>
                     <cfif local.imageDeleteResult EQ 1>
-                        <cfset local.newDafaultImageId = arguments.imageId + 1 >
+                        <cfquery name = "local.qryGetNextDefaultImage" datasource = "shoppingcart">
+                            SELECT 
+                                fldProductImage_ID 
+                            FROM    
+                                tblProductImages
+                            WHERE 
+                                fldProductId = <cfqueryparam 
+                                                    value = "#arguments.productId#"
+                                                    cfsqltype = "cf_sql_integer"
+                                                >
+                            AND fldActive = 1
+                            ORDER BY 
+                                fldProductImage_ID ASC 
+                            LIMIT 1
+                        </cfquery>
                         <cfquery name = "local.qryChangeDefaultImage" datasource = "shoppingcart">
                             UPDATE 
-                                tblProductImages AS targetTable
-                            INNER JOIN(
-                                        SELECT fldProductImage_ID AS maxImgId
-                                        FROM
-                                            tblProductImages
-                                        WHERE
-                                            fldProductId =  <cfqueryparam 
-                                                                value = "#arguments.productId#" 
-                                                                cfsqltype = "cf_sql_integer"
-                                                            >
-                                        ORDER BY 
-                                            fldProductImage_ID DESC 
-                                        LIMIT 1                                   
-                                    ) AS subQuery 
-                            ON targetTable.fldProductImage_ID = subQuery.maxImgId
+                                tblProductImages 
                             SET 
-                                targetTable.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                                fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                             WHERE
-                                targetTable.fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                                fldProductImage_ID = <cfqueryparam
+                                                        value = "#local.qryGetNextDefaultImage.fldProductImage_ID#"  
+                                                        cfsqltype = "cf_sql_integer"      
+                                                    >
+                            AND 
+                                fldActive = 1
+                            AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
                         </cfquery>  
                         <cfreturn "Success">                    
                     <cfelse>
@@ -433,6 +483,25 @@
                     AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfif local.qryDeleteProduct.recordCount EQ 1 >
+                <cfquery name = "local.qryDeleteFromCart" datasource = "shoppingcart">
+                    UPDATE 
+                        tblCart 
+                    SET 
+                        fldQuantity = 0
+                    WHERE 
+                        fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                </cfquery>
+                <cfquery name = "local.qryDeleteProductImages" datasource = "shoppingcart">
+                    UPDATE 
+                        tblProductImages 
+                    SET 
+                        fldActive = 0 ,
+                        fldDefaultImage = 0,
+                        fldDeactivatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                        fldDeactivatedDate  = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    WHERE 
+                        fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                </cfquery>
                 <cfreturn "Success">
             <cfelse>
                 <cfreturn "Failed" >
@@ -448,28 +517,22 @@
         <cftry>
             <cfquery name = "local.qryGetRandomProducts" datasource = "shoppingcart">
                 SELECT 
-                    p.fldProduct_ID AS idProduct,
-                    p.fldProductName,
-                    p.fldBrandId,
-                    sc.fldSubCategoryName,
-                    b.fldBrandName,
-                    p.fldPrice,
-                    img.fldDefaultImage,
-                    img.fldImageFileName
+                    P.fldProduct_ID AS idProduct,
+                    P.fldProductName,
+                    P.fldBrandId,
+                    SC.fldSubCategoryName,
+                    B.fldBrandName,
+                    P.fldPrice,
+                    IMG.fldDefaultImage,
+                    IMG.fldImageFileName
                 FROM
-                    tblProduct AS p
-                INNER JOIN 
-                    tblSubCategory AS sc
-                ON sc.fldSubCategory_ID = p.fldSubCategoryId
-                INNER JOIN 
-                    tblBrands AS b
-                ON b.fldBrand_ID = p.fldBrandId
-                INNER JOIN 
-                    tblProductImages AS img
-                ON img.fldProductId = p.fldProduct_ID
+                    tblProduct AS P
+                INNER JOIN tblSubCategory AS SC ON SC.fldSubCategory_ID = P.fldSubCategoryId
+                INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
+                INNER JOIN tblProductImages AS IMG ON IMG.fldProductId = P.fldProduct_ID
                 WHERE
-                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    P.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND IMG.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 ORDER BY RAND()
                 LIMIT 4
             </cfquery>
@@ -539,39 +602,36 @@
 
     <!--- PRODUCT SEARCH    --->
     <cffunction name = "getSearchedProduct" access = "public" returntype = "any">
-        <cfargument name = "searchWords" type = "array" required = "true">
+        <cfargument name = "searchWord" type = "any" required = "true">
         <cftry>
             <cfquery name = "local.qrySearchProduct" datasource = "shoppingcart">
                 SELECT 
-                    p.fldProduct_ID AS idProduct,
-                    p.fldProductName,
-                    p.fldDescription,
-                    p.fldBrandId,
-                    img.fldDefaultImage,
-                    sc.fldSubCategoryName,
-                    b.fldBrandName,
-                    p.fldPrice,
-                    img.fldImageFileName
+                    P.fldProduct_ID AS idProduct,
+                    P.fldProductName,
+                    P.fldDescription,
+                    P.fldBrandId,
+                    IMG.fldDefaultImage,
+                    SC.fldSubCategoryName,
+                    B.fldBrandName,
+                    P.fldPrice,
+                    IMG.fldImageFileName
                 FROM
-                    tblProduct AS p
+                    tblProduct AS P
                 INNER JOIN 
-                    tblSubCategory AS sc
-                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                    tblSubCategory AS SC
+                ON SC.fldSubCategory_ID = P.fldSubCategoryId
                 INNER JOIN 
-                    tblBrands AS b
-                ON b.fldBrand_ID = p.fldBrandId
+                    tblBrands AS B
+                ON B.fldBrand_ID = P.fldBrandId
                 INNER JOIN 
-                    tblProductImages AS img
-                ON img.fldProductId = p.fldProduct_ID
+                    tblProductImages AS IMG
+                ON IMG.fldProductId = P.fldProduct_ID
                 WHERE
-                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    P.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND IMG.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
                 AND
-                <cfloop array = "#arguments.searchWords#" index = "local.word">
-                    <cfset local.word = trim(local.word)>
-                    p.fldProductName LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
-                    OR p.fldDescription LIKE <cfqueryparam value = "%#lCase(local.word)#%" cfsqltype = "cf_sql_varchar">
-                </cfloop>                
+                    P.fldProductName LIKE <cfqueryparam value = "%#lCase(arguments.searchWord)#%" cfsqltype = "cf_sql_varchar">
+                    OR P.fldDescription LIKE <cfqueryparam value = "%#lCase(arguments.searchWord)#%" cfsqltype = "cf_sql_varchar">                
             </cfquery>
             <cfreturn local.qrySearchProduct>
         <cfcatch type="exception">
@@ -588,31 +648,31 @@
         <cftry>
             <cfquery name = "local.qryGetFilteredProduct" datasource = "shoppingcart">
                 SELECT 
-                    p.fldProduct_ID AS idProduct,
-                    p.fldProductName,
-                    p.fldDescription,
-                    p.fldBrandId,
-                    sc.fldSubCategoryName,
-                    b.fldBrandName,
-                    p.fldPrice,
-                    img.fldDefaultImage,
-                    img.fldImageFileName
+                    P.fldProduct_ID AS idProduct,
+                    P.fldProductName,
+                    P.fldDescription,
+                    P.fldBrandId,
+                    SC.fldSubCategoryName,
+                    B.fldBrandName,
+                    P.fldPrice,
+                    IMG.fldDefaultImage,
+                    IMG.fldImageFileName
                 FROM
-                    tblProduct AS p
+                    tblProduct AS P
                 INNER JOIN 
-                    tblSubCategory AS sc
-                ON sc.fldSubCategory_ID = p.fldSubCategoryId
+                    tblSubCategory AS SC
+                ON SC.fldSubCategory_ID = P.fldSubCategoryId
                 INNER JOIN 
-                    tblBrands AS b
-                ON b.fldBrand_ID = p.fldBrandId
+                    tblBrands AS B
+                ON B.fldBrand_ID = P.fldBrandId
                 INNER JOIN 
-                    tblProductImages AS img
-                ON img.fldProductId = p.fldProduct_ID
+                    tblProductImages AS IMG
+                ON IMG.fldProductId = P.fldProduct_ID
                 WHERE
-                    p.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND img.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                AND p.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">               
-                AND p.fldPrice BETWEEN 
+                    P.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND IMG.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                AND P.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">               
+                AND P.fldPrice BETWEEN 
                     <cfqueryparam value = "#arguments.minPrice#" cfsqltype = "cf_sql_decimal"> 
                     AND <cfqueryparam value = "#arguments.maxPrice#" cfsqltype = "cf_sql_decimal">
             </cfquery>

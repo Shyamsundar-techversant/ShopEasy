@@ -81,29 +81,7 @@
         <cfif arguments.productTax LT 0 >
             <cfset arrayAppend(local.errors,"*Product tax must be greater than or equal to zero")>
         </cfif>
-        <!--- VALIDATE   PRODUCT IMAGES    
-        <cfif structKeyExists(arguments, 'productImages')>
-		    <cfset local.maxImgSize = 5*1024*1024>
-		    <cfset local.allowedExtensions = "jpeg,jpg,png,gif">
-            <cfset local.uploadedImagePath = [] >
-            <cffile  
-                action = "uploadAll"
-                fileField = "arguments.productImages"
-                destination = "#application.imageSavePath#"
-                nameconflict = "makeunique"
-                result = "local.uploadedImage"
-            >
-            <cfloop array = "#local.uploadedImage#" index = "i" item = "image">
-                <cfif image.fileSize GT local.maxImgSize>
-                    <cfset arrayAppend(local.errors, "*The size of  image #i# is greater")>
-                </cfif>
-                <cfif NOT listFindNoCase(local.allowedExtensions,"#image.CLIENTFILEEXT#")>
-                    <cfset arrayAppend(local.errors,"*Image #image.CLIENTFILE# should be jpeg or png or gif format")>
-                </cfif>
-                <cfset arrayAppend(local.uploadedImagePath, image.SERVERFILE)>
-            </cfloop>
-            <cfset arguments['uploadedImgPath'] = local.uploadedImagePath>
-        </cfif>--->
+
         <cfif arrayLen(local.errors) GT 0 >
             <cfreturn local.errors >
         <cfelse>
@@ -111,14 +89,14 @@
             <cfset local.productAddEditResult = application.productModObj.productAddEdit(
                 argumentCollection = arguments
             )> 
-            <cfif local.productAddEditResult EQ "Success">
+            <cfif isArray(local.productAddEditResult)>
+                <cfreturn local.productAddEditResult>
+            <cfelseif local.productAddEditResult EQ "Success">
                 <cfset local.result = "Success">
                 <cfreturn local.result>
-            <cfelseif local.productAddEditResult EQ "Failed">
+            <cfelse>
                 <cfset arrayAppend(local.errors,local.productAddEditResult) >
                 <cfreturn local.errors >
-            <cfelse>
-                <cfreturn local.productAddEditResult>
             </cfif> 
         </cfif> 
     </cffunction>
@@ -140,6 +118,20 @@
             <cfreturn local.productData> 
         </cfif>
     </cffunction>
+
+    <!--- CHANGE DEFAULT IMAGE --->
+    <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
+        <cfargument name = "defaultImageId" type = "integer" required = "true">
+        <cfargument name = "previousSelectedImageId" type = "integer" required = "true">
+        <cfset local.defaultImageChangeResult = application.productModObj.changeDefaultImage(
+            argumentCollection = arguments
+        )>
+        <cfif local.defaultImageChangeResult EQ "Success">
+            <cfreturn "Success">
+        </cfif>
+    </cffunction>
+
+
     <!---  DELETE IMAGE    --->
     <cffunction  name = "deleteImage" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "imageId" type = "integer" required = "true">
@@ -201,9 +193,8 @@
     <!--- PRODUCT SEARCH    --->
     <cffunction name = "getSearchedProduct" access = "public">
         <cfargument name = "searchText" type = "string" required = "true">
-        <cfset local.searchWords = listToArray(arguments.searchText," ")>
         <cfset local.searchResult = application.productModObj.getSearchedProduct(
-            searchWords = local.searchWords
+            searchWord = arguments.searchText
         )>
         <cfset session['searchText'] = arguments.searchText>
         <cfif local.searchResult.recordCount GT 0>

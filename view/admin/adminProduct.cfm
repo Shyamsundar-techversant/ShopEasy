@@ -1,17 +1,16 @@
 <cfif structKeyExists(url,'productId') AND structKeyExists(url, "subCategID")>
     <cfset decryptedProductId = decrypt(
-                                            url.productId,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                        )
-    >
+        url.productId,
+        application.encryptionKey,
+        "AES",
+        "Hex"
+    )>
     <cfset variables.getProductDataById = application.productContObj.getProduct(
         productId = decryptedProductId,
         subCategoryId = url.subCategID
     )>
 </cfif>
-<cfinclude template = "header.cfm" >
+<cfinclude template = "header.cfm">
     <section class = "category-section">
         <div class = "container category-container">
             <div class = "card">
@@ -69,7 +68,6 @@
             </div>
         </div>
     </section>
-
     <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/adminProduct.js"></script>
   </body>
