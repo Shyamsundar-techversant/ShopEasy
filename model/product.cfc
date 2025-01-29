@@ -3,7 +3,7 @@
     <cffunction name = "getBrands" access = "public" returntype = "query">
         <cfargument  name="brandId" type = "integer" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetBrands" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetBrands" datasource = "#application.datasource#">
                 SELECT
                     fldBrand_ID,
                     fldBrandName
@@ -28,7 +28,7 @@
         <cfargument name = "brandId" type = "integer" required = "true" >
         <cfargument name = "productName" type = "string" required = "true" >
         <cftry>
-            <cfquery name = "local.qryCheckProduct" datasource = "shoppingcart">
+            <cfquery name = "local.qryCheckProduct" datasource = "#application.datasource#">
                 SELECT 
                     fldProduct_ID
                 FROM
@@ -64,7 +64,7 @@
         <cfset local.result = "">
         <cfif NOT structKeyExists(arguments, "productId")>
             <cftry>          
-                <cfquery datasource = "shoppingcart" result ="local.qryAddProduct">
+                <cfquery datasource = "#application.datasource#" result = "local.qryAddProduct">
                     INSERT INTO tblProduct(
                         fldSubCategoryId,
                         fldProductName,
@@ -111,7 +111,7 @@
             </cftry>
         <cfelse>
             <cftry>
-                <cfquery result = "local.qryEditProduct" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditProduct" datasource = "#application.datasource#">
                     UPDATE
                         tblProduct
                     SET 
@@ -159,7 +159,7 @@
     <cffunction  name="getProductImageCount" access = "private" returntype = "any">
         <cfargument  name="productId" type = "integer" required = "true">
         <cftry>
-            <cfquery name = "local.qryGetProductImageCount" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetProductImageCount" datasource = "#application.datasource#">
                 SELECT 
                     fldProductImage_ID
                 FROM 
@@ -214,7 +214,7 @@
             <cfelse>
                 <cfset local.productImageCount  = getProductImageCount(productId = arguments.productId) >
                 <cfloop array = "#arguments.productImages#" index = "i" item = "image">
-                    <cfquery datasource = "shoppingcart" result = "local.qryAddImage">
+                    <cfquery datasource = "#application.datasource#" result = "local.qryAddImage">
                         INSERT INTO tblProductImages(
                             fldProductId,
                             fldImageFileName,
@@ -252,7 +252,7 @@
         <cfargument name = "subCategoryId" type = "integer" required = "true">
         <cfargument name = "productId" type = "integer" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetProduct" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetProduct" datasource = "#application.datasource#">
                 SELECT
                     <cfif NOT structKeyExists(arguments, "productId") >
                         fldProduct_ID,
@@ -309,7 +309,7 @@
         <cfargument name = "productId" type = "integer" required = "true">
         <cfargument name = "defaultImg" type = "integer" required = "false" >   
         <cftry>
-            <cfquery name = "local.qryGetProductImages" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetProductImages" datasource = "#application.datasource#">
                 SELECT 
                     fldProductImage_ID,
                     fldImageFileName,
@@ -342,7 +342,7 @@
         <cfargument  name = "defaultImageId" type = "integer" required = "true">
         <cfargument name = "previousSelectedImageId" type = "integer" required = "true">
         <cftry>
-            <cfquery result = "local.qryChangeDefaultImage" datasource = "shoppingcart">
+            <cfquery result = "local.qryChangeDefaultImage" datasource = "#application.datasource#">
                 UPDATE 
                     tblProductImages 
                 SET 
@@ -351,7 +351,7 @@
                     fldProductImage_ID = <cfqueryparam value = "#arguments.defaultImageId#" cfsqltype = "cf_sql_integer">
                 AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery>
-            <cfquery result = "local.qryChangePreviousDefaultImage" datasource = "shoppingcart">
+            <cfquery result = "local.qryChangePreviousDefaultImage" datasource = "#application.datasource#">
                 UPDATE 
                     tblProductImages 
                 SET 
@@ -370,7 +370,7 @@
     <cffunction  name="imageDeleteFunction" access = "private" returntype = "any">
         <cfargument name = "imageId" type = "integer" required = "true">
         <cftry>
-            <cfquery result = "local.qryImageDelete" datasource = "shoppingcart">
+            <cfquery result = "local.qryImageDelete" datasource = "#application.datasource#">
                 UPDATE 
                     tblProductImages
                 SET 
@@ -382,7 +382,7 @@
                     fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
                 AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery>
-            <cfquery name = "local.qryGetProductImageName" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetProductImageName" datasource = "#application.datasource#">
                 SELECT
                     fldImageFileName
                 FROM 
@@ -410,7 +410,7 @@
             <cfif local.productImageCount LE 3 >
                 <cfreturn "*Atleast 3 Images required" >
             <cfelse>
-                <cfquery name = "local.qryCheckDefaultImg" datasource = "shoppingcart">
+                <cfquery name = "local.qryCheckDefaultImg" datasource = "#application.datasource#">
                     SELECT
                         fldDefaultImage
                     FROM 
@@ -421,7 +421,7 @@
                 <cfif local.qryCheckDefaultImg.fldDefaultImage EQ 1>
                     <cfset local.imageDeleteResult = imageDeleteFunction(imageId = arguments.imageId )>
                     <cfif local.imageDeleteResult EQ 1>
-                        <cfquery name = "local.qryGetNextDefaultImage" datasource = "shoppingcart">
+                        <cfquery name = "local.qryGetNextDefaultImage" datasource = "#application.datasource#">
                             SELECT 
                                 fldProductImage_ID 
                             FROM    
@@ -436,7 +436,7 @@
                                 fldProductImage_ID ASC 
                             LIMIT 1
                         </cfquery>
-                        <cfquery name = "local.qryChangeDefaultImage" datasource = "shoppingcart">
+                        <cfquery name = "local.qryChangeDefaultImage" datasource = "#application.datasource#">
                             UPDATE 
                                 tblProductImages 
                             SET 
@@ -473,7 +473,7 @@
     <cffunction  name="deleteProduct" access = "public" returntype = "string">
         <cfargument name = "productId" type = "integer" required = "true">
         <cftry>
-            <cfquery result = "local.qryDeleteProduct" datasource = "shoppingcart">
+            <cfquery result = "local.qryDeleteProduct" datasource = "#application.datasource#">
                 UPDATE 
                     tblProduct
                 SET 
@@ -483,7 +483,7 @@
                     AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfif local.qryDeleteProduct.recordCount EQ 1 >
-                <cfquery name = "local.qryDeleteFromCart" datasource = "shoppingcart">
+                <cfquery name = "local.qryDeleteFromCart" datasource = "#application.datasource#">
                     UPDATE 
                         tblCart 
                     SET 
@@ -491,7 +491,7 @@
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
-                <cfquery name = "local.qryDeleteProductImages" datasource = "shoppingcart">
+                <cfquery name = "local.qryDeleteProductImages" datasource = "#application.datasource#">
                     UPDATE 
                         tblProductImages 
                     SET 
@@ -515,7 +515,7 @@
         <!--- GET RANDOM PRODUCTS   --->
     <cffunction name = "getRandomProducts" access = "public" returntype = "any">
         <cftry>
-            <cfquery name = "local.qryGetRandomProducts" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetRandomProducts" datasource = "#application.datasource#">
                 SELECT 
                     P.fldProduct_ID AS idProduct,
                     P.fldProductName,
@@ -553,7 +553,7 @@
         <cfargument name = "productId" type = "integer" required = "false">
         <cfargument name = "productOrder" type = "integer" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetProductWithDefaultImage" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetProductWithDefaultImage" datasource = "#application.datasource#">
                 SELECT 
                     p.fldProduct_ID AS idProduct,
                     p.fldProductName,
@@ -604,7 +604,7 @@
     <cffunction name = "getSearchedProduct" access = "public" returntype = "any">
         <cfargument name = "searchWord" type = "any" required = "true">
         <cftry>
-            <cfquery name = "local.qrySearchProduct" datasource = "shoppingcart">
+            <cfquery name = "local.qrySearchProduct" datasource = "#application.datasource#">
                 SELECT 
                     P.fldProduct_ID AS idProduct,
                     P.fldProductName,
@@ -646,7 +646,7 @@
         <cfargument name = "minPrice" type = "integer" required = "true">
         <cfargument name = "maxPrice" type = "integer" required = "true">
         <cftry>
-            <cfquery name = "local.qryGetFilteredProduct" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetFilteredProduct" datasource = "#application.datasource#">
                 SELECT 
                     P.fldProduct_ID AS idProduct,
                     P.fldProductName,

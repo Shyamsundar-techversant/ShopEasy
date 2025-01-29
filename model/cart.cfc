@@ -4,7 +4,7 @@
         <cfargument  name="productId" type = "integer" required = "true">
         <cfargument name = "userId" type = "integer" required = "true">
         <cftry>
-            <cfquery result = "local.qryInsertToCart" datasource = 'shoppingcart'>
+            <cfquery result = "local.qryInsertToCart" datasource = '#application.datasource#'>
                 INSERT INTO 
                         tblCart(
                             fldUserId,
@@ -27,27 +27,27 @@
      <!---   GET CART PRODUCTS   --->
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cftry>
-            <cfquery name = "local.qryGetCartProducts" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetCartProducts" datasource = "#application.datasource#">
                 SELECT
-                    tc.fldCart_ID,
-                    p.fldProductName,
-                    b.fldBrandName,
-                    p.fldPrice,
-                    p.fldTax,
-                    tc.fldQuantity,
-                    img.fldImageFileName
+                    TC.fldCart_ID,
+                    P.fldProductName,
+                    B.fldBrandName,
+                    P.fldPrice,
+                    P.fldTax,
+                    TC.fldQuantity,
+                    IMG.fldImageFileName
                 FROM       
-                    tblCart AS tc
-                INNER JOIN tblProduct AS p
-                ON tc.fldProductId = p.fldProduct_ID
-                INNER JOIN tblBrands AS b
-                ON b.fldBrand_ID = p.fldBrandId
-                INNER JOIN tblProductImages AS img
-                ON img.fldProductId = p.fldProduct_ID
+                    tblCart AS TC
+                INNER JOIN tblProduct AS P
+                ON TC.fldProductId = P.fldProduct_ID
+                INNER JOIN tblBrands AS B
+                ON B.fldBrand_ID = P.fldBrandId
+                INNER JOIN tblProductImages AS IMG
+                ON IMG.fldProductId = P.fldProduct_ID
                 WHERE 
-                    img.fldDefaultImage = 1
+                    IMG.fldDefaultImage = 1
                 <cfif structKeyExists(session, 'userId')>
-                    AND tc.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
+                    AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
                 </cfif>
             </cfquery>
             <cfreturn local.qryGetCartProducts>

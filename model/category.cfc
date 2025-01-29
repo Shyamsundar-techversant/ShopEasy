@@ -3,7 +3,7 @@
     <cffunction  name="checkCategory" access = "public" returntype = "string">
         <cfargument name = "categoryName" type = "string" required = "true" >
         <cftry>
-            <cfquery name = "local.qryCheckCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryCheckCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldCategoryName                             
                 FROM 
@@ -30,7 +30,7 @@
         <cfset local.result = "">
         <cftry>
             <cfif NOT structKeyExists(arguments, "categoryId")>                      
-                <cfquery datasource = "shoppingcart" result ="local.qryAddCategory">
+                <cfquery datasource = "#application.datasource#" result ="local.qryAddCategory">
                     INSERT INTO 
                             tblCategory(
                                 fldCategoryName,
@@ -54,7 +54,7 @@
                 </cfif>
                 <cfreturn local.result>
             <cfelse>
-                <cfquery result = "local.qryEditCategory" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditCategory" datasource = "#application.datasource#">
                     UPDATE
                         tblCategory
                     SET 
@@ -106,7 +106,7 @@
         <cfargument name = "categoryId" type = "integer" required = "true">
         <cfset local.result = " " >
         <cftry>
-            <cfquery result = "local.qryCategoryDelete" datasource = "shoppingcart">
+            <cfquery result = "local.qryCategoryDelete" datasource = "#application.datasource#">
                 UPDATE 
                     tblCategory
                 SET 
@@ -136,7 +136,7 @@
         <cfargument name = "subCategoryName" type = "string" required = "true" >
         <cfargument name = "categoryId" type = "integer" required = "true" >
         <cftry>
-            <cfquery name = "local.qryCheckSubCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryCheckSubCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldSubCategoryName                             
                 FROM 
@@ -165,7 +165,7 @@
         <cfset local.result = "">
         <cftry>
             <cfif NOT structKeyExists(arguments, "subCategoryId")>                     
-                <cfquery datasource = "shoppingcart" result ="local.qryAddSubCategory">
+                <cfquery datasource = "#application.datasource#" result ="local.qryAddSubCategory">
                     INSERT INTO 
                             tblSubCategory(
                                 fldCategoryId,
@@ -191,7 +191,7 @@
                 </cfif>
                 <cfreturn local.result>
             <cfelse>
-                <cfquery result = "local.qryEditSubCategory" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditSubCategory" datasource = "#application.datasource#">
                     UPDATE
                         tblSubCategory
                     SET 
@@ -221,7 +221,7 @@
         <cfargument name ="subCategoryId" type = "integer" required = "false">
         <cfargument name = "categoryId" type = "integer" required = "true" >
         <cftry>
-            <cfquery name = "local.qryGetSubCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetSubCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldSubCategory_ID,
                     fldSubCategoryName
@@ -246,7 +246,7 @@
         <cfargument name = "subCategoryId" type = "integer" required = "true">
         <cfset local.result = " " >
         <cftry>
-            <cfquery result = "local.qrySubCategoryDelete" datasource = "shoppingcart">
+            <cfquery result = "local.qrySubCategoryDelete" datasource = "#application.datasource#">
                 UPDATE 
                     tblSubCategory
                 SET 

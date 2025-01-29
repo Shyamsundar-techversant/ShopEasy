@@ -15,7 +15,7 @@
         <cfargument name = "userName" type = "string" required = "false">
         <cfargument name = "phone" type = "string" required = "false" >       
         <cftry>
-            <cfquery name = "local.qryUserExist" datasource = "shoppingcart">
+            <cfquery name = "local.qryUserExist" datasource = "#application.datasource#">
                 SELECT 
                     fldUser_ID,
                     fldEmail,
@@ -61,7 +61,7 @@
                     password = arguments.password,
                     saltString = local.salt                 
                 )>
-                <cfquery result = "local.qryUserRegister" datasource = "shoppingcart">
+                <cfquery result = "local.qryUserRegister" datasource = "#application.datasource#">
                     INSERT INTO 
                         tblUser(
                             fldFirstName,
