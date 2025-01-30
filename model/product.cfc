@@ -84,8 +84,8 @@
                         <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
                         <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
                         <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                     )
                 </cfquery>
@@ -121,11 +121,11 @@
                         fldDescription = <cfqueryparam value = "#arguments.productDescription#" cfsqltype = "cf_sql_varchar">,
                         fldPrice = <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
                         fldTax = <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
-                        fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
+                        fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditProduct.recordCount EQ 1>
                     <cfif structKeyExists(arguments, 'productImages')>
@@ -230,7 +230,7 @@
                                 <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
                             </cfif>
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                         )
                     </cfquery>
                     <cfset local.insertedCount = local.insertedCount + 1>
@@ -349,7 +349,7 @@
                     fldDefaultImage = 1
                 WHERE 
                     fldProductImage_ID = <cfqueryparam value = "#arguments.defaultImageId#" cfsqltype = "cf_sql_integer">
-                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfquery result = "local.qryChangePreviousDefaultImage" datasource = "#application.datasource#">
                 UPDATE 
@@ -358,7 +358,7 @@
                     fldDefaultImage = 0
                 WHERE 
                     fldProductImage_ID = <cfqueryparam value = "#arguments.previousSelectedImageId#" cfsqltype = "cf_sql_integer">
-                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfreturn "Success">
         <cfcatch type="exception">
@@ -376,11 +376,11 @@
                 SET 
                     fldActive = 0,
                     fldDefaultImage = 0,
-                    fldDeactivatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                    fldDeactivatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                     fldDeactivatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                 WHERE 
                     fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
-                AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfquery name = "local.qryGetProductImageName" datasource = "#application.datasource#">
                 SELECT
@@ -448,7 +448,7 @@
                                                     >
                             AND 
                                 fldActive = 1
-                            AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                            AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                         </cfquery>  
                         <cfreturn "Success">                    
                     <cfelse>
@@ -480,7 +480,7 @@
                     fldActive = <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">
                 WHERE
                     fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                    AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfif local.qryDeleteProduct.recordCount EQ 1 >
                 <cfquery name = "local.qryDeleteFromCart" datasource = "#application.datasource#">
@@ -497,7 +497,7 @@
                     SET 
                         fldActive = 0 ,
                         fldDefaultImage = 0,
-                        fldDeactivatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                        fldDeactivatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         fldDeactivatedDate  = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">

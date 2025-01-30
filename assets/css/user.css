@@ -379,7 +379,7 @@ section {
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 5px !important;
+  gap: 8px !important;
 }
 .cart-prod-name {
   font-size: 16px;
@@ -406,6 +406,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding:10px 10px 0px 10px !important;
 }
 .cart-products {
   justify-content: space-between;
@@ -413,6 +414,7 @@ section {
   box-shadow: 0px 13px 19px 0px rgba(0, 0, 0, 0.3);
   padding: 10px;
   margin-bottom: 20px !important;
+  border:1px solid rgb(223 223 223 );
 }
 .cart-container {
   display: flex !important;
@@ -420,7 +422,7 @@ section {
 }
 .cart-product-add-section {
   width: 100%;
-  max-width: 700px;
+  max-width: 850px;
 }
 .prod-qty-btns {
   display: flex;
@@ -438,4 +440,70 @@ section {
   font-size: 13px;
   font-weight: 500;
   color: black;
+}
+.cart-product-image{
+  max-width:100%;
+  width:100px;
+  height:100px;
+}
+.remove-from-cart-btn{
+  background: none !important;
+  padding:8px 10px !important;
+  font-size:14px;
+  font-weight: 500;
+  color:#fff;
+  background: #db4444 !important;
+  border-radius:16px;
+}
+
+.card-product-count-input{
+  width:40px;
+  border:1px solid #db4444 !important;
+  padding-left: 10px;
+}
+.card-product-count-input:focus{
+  border:1px solid #db4444 !important;
+  box-shadow:none !important;
+  outline: none !important;
+}
+#productRemoveModalTitle{
+  font-size:20px;
+  font-weight: 600;
+}
+.product-remove-modal-body{
+  font-size:16px !important;
+  font-weight: 500 !important;
+}
+.delete-items{
+  background: red !important;
+  color: #fff !important;
+}
+.totl-price-details{
+  border:1px solid rgb(163, 163, 163);
+  border-radius:16px;
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:20px;
+}
+.cart-total-price{
+  width:50% !important;
+  max-width:350px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap:10px;
+
+}
+.bought-together-btn{
+  background: none !important;
+  border:1px solid #db4444 !important;
+  padding:10px 15px ;
+  border-radius:16px;
+  font-size:16px;
+  font-weight: 600;
+  color:#db4444;
+  width:100%;
 }

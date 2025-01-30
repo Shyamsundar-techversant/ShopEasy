@@ -42,8 +42,8 @@
                     VALUES(
                             <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
                 </cfquery>
@@ -59,11 +59,11 @@
                         tblCategory
                     SET 
                         fldCategoryName = <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
-                        fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
+                        fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
-                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -111,11 +111,11 @@
                     tblCategory
                 SET 
                     fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
-                    fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_varchar">,
+                    fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
                     fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                 WHERE 
                     fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer" >
-                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer" >
+                    AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >
                     AND fldActive = 1
             </cfquery>
             <cfif local.qryCategoryDelete.recordCount EQ 1>
@@ -179,8 +179,8 @@
                             <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
                 </cfquery>
@@ -197,11 +197,11 @@
                     SET 
                         fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">,
                         fldSubCategoryName = <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
-                        fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
+                        fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
-                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditSubCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -251,11 +251,11 @@
                     tblSubCategory
                 SET 
                     fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
-                    fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_varchar">,
+                    fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
                     fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                 WHERE 
                     fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer" >
-                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer" >
+                    AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >
             </cfquery>
             <cfif local.qrySubCategoryDelete.recordCount EQ 1>
                 <cfset local.result = "Success">

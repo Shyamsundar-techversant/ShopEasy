@@ -38,17 +38,19 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class = "user-profile">
-                                <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                    <cfif structKeyExists(variables, 'totalCartProducts')>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </cfif>
-                                </button>
-                            </div>
+                            <cfif structKeyExists(variables, 'totalCartProducts')>
+                                <div class = "user-profile">
+                                    <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        <cfif variables.totalCartProducts.recordCount GT 0>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>  
+                                        </cfif>      
+                                    </button>
+                                </div>
+                            </cfif>
                             <div class = "sign-buttons">
                                 <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
                             </div>

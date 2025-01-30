@@ -117,34 +117,24 @@
                 )>
                 <cfif local.hashPass EQ local.checkUserExistResult.fldHashedPassword>
                     <cfset local.result = "LogIn Successful" >
-                    <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>
-                    <cfif local.checkUserExistResult.fldRoleId EQ 1>
-                        <cfset session['adminId'] = local.checkUserExistResult.fldUser_ID >
-                        <cfif structKeyExists(session, "productId")>
-                            <cfset local.addProductToCart = application.cartContObj.addProductToCart(
-                                productId = session.productId,
-                                userId = session.adminId                   
-                            )>
-                            <cfif local.addProductToCart.recordCount EQ 1>
-                                <cflocation url = "./user/userCart.cfm" addtoken = "false">
-                            </cfif> 
-                        <cfelse>
-                            <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">
-                        </cfif>                
+                    <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>                 
+                    <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
+                    <cfif structKeyExists(session, "productId")>
+                        <cfset local.addProductToCart = application.cartContObj.addProductToCart(
+                            productId = session.productId,
+                            userId = session.userId,
+                            isLogIn = 1                 
+                        )>
+                        <cfif local.addProductToCart EQ 'Success'>
+                            <cflocation url = "user/userCart.cfm" addtoken = "false">
+                        </cfif> 
                     <cfelse>
-                        <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
-                        <cfif structKeyExists(session, "productId")>
-                            <cfset local.addProductToCart = application.cartContObj.addProductToCart(
-                                productId = session.productId,
-                                userId = session.userId                   
-                            )> 
-                            <cfif local.addProductToCart.recordCount EQ 1>
-                                <cflocation url = "./user/userCart.cfm" addtoken = "false">
-                            </cfif>
+                        <cfif local.checkUserExistResult.fldRoleId EQ 1>
+                            <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">
                         <cfelse>
                             <cflocation  url="./user/userHome.cfm" addtoken = "false">
                         </cfif>
-                    </cfif>
+                    </cfif>                
                 <cfelse>
                     <cfset local.result = "Invalid Data" >
                 </cfif>     
