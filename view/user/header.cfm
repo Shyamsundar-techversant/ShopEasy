@@ -39,7 +39,7 @@
                                 </form>
                             </div>
                             <cfif structKeyExists(variables, 'totalCartProducts')>
-                                <div class = "user-profile">
+                                <div class = "user-cart">
                                     <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                         <cfif variables.totalCartProducts.recordCount GT 0>
@@ -51,6 +51,11 @@
                                     </button>
                                 </div>
                             </cfif>
+                            <div class = "user-profile" title = "user">
+                                <button class = "user-profile-btn" onclick = "window.location.href='userProfile.cfm'">
+                                    <i class="fa-regular fa-user"></i>
+                                </button>
+                            </div>
                             <div class = "sign-buttons">
                                 <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
                             </div>

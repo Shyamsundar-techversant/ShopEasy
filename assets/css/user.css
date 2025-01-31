@@ -507,3 +507,86 @@ section {
   color:#db4444;
   width:100%;
 }
+.user-profile-btn{
+  background:none;
+  padding:3px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  font-size:16px;
+  border: 1px solid black !important; 
+}
+.user-profile-section{
+  padding:70px 0;
+}
+.user-profile-contaier{
+  display: flex !important;
+  align-items: center;
+  flex-direction: column;
+  gap:15px;
+}
+.card {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  box-shadow: 0px 13px 19px 0px rgba(0, 0, 0, 0.3);
+}
+.profile-card{
+  display:flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap:70px !important;
+}
+.profile-card-btn{
+  background: #db4444 !important;
+  color:#fff !important;
+  border:none !important;
+  width:60px !important;
+  height:60px !important;
+  font-size: 24px !important;
+}
+.intro{
+  font-size:20px !important;
+  font-weight: 500 !important;
+  color: black !important;
+}
+.user-name{
+  font-size:30px !important;
+  font-weight: 500 !important;
+  color: black !important;
+}
+.user-email{
+  font-size:16px !important;
+  font-weight: 500 !important;
+  color: black !important;
+}
+.profile-photo{
+  padding:10px !important;
+}
+.profile-card-title{
+  font-size:16px !important;
+  font-weight: 600 !important;
+  color:#ff5959 !important;
+}
+.profile-card-body{
+  border:1px solid rgb(217 217 217);
+
+}
+.profile-btn{
+  background:none;
+  padding:10px 15px ;
+  border-radius:16px; 
+  font-size:16px;
+  font-weight: 600;
+}
+.address-add-btn{
+  background : #db4444 !important;
+  color:#fff !important;
+}
+.order-details-btn{
+  border:1px solid #db4444 !important;
+  color:#db4444 !important;
+}
+.address-add{
+  padding:15px 0 !important;
+}
