@@ -1,3 +1,6 @@
+<cfif structKeyExists(form, 'addressSubmit')>
+    <cfdump var = "#form#">
+</cfif>
 <cfinclude template = "header.cfm">
 <section class = "user-profile-section">
     <div class = "container user-profile-contaier">
@@ -61,51 +64,88 @@
             <div class="modal-body">
                 <form class = "address-add-form" method = "post">
                     <div class = "row">
-                        <div class = "col">
-                            
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class = "col">
+                        <div class = "error">
 
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "firstname" class = "form-label">Firstname</label> 
+                            <input type = "text" class = "form-control" name = "firstName" id = "firstname"
+                                placeholder = "Enter first name"
+                            >
+                        </div>
+                    </div>                    
+                    <div class = "row mb-3">
+                        <div class = "col">
+                            <label for = "lastname" class = "form-label">Lastname</label> 
+                            <input type = "text" class = "form-control" name = "lastname" id = "lastname"
+                                placeholder = "Enter last name"
+                            >
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "addressLine1" class = "form-label">Address Line 1</label> 
+                            <input type = "text" class = "form-control" name = "addresLine_1" id = "addressLine1"
+                                placeholder = "Enter Address Line 1"
+                            >
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "addressLine2" class = "form-label">Address Line 2</label> 
+                            <input type = "text" class = "form-control" name = "addresLine_2" id = "addressLine2"
+                                placeholder = "Enter Address Line 2"
+                            >
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "city" class = "form-label">City</label> 
+                            <input type = "text" class = "form-control" name = "city" id = "city"
+                                placeholder = "Enter city name"
+                            >
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "state" class = "form-label">State</label> 
+                            <input type = "text" class = "form-control" name = "state" id = "state"
+                                placeholder = "Enter state name"
+                            >
                         </div>
                     </div>
-                    <div class = "row">
+                    <div class = "row mb-3">
                         <div class = "col">
-
+                            <label for = "pincode" class = "form-label">Pincode</label> 
+                            <input type = "text" class = "form-control" name = "pincode" id = "pincode"
+                                placeholder = "Enter your pincode"
+                            >
                         </div>
                     </div>
-
+                    <div class = "row mb-3">
+                        <div class = "col">
+                            <label for = "phone" class = "form-label">Phone</label> 
+                            <input type = "text" class = "form-control" name = "phone" id = "phone"
+                                placeholder = "Enter your phone"
+                            >
+                        </div>
+                    </div>
+                    <div class = "row mb-3">
+                        <div class = "col">
+                            <button type="button" class="btn modal-close-btn" data-bs-dismiss="modal">Close</button>
+                            <button 
+                                type="button" 
+                                class="btn address-add-button" 
+                                name = "addressSubmit"
+                                id = "addAddressBtn"
+                            >
+                                ADD
+                            </button>
+                        </div>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
             </div>
         </div>
     </div>

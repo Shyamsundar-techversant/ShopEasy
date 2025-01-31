@@ -69,4 +69,33 @@ $(document).ready(function(){
             }
         });
     });
+
+    //USER PROFILE
+
+    
+    $('#addAddressBtn').on('click',function(){
+        let formData = new FormData();
+        formData.append('firstName',$('#firstname').val());
+        formData.append('lastName',$('#lastname').val());
+        formData.append('addressLine_1',$('#addressLine1').val());
+        formData.append('addressLine_2',$('#addressLine2').val());
+        formData.append('city',$('#city').val());
+        formData.append('state',$('#state').val());
+        formData.append('pincode',$('#pincode').val());
+        formData.append('phone',$('#phone').val());
+        $.ajax({
+            url : "../../controller/cart.cfc?method=addUserAddress",
+            method : 'POST',
+            data : formData,
+            processData : false,
+            contentType : false,
+            success : function (response){
+                
+            },
+            error: function (){
+                console.log("Request failed");
+            }
+        })
+    });
 });
+

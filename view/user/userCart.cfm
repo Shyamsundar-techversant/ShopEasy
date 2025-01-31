@@ -83,19 +83,19 @@
         </div>
     </section>
     <div class="modal fade" id="productRemoveModal" tabindex="-1" aria-labelledby="productRemoveModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header productRemoveModalHead">
-            <h5 class="modal-title" id = "productRemoveModalTitle">Remove Product</h5>
-          </div>
-          <div class="modal-body product-remove-modal-body">
-            Do you want to remove this product from cart ?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary modal-close-btn " data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary delete-items" id = "productRemoveButton">Remove</button>
-          </div>      
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header productRemoveModalHead">
+                    <h5 class="modal-title" id = "productRemoveModalTitle">Remove Product</h5>
+                </div>
+                <div class="modal-body product-remove-modal-body">
+                    Do you want to remove this product from cart ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn " data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary delete-items" id = "productRemoveButton">Remove</button>
+                </div>      
+            </div>
         </div>
-      </div>
     </div>
 <cfinclude  template="footer.cfm">
