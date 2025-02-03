@@ -279,7 +279,7 @@ $(document).ready(function () {
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
-                    $('productDeleteModal').modal('hide');
+                    $('#productDeleteModal').modal('hide');
                     location.reload();
                 }
                 else {

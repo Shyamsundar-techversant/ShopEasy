@@ -132,4 +132,147 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    <!---   USER ADDRESS ADD      --->
+    <cffunction name = "addUserAddress" access = "public" returntype = "any">
+        <cfargument name = "firstName" type = "string" required = "true">
+        <cfargument name = "lastName" type = "string" required = "true">
+        <cfargument name = "addressLine_1" type = "string" required = "true">
+        <cfargument name = "addressLine_2" type = "string" required = "true">
+        <cfargument name = "city" type = "string" required = "true">
+        <cfargument name = "state" type = "string" required = "true">
+        <cfargument name = "pincode" type = "string" required = "true">
+        <cfargument name = "phone" type = "string" required = "true">
+        <cftry>
+            <cfquery name = "local.qryAddUserAddress" datasource = "#application.datasource#">
+                INSERT INTO tblAddress(
+                    fldUserId,
+                    fldFirstName,
+                    fldLastName,
+                    fldAddressLine1,
+                    fldAddressLine2,
+                    fldCity,
+                    fldState,
+                    fldPincode,
+                    fldPhoneNumber,
+                    fldActive,
+                    fldCreatedDate
+                )VALUES(
+                    <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                    <cfqueryparam value  = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value  = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.addressLine_1#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.addressLine_2#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.city#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.state#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.pincode#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
+                    <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                )   
+            </cfquery>
+            <cfreturn 'Success'>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+    <!---   GET USER ADDRESS   --->
+    <cffunction name = "getUserAddress" access = "public" returntype = "query">
+        <cftry>
+            <cfquery name = "local.qryGetUserAddress" datasource = "#application.datasource#">
+                SELECT 
+                    fldAddress_ID,
+                    fldFirstName,
+                    fldLastName,
+                    fldAddressLine1,
+                    fldAddressLine2,
+                    fldCity,
+                    fldState,
+                    fldPincode,
+                    fldPhoneNumber,
+                    fldCreatedDate
+                FROM 
+                    tblAddress
+                WHERE 
+                    fldActive = 1
+                AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
+            </cfquery>
+            <cfreturn local.qryGetUserAddress>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+    <!---   REMOVE ADDRESS   --->
+    <cffunction name = "removeUserAddress" access = "remote" returntype = "any">
+        <cfargument name = "addressId" type = "string" required = "true">
+        <cftry>
+            <cfquery result = "local.qryRemoveAddress" datasource = "#application.datasource#">
+                UPDATE 
+                    tblAddress 
+                SET 
+                    fldActive = 0 
+                WHERE 
+                    fldAddress_ID = <cfqueryparam value ="#arguments.addressId#" cfsqltype = "cf_sql_integer">
+                AND 
+                    fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
+            </cfquery>
+            <cfif local.qryRemoveAddress.recordCount EQ 1>
+                <cfreturn "Success">
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+    <!---  GET USER DETAILS   --->
+    <cffunction  name="getUserDetails" access = "remote" returntype = "any" returnformat = "json">
+        <cfargument  name="userId" type = "string" required = "true">
+        <cftry>
+            <cfquery name = "local.qryGetUserDetails" datasource = "#application.datasource#">
+                SELECT 
+                    fldFirstName,
+                    fldLastName,
+                    fldPhone,
+                    fldEmail
+                FROM 
+                    tblUser 
+                WHERE 
+                    fldUser_ID = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfreturn local.qryGetUserDetails>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
+
+        <!--- VALIDATE USER DETAILS --->
+    <cffunction name = "validateUserDetails" access = "remote" returntype = "any">
+        <cfargument name = "firstName" type = "string" required = "true">
+        <cfargument name = "lastName" type = "string" required = "true">
+        <cfargument name = "email" type = "string" required = "true">
+        <cfargument name = "phone" type = "string" required = "true">
+        <cftry>
+            <cfquery result = "local.qryUpdateUser" datasource = "#application.datasource#">
+                UPDATE 
+                    tblUser
+                SET 
+                    fldFirstName = <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
+                    fldLastName = <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
+                    fldEmail = <cfqueryparam value = "#arguments.email#" cfsqltype = "cf_sql_varchar">,
+                    fldPhone = <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
+                    fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                    fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                WHERE 
+                    fldUser_ID = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfif local.qryUpdateUser.recordCount EQ 1>
+                <cfreturn 'Success'>
+            </cfif>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>

@@ -32,7 +32,7 @@
 		    	<cfset arrayAppend(local.errors,"*Enter a valid email")>
 		    </cfif>
         </cfif>
-          <!---    Validate Phone      --->
+          <!---    Validate Phone   --->
         <cfif structKeyExists(arguments,"phone")>         
             <cfif len(trim(arguments.phone)) EQ 0>
 			    <cfset arrayAppend(local.errors,"*Phone number is required")>

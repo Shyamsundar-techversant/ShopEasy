@@ -119,7 +119,7 @@
                     <cfset local.result = "LogIn Successful" >
                     <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>                 
                     <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
-                    <cfif structKeyExists(session, "productId")>
+                    <cfif structKeyExists(session, "productId") AND NOT structKeyExists(session, 'setOrder')>
                         <cfset local.addProductToCart = application.cartContObj.addProductToCart(
                             productId = session.productId,
                             userId = session.userId,
@@ -128,6 +128,10 @@
                         <cfif local.addProductToCart EQ 'Success'>
                             <cflocation url = "user/userCart.cfm" addtoken = "false">
                         </cfif> 
+                    <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, "productId")>
+                        <cfoutput>
+                            <cflocation  url="user/userProduct.cfm" addtoken = "false">
+                        </cfoutput>    
                     <cfelse>
                         <cfif local.checkUserExistResult.fldRoleId EQ 1>
                             <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">

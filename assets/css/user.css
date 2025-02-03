@@ -534,8 +534,8 @@ section {
 .profile-card{
   display:flex !important;
   flex-direction: row !important;
+  justify-content: space-between;
   align-items: center !important;
-  gap:70px !important;
 }
 .profile-card-btn{
   background: #db4444 !important;
@@ -568,10 +568,7 @@ section {
   font-weight: 600 !important;
   color:#ff5959 !important;
 }
-.profile-card-body{
-  border:1px solid rgb(217 217 217);
 
-}
 .profile-btn{
   background:none;
   padding:10px 15px ;
@@ -590,11 +587,36 @@ section {
 .address-add{
   padding:15px 0 !important;
 }
-.error li {
+.error li ,.form-error li{
   color: red !important;
   font-size: 14px !important;
 }
 .address-add-button{
   background: #db4444 !important;
   color:#ffff !important;
+}
+.user-addresses{
+  border:1px solid #dddddd !important;
+  align-items: center !important;
+}
+.address-remove-btn{
+  padding:8px 10px !important;
+  border-radius:16px !important;
+  background: red !important;
+  color:#fff !important;
+}
+.address-removal{
+  display: flex !important;
+  justify-content: end;
+  align-items: end;
+}
+.edit-user-detail{
+  display:flex;
+  justify-content: end;
+  align-items: end;
+}
+.edit-user-detail-btn{
+  padding:8px 10px !important;
+  font-size:20px !important;
+  background:  none;
 }
