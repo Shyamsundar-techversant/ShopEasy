@@ -116,7 +116,15 @@
 
     <!---   GET ADDRESS   --->
     <cffunction name = "getAddresses" access = "remote" returntype = "query" returnformat = "json">
-        <cfset local.userAddress = application.cartModObj.getUserAddress()>
+        <cfargument name = "addressId" type = "string" required = "false">
+        <cfif structKeyExists(arguments, 'addressId')>
+            <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
+            <cfset local.userAddress = application.cartModObj.getUserAddress(
+                addressId = arguments.addressId
+            )>
+        <cfelse>
+            <cfset local.userAddress = application.cartModObj.getUserAddress()>
+        </cfif>
         <cfreturn local.userAddress>
     </cffunction>
 

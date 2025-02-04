@@ -562,6 +562,7 @@
                     sc.fldSubCategoryName,
                     b.fldBrandName,
                     p.fldPrice,
+                    p.fldTax,
                     img.fldDefaultImage,
                     img.fldImageFileName
                 FROM

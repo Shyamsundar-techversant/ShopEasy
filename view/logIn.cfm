@@ -11,6 +11,7 @@
     password = form.userPassword
   )>
 </cfif>
+<cfdump var = "#session#">
 <!DOCTYPE html>
 <html lang = "en">
   <head>

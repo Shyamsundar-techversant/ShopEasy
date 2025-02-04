@@ -22,7 +22,9 @@
         <cfset local.adminPages = [
             "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm","adminProduct.cfm"
         ]>
-        <cfset local.userPages = ['userCart.cfm','userOrder.cfm','userProfile.cfm','userOrder.cfm']>
+        <cfset local.userPages = [
+            'userCart.cfm','userOrder.cfm','userProfile.cfm','userOrder.cfm','paymentDetails.cfm'
+        ]>
         <cfset local.currentPage = listLast(CGI.SCRIPT_NAME, '/')>
         <cfset local.hasRole = structKeyExists(session, 'roleId')>
         <cfset local.productId = structKeyExists(url,"productId") ? url.productId : "">

@@ -240,5 +240,26 @@ $(document).ready(function () {
         $('#addressAddModal').modal('hide');
         $('.form-error').text('');
     });
+
+    // ORDER SUMMARY
+    let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
+    let totalPrice = parseFloat($('.payable-order-price').text());
+    let totalCalculatedAmount;
+    $('.qty-add-btn').on('click',function(){
+        productQuantity += 1;
+        $('#orderQuantity').val(productQuantity); 
+        totalCalculatedAmount = productQuantity*totalPrice;
+        $('.payable-order-price').text(totalCalculatedAmount);
+    });
+    $('.qty-remove-btn').on('click',function(){
+        productQuantity -= 1;
+        $('#orderQuantity').val(productQuantity);
+        productId = $(this).data('id');
+        totalCalculatedAmount = productQuantity*totalPrice;
+        $('.payable-order-price').text(totalCalculatedAmount);
+        if(productQuantity <= 0){
+            window.location.href = `userProduct.cfm?productId=${productId}`;
+        }
+    });
 });
 

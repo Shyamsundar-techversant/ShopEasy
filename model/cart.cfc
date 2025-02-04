@@ -178,6 +178,7 @@
     </cffunction>
     <!---   GET USER ADDRESS   --->
     <cffunction name = "getUserAddress" access = "public" returntype = "query">
+        <cfargument name = "addressId" type = "integer" required = "false">
         <cftry>
             <cfquery name = "local.qryGetUserAddress" datasource = "#application.datasource#">
                 SELECT 
@@ -196,6 +197,9 @@
                 WHERE 
                     fldActive = 1
                 AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
+                <cfif structKeyExists(arguments, 'addressId')>
+                    AND fldAddress_ID = <cfqueryparam value = "#arguments.addressId#" cfsqltype = "cf_sql_integer">
+                </cfif>
             </cfquery>
             <cfreturn local.qryGetUserAddress>
         <cfcatch type="exception">
