@@ -222,20 +222,20 @@ $(document).ready(function () {
             }
         });
     });
-    $('#order-product-btn').on('click',function(){
+    $('#order-product-btn').on('click', function () {
         $('#addressAddModal').modal('hide');
         $('#addressSelectModal').modal('show');
         $('.form-error').text('');
     });
-    $('.select-address-button').on('click',function(){
+    $('.select-address-button').on('click', function () {
         $('#addressSelectModal').modal('hide');
         $('#addressAddModal').modal('show');
     });
-    $('.close-select-address-modal').on('click',function(){
+    $('.close-select-address-modal').on('click', function () {
         $('#addressSelectModal').modal('hide');
         $('#addressAddModal').modal('hide');
     });
-    $('.add-address-modal-close').on('click',function(){
+    $('.add-address-modal-close').on('click', function () {
         $('#addressSelectModal').modal('show');
         $('#addressAddModal').modal('hide');
         $('.form-error').text('');
@@ -243,23 +243,67 @@ $(document).ready(function () {
 
     // ORDER SUMMARY
     let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
-    let totalPrice = parseFloat($('.payable-order-price').text());
-    let totalCalculatedAmount;
-    $('.qty-add-btn').on('click',function(){
+    let unitPrice = parseFloat($('.payable-order-price').text());
+    let unitTax = parseFloat($('.actual-order-tax').text());
+    let totalCalculatedAmount = unitPrice;
+    let totalTax = (unitTax*unitPrice)/100;
+    $('.qty-add-btn').on('click', function () {
         productQuantity += 1;
-        $('#orderQuantity').val(productQuantity); 
-        totalCalculatedAmount = productQuantity*totalPrice;
+        $('#orderQuantity').val(productQuantity);
+        totalCalculatedAmount = productQuantity * unitPrice;
         $('.payable-order-price').text(totalCalculatedAmount);
+        totalTax = (productQuantity * unitPrice * unitTax) / 100;
     });
-    $('.qty-remove-btn').on('click',function(){
+    $('.qty-remove-btn').on('click', function () {
         productQuantity -= 1;
         $('#orderQuantity').val(productQuantity);
         productId = $(this).data('id');
-        totalCalculatedAmount = productQuantity*totalPrice;
+        totalCalculatedAmount = productQuantity * unitPrice;
+        totalTax = (productQuantity * unitTax * unitPrice) / 100;
         $('.payable-order-price').text(totalCalculatedAmount);
-        if(productQuantity <= 0){
+        if (productQuantity <= 0) {
             window.location.href = `userProduct.cfm?productId=${productId}`;
         }
+    });
+
+    
+    // ORDER PAYMENT
+    $('.place-order-btn').on('click',function(){
+        $('#order-place-form').trigger('reset');
+        $('.form-error').empty();
+    });
+    $('.pay-btn').on('click', function () {
+        console.log($('#card-number').val());
+        let formData = new FormData();
+        productId = $('.selected-order-product').data('id');
+        addressId = $('.order-address-summary').data('id');
+        formData.append('cardNumber',$('#card-number').val());
+        formData.append('cvv',$('#cvv').val());
+        formData.append('productId',productId);
+        formData.append('addressId',addressId);
+        formData.append('unitPrice',unitPrice);
+        formData.append('unitTax',unitTax);
+        formData.append('totalPrice',totalCalculatedAmount);
+        formData.append('totalTax',totalTax);
+        $.ajax({
+            url: "../../controller/order.cfc?method=validateCardAndOrder",
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                    let data = JSON.parse(response);
+                    if(data === 'Success'){
+
+                    }
+                    else{
+                        addError(data);
+                    }
+            },
+            error: function () {
+                console.log("Request failed");
+            }
+        });
     });
 });
 

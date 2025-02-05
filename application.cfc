@@ -14,6 +14,8 @@
         <cfset application.imageSavePath = "C:\ColdFusion2021\cfusion\wwwroot\uploadImg">
         <cfset application.cartContObj = createObject("component","controller.cart")>
         <cfset application.cartModObj = createObject("component","model.cart")>
+        <cfset application.orderContObj = createObject("component","controller.order")>
+        <cfset application.orderModObj = createObject("component","model.order")>
     </cffunction>
     <cffunction  name = "onRequestStart" returntype = "void">
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>

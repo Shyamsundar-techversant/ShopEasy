@@ -112,7 +112,9 @@
                     P.fldPrice,
                     P.fldTax,
                     TC.fldQuantity,
-                    IMG.fldImageFileName
+                    IMG.fldImageFileName,
+                    SUM(TC.fldQuantity*(P.fldPrice + (P.fldPrice*P.fldTax)/100)) AS totalPrice,
+                    SUM(TC.fldQuantity*((P.fldPrice*P.fldTax)/100)) AS totalTax
                 FROM       
                     tblCart AS TC
                 INNER JOIN tblProduct AS P
@@ -125,6 +127,11 @@
                     IMG.fldDefaultImage = 1
                 AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
                 AND TC.fldQuantity > 0
+                GROUP BY 
+                    TC.fldCart_ID, TC.fldProductId,
+                    P.fldProductName, B.fldBrandName, 
+                    P.fldPrice, P.fldTax, TC.fldQuantity, 
+                    IMG.fldImageFileName
             </cfquery>
             <cfreturn local.qryGetCartProducts>
         <cfcatch type="exception">

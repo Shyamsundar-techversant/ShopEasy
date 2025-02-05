@@ -2,6 +2,7 @@
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
+<cfdump var = "#variables.totalCartProducts#">
 <!DOCTYPE html>
 <html lang = "en">
     <head>

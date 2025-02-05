@@ -78,9 +78,9 @@
             <div class = "cart-total-price">
                 <cfoutput>
                     <div class = "totl-price-details">
-                        <h6>Actual Price : $#variables.totalActualPrice# <br></h6>
-                        <h6>Total Tax : $#variables.totalTax# <br></h6>
-                        <h6>Total Price : $#variables.totalCartProductsPrice#</h6>
+                        <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
+                        <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
+                        <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
                     </div>
                 </cfoutput>
                 <button 
@@ -141,19 +141,19 @@
                                     "AES",
                                     "Hex"
                                 )>
-                                <div class = "row user-addresses">
-                                    <div class = "col">
+                                <div class = "row user-addresses mb-3">
+                                    <div class = "col user-saved-address">
                                         <input type = "radio" id = "radio#index#" name = "selectedAddress" value="#encryptedAddressId #" 
                                             <cfif index EQ 1>checked</cfif>
                                         >
                                         <label for="radio#index#">
-                                            <span class = "pb-2">#variables.existingAddresses.fldFirstName&variables.existingAddresses.fldLastName#</span><br>
-                                            <span>#variables.existingAddresses.fldPhoneNumber#</span><br>
-                                            <span>#variables.existingAddresses.fldAddressLine1#</span>,
-                                            <span>#variables.existingAddresses.fldAddressLine2#</span>,
-                                            <span>#variables.existingAddresses.fldCity#</span>,
-                                            <span>#variables.existingAddresses.fldPincode#</span>,
-                                            <span>#variables.existingAddresses.fldState#</span>
+                                            <span class = "pb-2 order-user-name">#variables.existingAddresses.fldFirstName&variables.existingAddresses.fldLastName#</span><br>
+                                            <span class = "order-user-address">#variables.existingAddresses.fldPhoneNumber#</span><br>
+                                            <span class = "order-user-address">#variables.existingAddresses.fldAddressLine1#</span>,
+                                            <span class = "order-user-address">#variables.existingAddresses.fldAddressLine2#</span>,
+                                            <span class = "order-user-address">#variables.existingAddresses.fldCity#</span>,
+                                            <span class = "order-user-address">#variables.existingAddresses.fldPincode#</span>,
+                                            <span class = "order-user-address">#variables.existingAddresses.fldState#</span>
                                         </label>
                                     </div>
                                 </div>
