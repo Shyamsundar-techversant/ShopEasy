@@ -34,7 +34,7 @@
                             "Hex"
                         )>
                         <cfset variables.totalActualPrice = variables.totalActualPrice + variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice)>
-                        <cfset variables.totalTax = (variables.totalTax +  variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax))/100>                            
+                        <cfset variables.totalTax = (variables.totalTax +  variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax)/100)>                            
                         <div class = "row cart-products">
                             <div class = "col-md-2 p-2">
                                 <img src = "/uploadImg/#variables.totalCartProducts.fldImageFileName#" alt = "Product Image" class = "cart-product-image">

@@ -285,6 +285,7 @@ $(document).ready(function () {
         formData.append('unitTax',unitTax);
         formData.append('totalPrice',totalCalculatedAmount);
         formData.append('totalTax',totalTax);
+        formData.append('quantity',productQuantity);
         $.ajax({
             url: "../../controller/order.cfc?method=validateCardAndOrder",
             method: 'POST',

@@ -128,9 +128,12 @@
                 AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
                 AND TC.fldQuantity > 0
                 GROUP BY 
-                    TC.fldCart_ID, TC.fldProductId,
-                    P.fldProductName, B.fldBrandName, 
-                    P.fldPrice, P.fldTax, TC.fldQuantity, 
+                    TC.fldCart_ID, 
+                    TC.fldProductId,
+                    P.fldProductName, 
+                    B.fldBrandName, 
+                    P.fldPrice, P.fldTax, 
+                    TC.fldQuantity, 
                     IMG.fldImageFileName
             </cfquery>
             <cfreturn local.qryGetCartProducts>
