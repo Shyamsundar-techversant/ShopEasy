@@ -1,17 +1,9 @@
 <cfset variables.getCategory = application.cateContObj.getCategory()>
-<cfif structKeyExists(form, 'searchProduct')>
-    <cfset variables.searchResult = application.productContObj.getSearchedProduct(
-                                                                                    searchText = form.searchProduct
-                                                                                 )
-    >
-    <cfif structKeyExists(variables, 'searchResult')>
-        <cfoutput>
-            <div class="alert alert-danger alertInfo" role="alert">
-                #variables.searchResult#
-            </div>
-        </cfoutput>
-    </cfif>
+<cfif structKeyExists(session, 'userId')>
+    <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
+<cfset variables.orderDetails = application.orderModObj.getOrderedProductsDetails('8F49D0E9-E49F-B95A-54635F8290ACFD1E')>
+<cfdump var = "#variables.orderDetails#" >
 
 <!DOCTYPE html>
 <html lang = "en">
@@ -20,6 +12,7 @@
         <meta name = "viewport" content= "width = device-width, initial-scale = 1.0" />
         <title>ShopEasy</title>
         <link rel = "stylesheet" href = "../../assets/css/user.css" />
+        <link rel = "stylesheet" href = "../../assets/css/order.css" />
         <link rel = "stylesheet" href = "../../assets/css/bootstrap.css" />
         <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
             integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
@@ -36,7 +29,7 @@
                         <div class = "brand-name">ShopEasy</div>
                         <div class = "user-content">
                             <div class = "search-container">
-                                <form class = "prdouct-search-form" method = "post">
+                                <form class = "prdouct-search-form" method = "post" action = 'searchProductResult.cfm'>
                                     <div class = "search-icon">
                                         <label for = "serach-product">
                                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -49,8 +42,25 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class = "user-profile">
-                                sdfhsdh
+                            <cfif structKeyExists(variables, 'totalCartProducts')>
+                                <div class = "user-cart">
+                                    <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        <cfif variables.totalCartProducts.recordCount GT 0>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>  
+                                        </cfif>      
+                                    </button>
+                                </div>
+                            </cfif>
+                            <div class = "user-profile" title = "user">
+                                <cfif structKeyExists(session, 'userId')>
+                                    <button class = "user-profile-btn" onclick = "window.location.href='userProfile.cfm'">
+                                        <i class="fa-regular fa-user"></i>
+                                    </button>
+                                </cfif>
                             </div>
                             <div class = "sign-buttons">
                                 <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>

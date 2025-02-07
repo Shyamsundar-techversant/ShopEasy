@@ -1,5 +1,3 @@
-<!--- <cfset variables.getCategory = application.cateContObj.getCategory()> --->
-
 <cfinclude template = "header.cfm">
     <!---   BANNER-SECTION   --->
     <section class = "banner-section">
@@ -26,16 +24,15 @@
                 <cfset randomProducts = application.productContObj.getRandomProducts()>
                 <cfoutput query = "randomProducts">
                     <cfset encryptedProductId = encrypt(
-                                                            randomProducts.idProduct,
-                                                            application.encryptionKey,
-                                                            "AES",
-                                                            "Hex"
-                                                        )
-                    >
+                        randomProducts.idProduct,
+                        application.encryptionKey,
+                        "AES",
+                        "Hex"
+                    )>
                     <div class = "col-md-3" data-aos="zoom-in-down">
                         <div class = "product-card">
                             <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                <img src = "../../uploadImg/#randomProducts.fldImageFileName#" alt = "ProductImage" 
+                                <img src = "/uploadImg/#randomProducts.fldImageFileName#" alt = "ProductImage" 
                                     class = "product-image-default"
                                 >
                             </a>

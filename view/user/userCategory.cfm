@@ -36,10 +36,10 @@
                                                                         "Hex"
                                                                     )
                                 >
-                                <div class = "col-md-3" data-aos="zoom-in-down">
+                                <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
                                     <div class = "product-card">
                                         <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                            <img src = "../../uploadImg/#variables.getProductsBySubCategoryId.fldImageFileName#" alt = "ProductImage" 
+                                            <img src = "/uploadImg/#variables.getProductsBySubCategoryId.fldImageFileName#" alt = "ProductImage" 
                                                 class = "product-image-default"
                                             >
                                         </a>

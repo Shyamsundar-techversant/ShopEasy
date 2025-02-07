@@ -163,8 +163,6 @@
         </div>
       </div>
     </div>
-
-
     <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/admin.js"></script>
   </body>

@@ -3,7 +3,7 @@
     <cffunction  name="checkCategory" access = "public" returntype = "string">
         <cfargument name = "categoryName" type = "string" required = "true" >
         <cftry>
-            <cfquery name = "local.qryCheckCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryCheckCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldCategoryName                             
                 FROM 
@@ -30,7 +30,7 @@
         <cfset local.result = "">
         <cftry>
             <cfif NOT structKeyExists(arguments, "categoryId")>                      
-                <cfquery datasource = "shoppingcart" result ="local.qryAddCategory">
+                <cfquery datasource = "#application.datasource#" result ="local.qryAddCategory">
                     INSERT INTO 
                             tblCategory(
                                 fldCategoryName,
@@ -42,8 +42,8 @@
                     VALUES(
                             <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
                 </cfquery>
@@ -54,16 +54,16 @@
                 </cfif>
                 <cfreturn local.result>
             <cfelse>
-                <cfquery result = "local.qryEditCategory" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditCategory" datasource = "#application.datasource#">
                     UPDATE
                         tblCategory
                     SET 
                         fldCategoryName = <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
-                        fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
+                        fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
-                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -82,7 +82,7 @@
     <cffunction name = "getCategory" access = "public" returntype = "any">
         <cfargument  name="categoryId" type = "integer" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldCategory_ID,
                     fldCategoryName
@@ -106,16 +106,17 @@
         <cfargument name = "categoryId" type = "integer" required = "true">
         <cfset local.result = " " >
         <cftry>
-            <cfquery result = "local.qryCategoryDelete" datasource = "shoppingcart">
+            <cfquery result = "local.qryCategoryDelete" datasource = "#application.datasource#">
                 UPDATE 
                     tblCategory
                 SET 
                     fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
-                    fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_varchar">,
+                    fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
                     fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                 WHERE 
                     fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer" >
-                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer" >
+                    AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >
+                    AND fldActive = 1
             </cfquery>
             <cfif local.qryCategoryDelete.recordCount EQ 1>
                 <cfset local.result = "Success">
@@ -135,7 +136,7 @@
         <cfargument name = "subCategoryName" type = "string" required = "true" >
         <cfargument name = "categoryId" type = "integer" required = "true" >
         <cftry>
-            <cfquery name = "local.qryCheckSubCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryCheckSubCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldSubCategoryName                             
                 FROM 
@@ -164,7 +165,7 @@
         <cfset local.result = "">
         <cftry>
             <cfif NOT structKeyExists(arguments, "subCategoryId")>                     
-                <cfquery datasource = "shoppingcart" result ="local.qryAddSubCategory">
+                <cfquery datasource = "#application.datasource#" result ="local.qryAddSubCategory">
                     INSERT INTO 
                             tblSubCategory(
                                 fldCategoryId,
@@ -172,18 +173,16 @@
                                 fldActive,
                                 fldCreatedById,
                                 fldUpdatedById,
-                                fldUpdatedDate
-                                
+                                fldUpdatedDate                               
                             )
                     VALUES(
                             <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                         )
-
                 </cfquery>
                 <cfif local.qryAddSubCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -192,17 +191,17 @@
                 </cfif>
                 <cfreturn local.result>
             <cfelse>
-                <cfquery result = "local.qryEditSubCategory" datasource = "shoppingcart">
+                <cfquery result = "local.qryEditSubCategory" datasource = "#application.datasource#">
                     UPDATE
                         tblSubCategory
                     SET 
                         fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">,
                         fldSubCategoryName = <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
-                        fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype ="cf_sql_integer" >,
+                        fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
                         fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
                     WHERE 
                         fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
-                        AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer">
+                        AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfif local.qryEditSubCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -222,7 +221,7 @@
         <cfargument name ="subCategoryId" type = "integer" required = "false">
         <cfargument name = "categoryId" type = "integer" required = "true" >
         <cftry>
-            <cfquery name = "local.qryGetSubCategory" datasource = "shoppingcart">
+            <cfquery name = "local.qryGetSubCategory" datasource = "#application.datasource#">
                 SELECT 
                     fldSubCategory_ID,
                     fldSubCategoryName
@@ -247,16 +246,16 @@
         <cfargument name = "subCategoryId" type = "integer" required = "true">
         <cfset local.result = " " >
         <cftry>
-            <cfquery result = "local.qrySubCategoryDelete" datasource = "shoppingcart">
+            <cfquery result = "local.qrySubCategoryDelete" datasource = "#application.datasource#">
                 UPDATE 
                     tblSubCategory
                 SET 
                     fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
-                    fldUpdatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_varchar">,
+                    fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
                     fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
                 WHERE 
                     fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer" >
-                    AND fldCreatedById = <cfqueryparam value = "#session.adminId#" cfsqltype = "cf_sql_integer" >
+                    AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >
             </cfquery>
             <cfif local.qrySubCategoryDelete.recordCount EQ 1>
                 <cfset local.result = "Success">
