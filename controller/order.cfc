@@ -50,6 +50,7 @@
                     argumentCollection = arguments
                 )>
             </cfif>
+            <cfreturn local.orderResult>
         </cfif>
     </cffunction>
 </cfcomponent>

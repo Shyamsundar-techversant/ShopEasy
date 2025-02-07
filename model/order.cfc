@@ -38,6 +38,7 @@
                     <cfset local.OrderItemResult = addOrderItems(
                             argumentCollection = arguments
                     )>
+                    <cfreturn local.OrderItemResult>
                 </cfif>
             <cftransaction action = "commit">
         <cfcatch type="exception">
@@ -176,17 +177,31 @@
             <cfset local.displayOrderedItems = application.orderModObj.getOrderedProductsDetails(
                 orderId = arguments.orderId
             )>
-            <cfset local.userDetails = application.modelUserPage.getUserProfileDetails()>
-            <cfset local.userMail = local.userDetails.fldEmail>
-            <cfset local.payableAmount = local.displayOrderedItems.fldTotalTax  + local.displayOrderedItems.fldTotalPrice>
-            <cfif local.displayOrderedItems.recordCount GT 0>
-                <cfset local.orderTotal = local.displayOrderedItems.fldTotalPrice>
-                <cfset local.orderTax = local.displayOrderedItems.fldTotalTax>
-                <cfset local.emailBody = "<h2>Thank you for your purchase!</h2>">
-                <cfset local.emailBody &= "<p>Order Date: <strong>#local.displayOrderedItems.fldOrderDate#</strong></p>">
-                <cfset local.emailBody &= "<p>Your Order ID: <strong>#local.displayOrderedItems.fldOrderId#</strong></p>">
-                <cfset local.emailBody &= "<p>Your Shipping Address: #local.displayOrderedItems.fldAddressLine1#, #local.displayOrderedItems.fldAddressLine2#, #local.displayOrderedItems.fldCity#, #local.displayOrderedItems.fldState#, #local.displayOrderedItems.fldPincode#</p>">
-                <cfset local.emailBody &= "<p>Your Account Details: <strong>********#local.displayOrderedItems.fldCardPart#</strong></p>">
+            <!---     GET USER EMAIL     --->
+            <cfquery name = "local.qryGetUserEmail" datasource = "#application.datasource#">
+                SELECT 
+                    fldEmail
+                FROM tblUser 
+                WHERE 
+                    fldUser_ID = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfset local.userMail = local.qryGetUserEmail.fldEmail>
+            <cfif local.orderInformation.recordCount GT 0>
+                <cfset local.payableAmount = local.orderInformation.fldTotalPrice>
+                <cfset local.orderTotal = local.orderInformation.fldUnitPrice>
+                <cfset local.orderTax = local.orderInformation.fldUnitTax>
+                <cfset local.emailBody = "<h2>Thank you for purchasing from us.</h2>">
+                <cfset local.emailBody &= "<p>Order Date: <strong>#local.orderInformation.fldOrderDate#</strong></p>">
+                <cfset local.emailBody &= "<p>Your Order ID: <strong>#local.orderInformation.fldOrderId#</strong></p>">
+                <cfset local.emailBody &= 
+                    "<p>Your Shipping Address: 
+                    #local.orderInformation.fldAddressLine1#, 
+                    #local.orderInformation.fldAddressLine2#, 
+                    #local.orderInformation.fldCity#, 
+                    #local.orderInformation.fldState#, 
+                    #local.orderInformations.fldPincode#</p>"
+                >
+                <cfset local.emailBody &= "<p>Your Account Details: <strong>*******#local.orderInformation.fldCardPart#</strong></p>">
                 <cfset local.emailBody &= "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
                                             <tr>
                                                 <th>Product Name</th>
@@ -195,20 +210,20 @@
                                                 <th>Tax</th>
                                             </tr>">
             
-                <cfloop query="local.displayOrderedItems">
+                <cfloop query="local.orderInformation">
                     <cfset local.emailBody &= "<tr>
-                                                <td>#local.displayOrderedItems.fldProductName#</td>
-                                                <td>#local.displayOrderedItems.fldQuantity#</td>
-                                                <td>#local.displayOrderedItems.fldPrice#</td>
-                                                <td>#local.displayOrderedItems.fldTax#</td>
+                                                <td>#local.orderInformation.fldProductName#</td>
+                                                <td>#local.orderInformation.fldQuantity#</td>
+                                                <td>#local.orderInformation.fldPrice#</td>
+                                                <td>#local.orderInformation.fldTax#</td>
                                             </tr>">
                 </cfloop>
                 <cfset local.emailBody &= "</table>">
-                <cfset local.emailBody &= "<p><strong>Total Price:</strong> #local.displayOrderedItems.fldTotalPrice#</p>">
-                <cfset local.emailBody &= "<p><strong>Total Tax:</strong> #local.displayOrderedItems.fldTotalTax#</p>">
+                <cfset local.emailBody &= "<p><strong>Total Price:</strong> #local.orderInformation.fldTotalPrice#</p>">
+                <cfset local.emailBody &= "<p><strong>Total Tax:</strong> #local.orderInformation.fldTotalTax#</p>">
                 <cfset local.emailBody &= "<p><strong>Payable Amount:</strong> #local.payableAmount#</p>">
                 <cfset local.emailBody &= "<p>We appreciate your business!</p>"> 
-                <cfmail to="#local.userMail#" from="eevaparayil7@gmail.com" subject="Your Order Confirmation - #local.displayOrderedItems.fldOrderId#" type="html">
+                <cfmail to="#local.userMail#" from="shyamsms466340@gmail.com" subject="Your Order Confirmation Details - #local.orderInformation.fldOrderId#" type="html">
                     #local.emailBody#
                 </cfmail>
             </cfif>

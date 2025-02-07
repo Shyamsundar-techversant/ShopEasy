@@ -246,7 +246,7 @@ $(document).ready(function () {
     let unitPrice = parseFloat($('.payable-order-price').text());
     let unitTax = parseFloat($('.actual-order-tax').text());
     let totalCalculatedAmount = unitPrice;
-    let totalTax = (unitTax*unitPrice)/100;
+    let totalTax = (unitTax * unitPrice) / 100;
     $('.qty-add-btn').on('click', function () {
         productQuantity += 1;
         $('#orderQuantity').val(productQuantity);
@@ -266,9 +266,9 @@ $(document).ready(function () {
         }
     });
 
-    
+
     // ORDER PAYMENT
-    $('.place-order-btn').on('click',function(){
+    $('.place-order-btn').on('click', function () {
         $('#order-place-form').trigger('reset');
         $('.form-error').empty();
     });
@@ -277,15 +277,15 @@ $(document).ready(function () {
         let formData = new FormData();
         productId = $('.selected-order-product').data('id');
         addressId = $('.order-address-summary').data('id');
-        formData.append('cardNumber',$('#card-number').val());
-        formData.append('cvv',$('#cvv').val());
-        formData.append('productId',productId);
-        formData.append('addressId',addressId);
-        formData.append('unitPrice',unitPrice);
-        formData.append('unitTax',unitTax);
-        formData.append('totalPrice',totalCalculatedAmount);
-        formData.append('totalTax',totalTax);
-        formData.append('quantity',productQuantity);
+        formData.append('cardNumber', $('#card-number').val());
+        formData.append('cvv', $('#cvv').val());
+        formData.append('productId', productId);
+        formData.append('addressId', addressId);
+        formData.append('unitPrice', unitPrice);
+        formData.append('unitTax', unitTax);
+        formData.append('totalPrice', totalCalculatedAmount);
+        formData.append('totalTax', totalTax);
+        formData.append('quantity', productQuantity);
         $.ajax({
             url: "../../controller/order.cfc?method=validateCardAndOrder",
             method: 'POST',
@@ -293,13 +293,17 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                    let data = JSON.parse(response);
-                    if(data === 'Success'){
-
-                    }
-                    else{
-                        addError(data);
-                    }
+                let data = JSON.parse(response);
+                if (data === 'Success') {
+                    $('#orderPlaceModal').modal('hide');
+                    Swal.fire({
+                        title: "Payment Successful",
+                        icon: "success"
+                    });
+                }
+                else {
+                    addError(data);
+                }
             },
             error: function () {
                 console.log("Request failed");
