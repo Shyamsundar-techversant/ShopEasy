@@ -90,7 +90,9 @@
                 >
                     Add New Address
                 </button>
-                <button class = "order-details-btn profile-btn">Order Details</button>
+                <button class = "order-details-btn profile-btn" 
+                    onclick = "window.location.href='orderHistory.cfm'"
+                >Order Details</button>
             </div>
         </div>
     </div>

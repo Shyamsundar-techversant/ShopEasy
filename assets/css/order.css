@@ -117,3 +117,122 @@
   background: #db4444 !important;
   color: #ffff !important;
 }
+
+/* ORDER HISTORY */
+.order-history-container{
+  display: flex !important;
+  flex-direction: column !important;
+}
+.order-product-search{
+  border-radius:25px;
+  background: #db4444;
+  display:flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.order-history-search-contaier{
+  width:50%;
+  max-width:350px;
+}
+.order-history-search-title{
+  padding-left:10px;
+  color:#ffff;
+  font-size:18px;
+  font-weight: 500;
+}
+.order-search-form{
+  display: flex;
+  width:100%;
+  background: #fff;
+  border-radius:20px;
+}
+.search-text{
+  width:100% !important;
+  max-width: 90% !important;
+}
+#serach-order{
+  width:100%;
+  border:none !important;
+  padding:4px;
+}
+#serach-order:focus{
+  border:none !important;
+  outline: none !important;
+}
+.order-item-details-history{
+  border-bottom:1px solid #d5d5d5 !important;
+  margin:0px !important;
+  background: #ffdbdb;
+  padding:5px;
+}
+.order-history-details{
+  border:1px solid #d5d5d5 !important;
+
+}
+.order-items-id,.order-date{
+  font-size:16px !important;
+  color:#4a4444 !important;
+  font-weight: 500 !important;
+}
+.ordered-image-details{
+  width:150px ;
+  height:150px; 
+}
+.order-history-btn{
+  padding:5px 10px !important;
+  font-size:16px !important;
+  border-radius: 16px !important;
+  color:#db4444;
+  font-weight: 600;
+  border:1px solid #db4444 !important;
+  background: none;
+}
+.order-items-details{
+  display: flex !important;
+  align-items: center !important;
+  gap:80px;
+}
+.order-items-content{
+  display: flex;
+  flex-direction: column;
+}
+.order-items-name-details{
+  font-size: 18px;
+  font-weight: 500;
+  color:#db4444;
+  text-align: center;
+}
+.order-items-brand-name-details,.order-items-quantity-details{
+  font-size:16px;
+  font-weight: 500;
+  text-align: center;
+}
+.order-actual-price,.order-actual-tax,.order-total-price,.final-price{
+  font-size:16px;
+  font-weight: 500;
+}
+.order-actual-price-value{
+  color:#db4444;
+}
+.order-total-price-value{
+  color:#ffa500;
+}
+.order-data-footer{
+  border-top:1px solid #d5d5d5 !important;
+}
+.ship-adress{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+}
+.order-user-name{
+  font-size:17px ;
+  font-weight: 500;
+}
+.ship-address-content{
+  text-align: center;
+}
+.order-history-section{
+  padding-bottom:70px !important;
+}
