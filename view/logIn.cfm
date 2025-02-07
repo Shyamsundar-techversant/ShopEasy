@@ -4,6 +4,7 @@
   <cfset structDelete(session, "userId","true")>
   <cfset structDelete(session, "productId","true")>
   <cfset structDelete(session,"setOrder","true")>
+  <cfset structDelete(session, 'orderId',"true")>
 </cfif>
 <cfif structKeyExists(form, "userLogIn")>
   <cfset variables.logResult = application.userContObj.validateUserForm(

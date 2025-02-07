@@ -93,13 +93,16 @@
             </cfif>
             <cfif structKeyExists(local,'qryAddOrderItems') >
                 <cfif local.qryAddOrderItems.recordCount GT 0>
+                    <cfset local.sendMail = sendMailToUser(
+                        orderId = arguments.orderId
+                    )>
                     <cfreturn 'Success'>
                 </cfif>
-               <cfset local.sendMail = sendMailToUser(
-                    orderId = arguments.orderId
-                )>
             <cfelseif structKeyExists(local,'qryCartOrderItems') >
                 <cfif local.qryCartOrderItems.recordCount GT 0>
+                    <cfset local.sendMail = sendMailToUser(
+                        orderId = arguments.orderId
+                    )>
                     <cfset local.deleteCartItems = deleteCartProducts()>
                     <cfreturn 'Success'>
                 </cfif>
@@ -128,14 +131,15 @@
     </cffunction>
     <!---  GET ORDER DETAILS    --->
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
-        <cfargument name = "orderId" type = "string" required = "true">
+        <cfargument name = "orderId" type = "string" required = "false">
         <cftry>
-            <cfquery name = "local.qryGetOrderedProcutsDetails" datasource = "#application.datasource#">
+          <cfquery name = "local.qryGetOrderedProcutsDetails" datasource = "#application.datasource#">
                 SELECT 
                     OI.fldOrderId,
                     OI.fldProductId,
                     OI.fldQuantity,
                     OI.fldUnitPrice,
+                    OI.fldOrderId,
                     OI.fldUnitTax,
                     O.fldTotalPrice,
                     O.fldTotalTax,
@@ -148,7 +152,10 @@
                     A.fldCity,
                     A.fldState,
                     A.fldPincode,
-                    PI.fldImageFileName
+                    A.fldPhoneNumber,
+                    PI.fldImageFileName,
+                    B.fldBrandName,
+                    SUM(OI.fldQuantity*(OI.fldUnitPrice + (OI.fldUnitPrice*OI.fldUnitTax)/100)) AS totalPrice
                 FROM tblOrderItems AS OI
                 INNER JOIN tblOrder AS O
                 ON OI.fldOrderId = O.fldOrder_ID
@@ -158,8 +165,34 @@
                 ON O.fldAddressId = A.fldAddress_ID
                 INNER JOIN tblProductImages AS PI 
                 ON PI.fldProductId = P.fldProduct_ID
+                INNER JOIN tblBrands AS B
+                ON B.fldBrand_ID = P.fldBrandId
                 WHERE 
                     PI.fldDefaultImage = 1
+                <cfif structKeyExists(arguments, 'orderId')>
+                    AND OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
+                </cfif>
+                GROUP BY
+                    OI.fldOrderId,
+                    OI.fldProductId,
+                    OI.fldQuantity,
+                    OI.fldUnitPrice,
+                    OI.fldOrderId,
+                    OI.fldUnitTax,
+                    O.fldTotalPrice,
+                    O.fldTotalTax,
+                    O.fldOrderedDate,
+                    P.fldProductName,
+                    A.fldFirstName,
+                    A.fldLastName,
+                    A.fldAddressLine1,
+                    A.fldAddressLine2,
+                    A.fldCity,
+                    A.fldState,
+                    A.fldPincode,
+                    A.fldPhoneNumber,
+                    PI.fldImageFileName,
+                    B.fldBrandName
             </cfquery>
             <cfreturn local.qryGetOrderedProcutsDetails>
         <cfcatch type="exception">
@@ -168,18 +201,42 @@
         </cftry>
     </cffunction>
 
+    <!---GET UNIQUE ORDER ID  --->
+    <cffunction name = "getUniqueOrderId" access = "public" returntype = "query">
+        <cftry>
+            <cfquery name = "local.qryGetUniqueOrderId" datasource = "#application.datasource#">
+                SELECT 
+                    fldOrder_ID,
+                    fldTotalPrice
+                FROM tblOrder 
+                WHERE 
+                    fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
+            </cfquery>
+            <cfreturn local.qryGetUniqueOrderId>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 
     <!---   SEND MAIL TO USER   --->
     <cffunction name = "sendMailToUser" access = "private" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">
         <cftry>
-            <cfset local.displayOrderedItems = application.orderModObj.getOrderedProductsDetails(
+            <cfset local.orderInformation =getOrderedProductsDetails(
                 orderId = arguments.orderId
             )>
-            <cfset local.userDetails = application.modelUserPage.getUserProfileDetails()>
-            <cfset local.userMail = local.userDetails.fldEmail>
-            <cfset local.payableAmount = local.displayOrderedItems.fldTotalTax  + local.displayOrderedItems.fldTotalPrice>
-            <cfif local.displayOrderedItems.recordCount GT 0>
+            <!---     GET USER EMAIL     --->
+            <cfquery name = "local.qryGetUserEmail" datasource = "#application.datasource#">
+                SELECT 
+                    fldEmail
+                FROM tblUser 
+                WHERE 
+                    fldUser_ID = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+            </cfquery>
+            <cfset local.userMail = local.qryGetUserEmail.fldEmail>
+            <cfif local.orderInformation.recordCount GT 0>
+                <cfset local.payableAmount = local.displayOrderedItems.fldTotalTax  + local.displayOrderedItems.fldTotalPrice>
                 <cfset local.orderTotal = local.displayOrderedItems.fldTotalPrice>
                 <cfset local.orderTax = local.displayOrderedItems.fldTotalTax>
                 <cfset local.emailBody = "<h2>Thank you for your purchase!</h2>">

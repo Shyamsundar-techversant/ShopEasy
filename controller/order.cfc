@@ -52,4 +52,21 @@
             </cfif>
         </cfif>
     </cffunction>
+    <!--- GET ORDER DETAILS     --->
+        <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
+        <cfargument name = "orderId" type = "string" required = "false">
+        <cftry>
+            <cfif structKeyExists(arguments, 'orderId')>
+                <cfset local.orderResult = application.orderModObj.getOrderedProductsDetails(
+                    orderId = arguments.orderId
+                )>
+            <cfelse>
+                <cfset local.orderResult = application.orderModObj.getOrderedProductsDetails( )>
+            </cfif>
+            <cfreturn local.orderResult>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>

@@ -2,9 +2,6 @@
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
-<cfset variables.orderDetails = application.orderModObj.getOrderedProductsDetails('8F49D0E9-E49F-B95A-54635F8290ACFD1E')>
-<cfdump var = "#variables.orderDetails#" >
-
 <!DOCTYPE html>
 <html lang = "en">
     <head>
