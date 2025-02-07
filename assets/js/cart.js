@@ -299,6 +299,8 @@ $(document).ready(function () {
                     Swal.fire({
                         title: "Payment Successful",
                         icon: "success"
+                    }).then(() => {
+                        window.location.href = 'orderHistory.cfm';
                     });
                 }
                 else {

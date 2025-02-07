@@ -2,8 +2,9 @@
 <cfset variables.orderIds = application.orderModObj.getUniqueOrderId()>
 <cfset variables.orderIdList = valueList(orderIds.fldOrder_ID,",")>
 <cfif structKeyExists(variables, 'orderDetails')>
-<!---     <cfdump var = "#variables.orderDetails#"> --->
+<cfdump var = "#variables.orderDetails#"> 
 </cfif> 
+<cfset variables.email = application.orderModObj.sendMailToUser(orderId = '935BD7B6-DC8E-DDCE-DE30A22FDDE3F5A9')>
 <cfif structKeyExists(form, 'searchOrder')>
     <cfset session.orderId = trim(form.searchOrder)>
     <cflocation  url="orderedProductDetails.cfm" addToken = "false">
@@ -30,7 +31,7 @@
                     </form>
                 </div>
             </div>
-            <cfif structKeyExists(variables, 'orderIdList')>     
+            <cfif structKeyExists(variables, 'orderIds')>     
                 <cfoutput query = "variables.orderIds" >
                     <cfset variables.currentOrder = application.orderContObj.getOrderedProductsDetails(
                         variables.orderIds.fldOrder_ID
@@ -51,23 +52,25 @@
                                 <div class = "order-date">Ordered In : #variables.currentOrder.fldOrderedDate#</div>
                             </div>
                         </div>
-                        <cfloop query = "variables.currentOrder">
-                            <div class = "row  ordered-products-history align-items-center p-2 mb-2">
-                                <div class = "col order-items-details">
-                                    <div><img src = "/uploadImg/#variables.currentOrder.fldImageFileName#" alt = "prod-img" class = "ordered-image-details"></div>
-                                    <div class = "order-items-content">
-                                        <div class = "order-items-name-details">#variables.currentOrder.fldProductName#</div>
-                                        <div class = "order-items-brand-name-details">Brand : #variables.currentOrder.fldBrandName#</div>
-                                        <div class = "order-items-quantity-details">Quantity : #variables.currentOrder.fldQuantity#</div>
+                        <cfif structKeyExists(variables, 'currentOrder')>
+                            <cfloop query = "variables.currentOrder">
+                                <div class = "row  ordered-products-history align-items-center p-2 mb-2">
+                                    <div class = "col order-items-details">
+                                        <div><img src = "/uploadImg/#variables.currentOrder.fldImageFileName#" alt = "prod-img" class = "ordered-image-details"></div>
+                                        <div class = "order-items-content">
+                                            <div class = "order-items-name-details">#variables.currentOrder.fldProductName#</div>
+                                            <div class = "order-items-brand-name-details">Brand : #variables.currentOrder.fldBrandName#</div>
+                                            <div class = "order-items-quantity-details">Quantity : #variables.currentOrder.fldQuantity#</div>
+                                        </div>
+                                    </div>
+                                    <div class = "col d-flex justify-content-center align-items-center gap-3 flex-column">
+                                        <div class = "order-actual-price">Actual Price : <span class = "order-actual-price-value">$#variables.currentOrder.fldUnitPrice#</span></div>
+                                        <div class = "order-actual-tax">Tax: #variables.currentOrder.fldUnitTax#</div>
+                                        <div class = "order-total-price">Total Price : <span class = "order-total-price-value">$#variables.currentOrder.totalPrice#</span></div>
                                     </div>
                                 </div>
-                                <div class = "col d-flex justify-content-center align-items-center gap-3 flex-column">
-                                    <div class = "order-actual-price">Actual Price : <span class = "order-actual-price-value">$#variables.currentOrder.fldUnitPrice#</span></div>
-                                    <div class = "order-actual-tax">Tax: #variables.currentOrder.fldUnitTax#</div>
-                                    <div class = "order-total-price">Total Price : <span class = "order-total-price-value">$#variables.currentOrder.totalPrice#</span></div>
-                                </div>
-                            </div>
-                        </cfloop>
+                            </cfloop>
+                        </cfif>
                         <div class = "d-flex align-items-center order-data-footer p-3">
                             <div class = "final-price col">
                                 Total Price : <span class = "order-total-price-value">$#variables.currentOrder.fldTotalPrice#</span>
@@ -87,8 +90,8 @@
                         </div>
                     </div>
                 </cfoutput>
-            <cfelse>
-                <h4>No product ordered yet.</h4>
+            <cfelseif variables.orderList EQ 'undefined' OR NOT structKeyExists(variables,'orderList')>
+                <h4>No products ordered yet.</h4>
             </cfif> 
         </div>
     </section>

@@ -35,10 +35,9 @@
                 </cfquery>
                 <cfset arguments['orderId'] = local.orderId>
                 <cfif local.qryOrder.recordCount EQ 1>
-                    <cfset local.OrderItemResult = addOrderItems(
+                    <cfset local.orderItemResult = addOrderItems(
                             argumentCollection = arguments
                     )>
-                    <cfreturn local.OrderItemResult>
                 </cfif>
             <cftransaction action = "commit">
         <cfcatch type="exception">
@@ -221,7 +220,7 @@
     </cffunction>
 
     <!---   SEND MAIL TO USER   --->
-    <cffunction name = "sendMailToUser" access = "private" returntype = "any">
+    <cffunction name = "sendMailToUser" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">
         <cftry>
             <cfset local.orderInformation =getOrderedProductsDetails(
@@ -237,14 +236,21 @@
             </cfquery>
             <cfset local.userMail = local.qryGetUserEmail.fldEmail>
             <cfif local.orderInformation.recordCount GT 0>
-                <cfset local.payableAmount = local.displayOrderedItems.fldTotalTax  + local.displayOrderedItems.fldTotalPrice>
-                <cfset local.orderTotal = local.displayOrderedItems.fldTotalPrice>
-                <cfset local.orderTax = local.displayOrderedItems.fldTotalTax>
+                <cfset local.payableAmount = local.orderInformation.fldTotalPrice>
+                <cfset local.orderTotal = local.orderInformation.fldUnitPrice>
+                <cfset local.orderTax = local.orderInformation.fldUnitTax>
                 <cfset local.emailBody = "<h2>Thank you for your purchase!</h2>">
-                <cfset local.emailBody &= "<p>Order Date: <strong>#local.displayOrderedItems.fldOrderDate#</strong></p>">
-                <cfset local.emailBody &= "<p>Your Order ID: <strong>#local.displayOrderedItems.fldOrderId#</strong></p>">
-                <cfset local.emailBody &= "<p>Your Shipping Address: #local.displayOrderedItems.fldAddressLine1#, #local.displayOrderedItems.fldAddressLine2#, #local.displayOrderedItems.fldCity#, #local.displayOrderedItems.fldState#, #local.displayOrderedItems.fldPincode#</p>">
-                <cfset local.emailBody &= "<p>Your Account Details: <strong>********#local.displayOrderedItems.fldCardPart#</strong></p>">
+                <cfset local.emailBody &= "<p>Order Date: <strong>#local.orderInformation.fldOrderedDate#</strong></p>">
+                <cfset local.emailBody &= "<p>Your Order ID: <strong>#local.orderInformation.fldOrderId#</strong></p>">
+                <cfset local.emailBody &= 
+                    "<p>
+                        Your Shipping Address: 
+                        #local.orderInformation.fldAddressLine1#, 
+                        #local.orderInformation.fldAddressLine2#, 
+                        #local.orderInformation.fldCity#, 
+                        #local.orderInformation.fldState#, 
+                        #local.orderInformation.fldPincode#
+                    </p>">
                 <cfset local.emailBody &= "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
                                             <tr>
                                                 <th>Product Name</th>
@@ -257,19 +263,20 @@
                     <cfset local.emailBody &= "<tr>
                                                 <td>#local.orderInformation.fldProductName#</td>
                                                 <td>#local.orderInformation.fldQuantity#</td>
-                                                <td>#local.orderInformation.fldPrice#</td>
-                                                <td>#local.orderInformation.fldTax#</td>
+                                                <td>#local.orderInformation.fldUnitPrice#</td>
+                                                <td>#local.orderInformation.fldUnitTax#</td>
                                             </tr>">
                 </cfloop>
                 <cfset local.emailBody &= "</table>">
                 <cfset local.emailBody &= "<p><strong>Total Price:</strong> #local.orderInformation.fldTotalPrice#</p>">
                 <cfset local.emailBody &= "<p><strong>Total Tax:</strong> #local.orderInformation.fldTotalTax#</p>">
                 <cfset local.emailBody &= "<p><strong>Payable Amount:</strong> #local.payableAmount#</p>">
-                <cfset local.emailBody &= "<p>We appreciate your business!</p>"> 
+                <cfset local.emailBody &= "<p>Stay Connected with us!</p>"> 
                 <cfmail to="#local.userMail#" from="shyamsms466340@gmail.com" subject="Your Order Confirmation Details - #local.orderInformation.fldOrderId#" type="html">
                     #local.emailBody#
                 </cfmail>
             </cfif>
+            <cfreturn 'Success'>
         <cfcatch type="exception">
             <cfdump var = "#arguments#">
         </cfcatch>

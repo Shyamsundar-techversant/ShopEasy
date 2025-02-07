@@ -37,6 +37,7 @@
                 <cfset local.orderResult = application.orderModObj.orderProduct(
                     argumentCollection = arguments
                 )>
+                <cfreturn 'Success'>
             <cfelse>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
                 <cfset arguments.totalPrice = 0>
@@ -49,8 +50,8 @@
                 <cfset local.orderResult = application.orderModObj.orderProduct(
                     argumentCollection = arguments
                 )>
+                <cfreturn 'Success'>
             </cfif>
-            <cfreturn local.orderResult>
         </cfif>
     </cffunction>
     <!--- GET ORDER DETAILS     --->
