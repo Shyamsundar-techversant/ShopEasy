@@ -1,5 +1,7 @@
 <cfif structKeyExists(url, "logOut")>
   <cfset structDelete(session, "roleId","true")>
+  <cfset structDelete(session, "adminId","true")>
+  <cfset structDelete(session, "userId","true")>
 </cfif>
 <cfif structKeyExists(form, "userLogIn")>
   <cfset variables.logResult = application.userContObj.validateUserForm(
@@ -8,15 +10,6 @@
                                   )
   >
 </cfif>
-
-<!--- <cfset pass = "Shyam@123">
-<cfset salt = "q1Y9Ls/IoY5RUVY3oojjOQ==">
-<cfset saltPass = pass & salt>
-<cfset hashPass = hash(saltPass,"SHA-256","UTF-8")>
-<cfdump var = #hashPass# > 
- 037FC62C2202B4FBB97D55652E329D91419987E12E6B6A7210832F70908EA464  --->
-
-
 <!DOCTYPE html>
 <html lang = "en">
   <head>
@@ -25,6 +18,7 @@
     <title>ShopEasy</title>
     <link rel = "stylesheet" href = "../assets/css/style.css" />
     <link rel = "stylesheet" href = "../assets/css/bootstrap.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   </head>
   <body>
     <!-- Header -->
@@ -41,16 +35,24 @@
       </header>
     </section>
 
-
     <!--- LogIn Form --->
     <section class = "form-section">
       <div class = "container">
         <div class = "user-registration">         
-          <div class = "card">
+          <div class = "card user-reg-card" data-aos="flip-left" data-aos-easing="ease-out-cubic"
+                        data-aos-duration="1000"        
+          >
             <h5 class = "card-head">LogIn</h5>
             <form action = "" class = "user-reg-form" method = "post">
-
-              
+              <div class = "row">
+                <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
+                  <cfoutput>
+                    <cfloop array = "#variables.logResult#" index = "error">
+                      <span class = "errors" >#error#</span><br>
+                    </cfloop>
+                  </cfoutput>
+                </cfif>
+              </div>            
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "username" class = "form-label">Username </label>
@@ -90,15 +92,6 @@
               <div class = "row mb-3" >
                 <a href = "signup.cfm" class = "sign-link"> Don't have any account? Please SignUp</a>
               </div>
-              <div class = "row">
-                <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
-                  <cfoutput>
-                    <cfloop array = "#variables.logResult#" index = "error">
-                      <span class = "errors" >#error#</span><br>
-                    </cfloop>
-                  </cfoutput>
-                </cfif>
-              </div>
             </form>
           </div>						
 		    </div>
@@ -106,5 +99,9 @@
 		</section>
   
     <script src = "../assets/js/bootstrap.bundle.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
   </body>
 </html>

@@ -1,37 +1,20 @@
-<cfif structKeyExists(form, "categSubmit")>
-  <cfdump var = "#form#">
-</cfif>
 
 <cfset variables.getCategory = application.cateContObj.getCategory()>
+<!---  
+<cfset variables.categoryList = valueList(variables.getCategory.fldCategory_ID)>
+<cfset a = 67>
+<cfset categoryExistCheck = listFind(variables.categoryList, a)>
 
-<!DOCTYPE html>
-<html lang = "en">
-  <head>
-    <meta charset = "UTF-8" />
-    <meta name = "viewport" content= "width = device-width, initial-scale = 1.0" />
-    <title>ShopEasy</title>
-    <link rel = "stylesheet" href = "../../assets/css/style.css" />
-    <link rel = "stylesheet" href = "../../assets/css/bootstrap.css" />
-  </head>
-  <body>
+<cfif NOT categoryExistCheck>
+  <cfoutput>
+    Haii
+  </cfoutput>
+</cfif> --->
 
-    <!-- Header -->
-    <section class = "header-section">
-      <header class = "header">
-        <div class = "container">
-          <div class = "header-content">
-            <div class = "brand-name">ShopEasy</div>
-            <div class = "sign-buttons">
-              <button class = "reg-btn btn" onclick = "window.location.href = '../log.cfm?logOut=1' ">LogOut</button>
-            </div>
-          </div>
-        </div>
-      </header>
-    </section>
-
+<cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
-        <div class = "card">
+        <div class = "card category-card" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="300">
           <div class = "card-head">
             <div class = "cardhead-content">
               <span class = "category-head">Categories</span>
@@ -56,7 +39,7 @@
                                             "Hex"
                                           )
                     >
-                    <tr class = "table-danger">
+                    <tr class = "table-light">
                       <td>#variables.getCategory.fldCategoryName#</td>
                       <td>
                         <button type = "button" 
@@ -85,7 +68,7 @@
                                 onclick = 
                                 "window.location.href = 'adminCategory.cfm?categId=#encryptedId#' "
                         >       
-                          SUB 
+                          VIEW 
                         </button>             
                       </td>
                     </tr>   
@@ -105,32 +88,31 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header categAddModalHead">
-            <h5 class="modal-title" id = "categTitle">Add Category</h5>
+            <h5 class="modal-title" id = "categoryTitle">Add Category</h5>
           </div>
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "categoryAddForm">
+              <div class = "row mb-3 ">
+                <div class = "error">
+
+                </div>
+              </div>
               <div class = "row mb-3">
                 <div class = "col">
-                  <label for = "categName" class = "form-label">Enter category Name </label>
-                  <input type = "text" class = "form-control" id = "categName" name = "categName"
+                  <label for = "categoryName" class = "form-label">Enter category Name </label>
+                  <input type = "text" class = "form-control" id = "categoryName" name = "categoryName"
                     placeholder = "Enter the category name you want to add"
                   >
                 </div>
               </div>
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categAddBtn">Add Category</button>
-                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categEditBtn">Edit Category</button>
+                  <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryAddBtn">Add</button>
+                  <button type="button" class="btn btn-primary" name = "categSubmit" id = "categoryEditButton">Update</button>
                 </div>
-              </div>  
-              <div class = "row mb-3 ">
-                <div class = "error">
-
-                </div>
-              </div>  
-                      
-            </form>
+              </div>                     
+           </form>
           </div>       
         </div>
       </div>
@@ -146,15 +128,14 @@
             Do you want to delete this category ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id = "categoryDeleteBtn">Delete Category</button>
+            <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary delete-items" id = "categoryDeleteBtn">Delete</button>
           </div>      
         </div>
       </div>
     </div>
 
-    <script src = "../../assets/js/bootstrap.bundle.js"></script>
-    <script src = "../../assets/js/jquery-3.7.1.min.js"></script>
+    <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/admin.js"></script>
   </body>
 </html>

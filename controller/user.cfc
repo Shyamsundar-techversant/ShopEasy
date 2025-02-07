@@ -1,7 +1,4 @@
 <cfcomponent>
-
-
-
     <!--- Validate LogIn form  --->
     <cffunction  name = "validateUserForm" access = "public" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "false" >
@@ -18,7 +15,7 @@
             <cfif len(trim(arguments.firstName)) EQ 0>
 		    	<cfset arrayAppend(local.errors,"*Firstname is required")>
 	    	<cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.firstName)>
-		    	<cfset arrayAppend(local.errors,"*Enter a valid fullname")>
+		    	<cfset arrayAppend(local.errors,"*Enter a valid firstname")>
 		    </cfif>	
         </cfif>
 
@@ -27,7 +24,7 @@
             <cfif len(trim(arguments.lastName)) EQ 0>
 			    <cfset arrayAppend(local.errors,"*Lastname is required")>
 		    <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.lastName)>
-			    <cfset arrayAppend(local.errors,"*Enter a valid fullname")>
+			    <cfset arrayAppend(local.errors,"*Enter a valid lastname")>
 		    </cfif>	     
         </cfif>  
 
@@ -67,13 +64,16 @@
             <cfreturn local.errors>
         <cfelse>
             <cfif structKeyExists(arguments, "userName")>
-                <cfset local.logResult = application.userModObj.logUser(
-                                            argumentCollection = arguments
-                                         )
+                <cfset local.userLogInResult = application.userModObj.userLogIn(
+                                                                            argumentCollection = arguments
+                                                                        )
+                >
+            <cfelse>
+                <cfset local.userRegisterResult = application.userModObj.userRegister(
+                                                                                        argumentCollection = arguments
+                                                                                    )
                 >
             </cfif>
-        </cfif>
-      
+        </cfif>      
     </cffunction>
-
 </cfcomponent>
