@@ -1,5 +1,4 @@
 <cfcomponent>
-
     <!---  CHECK PRODUCT ALREADY IN CART --->
     <cffunction  name = "checkProductExist" access = "private" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
@@ -21,13 +20,11 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!--- CHANGE PRODUCT QUANTITY --->
     <cffunction  name = "changeProductQuantity" access = "public" returntype = "any">
         <cfargument name="productId" type = "string" required = "true">
-        <cfargument name = "userId" type = "integer" required = "true">
-        <cfargument name = "decreaseQuantity" type = "integer" required = "false">
-        <cfargument name = "increaseQuantity" type = "integer" required = "false">
+        <cfargument name = "isDecreaseQuantity" type = "integer" required = "false">
+        <cfargument name = "isIncreaseQuantity" type = "integer" required = "false">
         <cfargument name = "isRemoveProduct" type = "integer" required = "false">
         <cftry>
             <cfset local.isProductExist = checkProductExist(
@@ -38,10 +35,10 @@
                     UPDATE 
                         tblCart
                     SET 
-                        <cfif structKeyExists(arguments, 'decreaseQuantity') >
+                        <cfif structKeyExists(arguments, 'isDecreaseQuantity') >
                             <cfset local.updatedQuantity = local.isProductExist.fldQuantity - 1> 
                             fldQuantity = <cfqueryparam value = "#local.updatedQuantity#" cfsqltype = "cf_sql_integer">
-                        <cfelseif structKeyExists(arguments, 'increaseQuantity')>
+                        <cfelseif structKeyExists(arguments, 'isIncreaseQuantity')>
                             <cfset local.updatedQuantity = local.isProductExist.fldQuantity + 1> 
                             fldQuantity = <cfqueryparam value = "#local.updatedQuantity#" cfsqltype = "cf_sql_integer">
                         <cfelseif structKeyExists(arguments, 'isRemoveProduct')>
@@ -49,21 +46,21 @@
                         </cfif>
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
+                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfreturn 'Success'>
             <cfelse>
                 <cfreturn 'Failed'>
             </cfif>
         <cfcatch type="exception">
+            <cfdump var = "#cfcatch#">
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!--- ADD PRODUCT TO CART --->
     <cffunction name = "addProductToCart" access = "public" returntype = "any">
         <cfargument  name="productId" type = "integer" required = "true">
-        <cfargument name = "userId" type = "integer" required = "true">
+        <cfargument name = "userId" type = "integer" required = "false">
         <cftry>
             <cfset local.isProductExist = checkProductExist(
                 argumentCollection = arguments
@@ -99,7 +96,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
      <!---   GET CART PRODUCTS   --->
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cftry>
@@ -146,8 +142,8 @@
     <cffunction name = "addUserAddress" access = "public" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
         <cfargument name = "lastName" type = "string" required = "true">
-        <cfargument name = "addressLine_1" type = "string" required = "true">
-        <cfargument name = "addressLine_2" type = "string" required = "true">
+        <cfargument name = "addressLine1" type = "string" required = "true">
+        <cfargument name = "addressLine2" type = "string" required = "true">
         <cfargument name = "city" type = "string" required = "true">
         <cfargument name = "state" type = "string" required = "true">
         <cfargument name = "pincode" type = "string" required = "true">
@@ -170,8 +166,8 @@
                     <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                     <cfqueryparam value  = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value  = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
-                    <cfqueryparam value = "#arguments.addressLine_1#" cfsqltype = "cf_sql_varchar">,
-                    <cfqueryparam value = "#arguments.addressLine_2#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.addressLine1#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.addressLine2#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "#arguments.city#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "#arguments.state#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "#arguments.pincode#" cfsqltype = "cf_sql_varchar">,
@@ -260,8 +256,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
-        <!--- VALIDATE USER DETAILS --->
+    <!--- VALIDATE USER DETAILS --->
     <cffunction name = "validateUserDetails" access = "remote" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
         <cfargument name = "lastName" type = "string" required = "true">

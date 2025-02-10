@@ -13,16 +13,14 @@ $(document).ready(function () {
     let productId;
     $('.qty-decrease').on('click', function () {
         productId = $(this).data('id');
-        let decreaseQuantity = 1;
-        let formData = new FormData();
-        formData.append('productId', productId);
-        formData.append('decreaseQuantity', decreaseQuantity);
+        let isDecreaseQuantity = 1;
         $.ajax({
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                productId : productId,
+                isDecreaseQuantity : isDecreaseQuantity               
+            },
             success: function (response) {
                 console.log(response);
                 location.reload();
@@ -35,16 +33,15 @@ $(document).ready(function () {
     });
     $('.qty-increase').on('click', function () {
         productId = $(this).data('id');
-        let increaseQuantity = 1;
+        let isIncreaseQuantity = 1;
         let formData = new FormData();
-        formData.append('productId', productId);
-        formData.append('increaseQuantity', increaseQuantity);
         $.ajax({
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                productId : productId,
+                isIncreaseQuantity : isIncreaseQuantity
+            },
             success: function (response) {
                 console.log(response);
                 location.reload();
@@ -67,9 +64,10 @@ $(document).ready(function () {
         $.ajax({
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                productId : productId,
+                isRemoveProduct : isRemoveProduct
+            },
             success: function (response) {
                 console.log(response);
                 location.reload();
@@ -87,21 +85,19 @@ $(document).ready(function () {
     });
 
     $('#addAddressBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('firstName', $('#firstname').val());
-        formData.append('lastName', $('#lastname').val());
-        formData.append('addressLine_1', $('#addressLine1').val());
-        formData.append('addressLine_2', $('#addressLine2').val());
-        formData.append('city', $('#city').val());
-        formData.append('state', $('#state').val());
-        formData.append('pincode', $('#pincode').val());
-        formData.append('phone', $('#phone').val());
         $.ajax({
             url: "../../controller/cart.cfc?method=addUserAddress",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                firstName : $('#firstname').val(),
+                lastName : $('#lastname').val(),
+                addressLine1 : $('#addressLine1').val(),
+                addressLine2 : $('#addressLine2').val(),
+                city : $('#city').val(),
+                state : $('#state').val(),
+                pincode : $('#pincode').val(),
+                phone : $('#phone').val()
+            },
             success: function (response) {
                 console.log(response);
                 let data = JSON.parse(response);
@@ -125,14 +121,10 @@ $(document).ready(function () {
         addressId = $(this).data('id');
     });
     $('#addressRemoveBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('addressId', addressId);
         $.ajax({
             url: "../../controller/cart.cfc?method=removeUserAddress",
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            method : 'POST',
+            data: {addressId : addressId},
             success: function (response) {
                 console.log(response);
                 let data = JSON.parse(response);
@@ -153,14 +145,10 @@ $(document).ready(function () {
         $('#editUserModalForm').trigger('reset');
         $('.form-error').text('');
         userId = $(this).data('id');
-        let formData = new FormData();
-        formData.append('userId', userId);
         $.ajax({
             url: "../../controller/cart.cfc?method=getUserDetails",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {userId : userId},
             success: function (response) {
                 let data = JSON.parse(response);
                 $('#userFirstname').val(data.DATA[0][0]);
@@ -169,23 +157,21 @@ $(document).ready(function () {
                 $('#phoneNumber').val(data.DATA[0][2]);
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
     $('#editUserModalBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('firstName', $('#userFirstname').val());
-        formData.append('lastName', $('#userLastname').val());
-        formData.append('email', $('#emailId').val());
-        formData.append('phone', $('#phoneNumber').val());
         $.ajax({
             url: "../../controller/cart.cfc?method=validateUserDetails",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                userId : userId,
+                firstName : $('#userFirstname').val(),
+                lastName : $('#userLastname').val(),
+                email : $('#emailId').val(),
+                phone : $('#phoneNumber').val()
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === 'Success') {
@@ -197,28 +183,20 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
 
     // SET SESSION VARIABLE FOR ORDER NOW
     $('#order-now-btn').on('click', function () {
-        let formData = new FormData();
         productId = $(this).data('id');
-        formData.append('setOrder', 1);
-        formData.append('productId', productId);
         $.ajax({
             url: "../../controller/cart.cfc?method=setSessionValue",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                console.log('hhh');
-            },
-            error: function () {
-                console.log("Request failed");
+            data: {
+                setOrder : 1,
+                productId : productId
             }
         });
     });
@@ -273,25 +251,22 @@ $(document).ready(function () {
         $('.form-error').empty();
     });
     $('.pay-btn').on('click', function () {
-        console.log($('#card-number').val());
-        let formData = new FormData();
         productId = $('.selected-order-product').data('id');
         addressId = $('.order-address-summary').data('id');
-        formData.append('cardNumber', $('#card-number').val());
-        formData.append('cvv', $('#cvv').val());
-        formData.append('productId', productId);
-        formData.append('addressId', addressId);
-        formData.append('unitPrice', unitPrice);
-        formData.append('unitTax', unitTax);
-        formData.append('totalPrice', totalCalculatedAmount);
-        formData.append('totalTax', totalTax);
-        formData.append('quantity', productQuantity);
         $.ajax({
             url: "../../controller/order.cfc?method=validateCardAndOrder",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                cardNumber : $('#card-number').val(),
+                cvv :  $('#cvv').val(),
+                productId : productId,
+                addressId : addressId,
+                unitPrice : unitPrice,
+                unitTax : unitTax,
+                totalPrice : totalCalculatedAmount,
+                totalTax : totalTax,
+                quantity : productQuantity
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === 'Success') {

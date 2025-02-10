@@ -20,10 +20,10 @@
             <cfset arrayAppend(local.errors,"*Incorrect card Number")>
 		</cfif>
         <!---    VALIDATE CVV      --->
-        <cfset local.cvv = 1234>
+        <cfset local.cvv = 123>
         <cfif len(trim(arguments.cvv)) EQ 0>
 			<cfset arrayAppend(local.errors,"*cvv number is required")>
-		<cfelseif NOT reFindNoCase("\d{4}",arguments.cvv)>
+		<cfelseif NOT reFindNoCase("\d{3}",arguments.cvv)>
 		    <cfset arrayAppend(local.errors,"*Enter a valid cvv")>
         <cfelseif arguments.cvv NEQ local.cvv>
             <cfset arrayAppend(local.errors,"*Incorrect cvv")>
@@ -31,12 +31,10 @@
         <cfif arrayLen(local.errors) GT 0>
             <cfreturn local.errors>
         <cfelse>
-            <cfif arguments.productId NEQ 'undefined' AND structKeyExists(arguments, 'quantity')>
+            <cfif structKeyExists(arguments, 'productId') AND len(arguments.productId) AND structKeyExists(arguments, 'quantity')>
                 <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
-                <cfset local.orderResult = application.orderModObj.orderProduct(
-                    argumentCollection = arguments
-                )>
+                <cfset local.orderResult = application.orderModObj.orderProduct( argumentCollection = arguments)>
                 <cfreturn 'Success'>
             <cfelse>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
@@ -47,9 +45,7 @@
                     <cfset arguments.totalPrice = arguments.totalPrice + arguments.cartProducts.totalPrice>
                     <cfset arguments.totalTax = arguments.totalTax + arguments.cartProducts.totalTax>
                 </cfloop>
-                <cfset local.orderResult = application.orderModObj.orderProduct(
-                    argumentCollection = arguments
-                )>
+                <cfset local.orderResult = application.orderModObj.orderProduct(argumentCollection = arguments)>
                 <cfreturn 'Success'>
             </cfif>
         </cfif>
