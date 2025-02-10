@@ -59,29 +59,27 @@
                     saltString = local.salt                 
                 )>
                 <cfquery result = "local.qryUserRegister" datasource = "#application.datasource#">
-                    INSERT INTO 
-                        tblUser(
-                            fldFirstName,
-                            fldLastName,
-                            fldEmail,
-                            fldPhone,
-                            fldRoleId,
-                            fldHashedPassword,
-                            fldUserSaltString,
-                            fldActive,
-                            fldUpdatedDate
+                    INSERT INTO tblUser(
+                        fldFirstName,
+                        fldLastName,
+                        fldEmail,
+                        fldPhone,
+                        fldRoleId,
+                        fldHashedPassword,
+                        fldUserSaltString,
+                        fldActive,
+                        fldUpdatedDate
                     )VALUES(
-                                <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "#arguments.userEmail#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
-                                <cfqueryparam value = "#local.hashedPassword#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "#local.salt#" cfsqltype = "cf_sql_varchar">,
-                                <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                                <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
-                            )
-
+                        <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.userEmail#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
+                        <cfqueryparam value = "#local.hashedPassword#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#local.salt#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
+                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    )
                 </cfquery>
                 <cfif local.qryUserRegister.recordCount EQ 1>
                     <cfset local.result = "LogIn Successful">
@@ -91,18 +89,17 @@
                 </cfif>
                 <cfreturn local.result >
             </cfif>
-        <cfcatch type="exception">
+        <cfcatch type = "exception">
             <cfdump var = "#cfcatch#">
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---   USER LOGIN  --->
     <cffunction name = "userLogIn" access = "public" returntype = "any" >
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
         <cftry>
-            <!---   CHECK USER EXIST      --->
+            <!---   CHECK USER EXIST --->
             <cfset local.checkUserExistResult = checkUserExist(
                 argumentCollection = arguments
             )>  

@@ -1,9 +1,7 @@
 $(document).ready(function () {
-
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
     }
-
     // Error function 
     function addError(error) {
         let errorList = $('.error');
@@ -14,10 +12,7 @@ $(document).ready(function () {
             errorList.append(li);
         });
     }
-
-
     // CATEGORY
-
     // ADD
     $('#categoryButton').on('click', function () {
         $("#categoryAddForm").trigger('reset');
@@ -26,7 +21,6 @@ $(document).ready(function () {
         $('#categoryAddBtn').show();
         $('#categoryEditButton').hide();
     });
-
     $('#categoryAddBtn').on('click', function (event) {
         let formData = new FormData();
         let categoryName = $('#categoryName').val();
@@ -48,13 +42,11 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     // EDIT
-
     let categoryId;
     $('.categoryEditBtn').on('click', function () {
         $("#categoryAddForm").trigger('reset');
@@ -78,11 +70,10 @@ $(document).ready(function () {
                 $('#categoryName').val(data.fldCategoryName);
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     })
-
     $('#categoryEditButton').on('click', function () {
         let formData = new FormData();
         let categoryName = $('#categoryName').val();
@@ -105,18 +96,15 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
 
         })
-
     })
-
     //DELETE
     $('.categoryDeleteBtn').on('click', function () {
         categoryId = $(this).data('id');
     })
-
     $('#categoryDeleteBtn').on('click', function () {
         let formData = new FormData();
         formData.append('categoryId', categoryId);
@@ -134,13 +122,11 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");
             }
         });
     });
-
     //SUB CATEGORY
-
     //ADD
     $('#subCategoryButton').on('click', function () {
         $("#categoryAddForm").trigger('reset');
@@ -149,7 +135,6 @@ $(document).ready(function () {
         $('#subCategoryAddButton').show();
         $('#subCategoryEditButton').hide();
     });
-
     $('#subCategoryAddButton').on('click', function () {
         let formData = new FormData();
         let subCategoryName = $('#subCategName').val();
@@ -174,11 +159,10 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     //EDIT
     let subCategoryId;
     $('.subcategory-edit-btn').on('click', function () {
@@ -203,11 +187,10 @@ $(document).ready(function () {
                 $('#subCategName').val(data.fldSubCategoryName);
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     $('#subCategoryEditButton').on('click', function () {
         let subCategoryName = $('#subCategName').val();
         let categoryId = $('#categorySelect').val();
@@ -233,13 +216,11 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     //DELETE
-
     $('.subcategory-delete-btn').on('click', function () {
         subCategoryId = $(this).data('id');
     });
@@ -256,7 +237,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");
             }
         });
     })

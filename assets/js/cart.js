@@ -18,17 +18,15 @@ $(document).ready(function () {
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
             data: {
-                productId : productId,
-                isDecreaseQuantity : isDecreaseQuantity               
+                productId: productId,
+                isDecreaseQuantity: isDecreaseQuantity
             },
             success: function (response) {
-                console.log(response);
                 location.reload();
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");
             }
-
         });
     });
     $('.qty-increase').on('click', function () {
@@ -39,15 +37,14 @@ $(document).ready(function () {
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
             data: {
-                productId : productId,
-                isIncreaseQuantity : isIncreaseQuantity
+                productId: productId,
+                isIncreaseQuantity: isIncreaseQuantity
             },
             success: function (response) {
-                console.log(response);
                 location.reload();
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");;
             }
 
         });
@@ -65,41 +62,37 @@ $(document).ready(function () {
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
             data: {
-                productId : productId,
-                isRemoveProduct : isRemoveProduct
+                productId: productId,
+                isRemoveProduct: isRemoveProduct
             },
             success: function (response) {
-                console.log(response);
                 location.reload();
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");
             }
         });
     });
-
     //USER PROFILE
     $('.address-add-btn').on('click', function () {
         $('#addressAddForm').trigger('reset');
         $('.form-error').text('');
     });
-
     $('#addAddressBtn').on('click', function () {
         $.ajax({
             url: "../../controller/cart.cfc?method=addUserAddress",
             method: 'POST',
             data: {
-                firstName : $('#firstname').val(),
-                lastName : $('#lastname').val(),
-                addressLine1 : $('#addressLine1').val(),
-                addressLine2 : $('#addressLine2').val(),
-                city : $('#city').val(),
-                state : $('#state').val(),
-                pincode : $('#pincode').val(),
-                phone : $('#phone').val()
+                firstName: $('#firstname').val(),
+                lastName: $('#lastname').val(),
+                addressLine1: $('#addressLine1').val(),
+                addressLine2: $('#addressLine2').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+                pincode: $('#pincode').val(),
+                phone: $('#phone').val()
             },
             success: function (response) {
-                console.log(response);
                 let data = JSON.parse(response);
                 if (data === 'Success') {
                     $('#addressAddModal').modal('hide');
@@ -108,10 +101,9 @@ $(document).ready(function () {
                 else {
                     addError(data);
                 }
-
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         })
     });
@@ -123,10 +115,9 @@ $(document).ready(function () {
     $('#addressRemoveBtn').on('click', function () {
         $.ajax({
             url: "../../controller/cart.cfc?method=removeUserAddress",
-            method : 'POST',
-            data: {addressId : addressId},
+            method: 'POST',
+            data: { addressId: addressId },
             success: function (response) {
-                console.log(response);
                 let data = JSON.parse(response);
                 if (data === 'Success') {
                     $('#addressRemoveModal').modal('hide');
@@ -134,11 +125,10 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     // EDIT USER DETAIS
     let userId;
     $('.edit-user-detail-btn').on('click', function () {
@@ -148,7 +138,7 @@ $(document).ready(function () {
         $.ajax({
             url: "../../controller/cart.cfc?method=getUserDetails",
             method: 'POST',
-            data: {userId : userId},
+            data: { userId: userId },
             success: function (response) {
                 let data = JSON.parse(response);
                 $('#userFirstname').val(data.DATA[0][0]);
@@ -166,11 +156,11 @@ $(document).ready(function () {
             url: "../../controller/cart.cfc?method=validateUserDetails",
             method: 'POST',
             data: {
-                userId : userId,
-                firstName : $('#userFirstname').val(),
-                lastName : $('#userLastname').val(),
-                email : $('#emailId').val(),
-                phone : $('#phoneNumber').val()
+                userId: userId,
+                firstName: $('#userFirstname').val(),
+                lastName: $('#userLastname').val(),
+                email: $('#emailId').val(),
+                phone: $('#phoneNumber').val()
             },
             success: function (response) {
                 let data = JSON.parse(response);
@@ -187,7 +177,6 @@ $(document).ready(function () {
             }
         });
     });
-
     // SET SESSION VARIABLE FOR ORDER NOW
     $('#order-now-btn').on('click', function () {
         productId = $(this).data('id');
@@ -195,8 +184,8 @@ $(document).ready(function () {
             url: "../../controller/cart.cfc?method=setSessionValue",
             method: 'POST',
             data: {
-                setOrder : 1,
-                productId : productId
+                setOrder: 1,
+                productId: productId
             }
         });
     });
@@ -218,7 +207,6 @@ $(document).ready(function () {
         $('#addressAddModal').modal('hide');
         $('.form-error').text('');
     });
-
     // ORDER SUMMARY
     let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
     let unitPrice = parseFloat($('.payable-order-price').text());
@@ -243,8 +231,6 @@ $(document).ready(function () {
             window.location.href = `userProduct.cfm?productId=${productId}`;
         }
     });
-
-
     // ORDER PAYMENT
     $('.place-order-btn').on('click', function () {
         $('#order-place-form').trigger('reset');
@@ -257,15 +243,15 @@ $(document).ready(function () {
             url: "../../controller/order.cfc?method=validateCardAndOrder",
             method: 'POST',
             data: {
-                cardNumber : $('#card-number').val(),
-                cvv :  $('#cvv').val(),
-                productId : productId,
-                addressId : addressId,
-                unitPrice : unitPrice,
-                unitTax : unitTax,
-                totalPrice : totalCalculatedAmount,
-                totalTax : totalTax,
-                quantity : productQuantity
+                cardNumber: $('#card-number').val(),
+                cvv: $('#cvv').val(),
+                productId: productId,
+                addressId: addressId,
+                unitPrice: unitPrice,
+                unitTax: unitTax,
+                totalPrice: totalCalculatedAmount,
+                totalTax: totalTax,
+                quantity: productQuantity
             },
             success: function (response) {
                 let data = JSON.parse(response);
@@ -283,7 +269,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });

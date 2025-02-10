@@ -156,22 +156,18 @@
                     PI.fldImageFileName,
                     B.fldBrandName,
                     SUM(OI.fldQuantity*(OI.fldUnitPrice + (OI.fldUnitPrice*OI.fldUnitTax)/100)) AS totalPrice
-                FROM tblOrderItems AS OI
-                INNER JOIN tblOrder AS O
-                ON OI.fldOrderId = O.fldOrder_ID
-                INNER JOIN tblProduct AS P
-                ON OI.fldProductId = P.fldProduct_ID
-                INNER JOIN tblAddress AS A
-                ON O.fldAddressId = A.fldAddress_ID
-                INNER JOIN tblProductImages AS PI 
-                ON PI.fldProductId = P.fldProduct_ID
-                INNER JOIN tblBrands AS B
-                ON B.fldBrand_ID = P.fldBrandId
+                FROM 
+                    tblOrderItems AS OI
+                    INNER JOIN tblOrder AS O ON OI.fldOrderId = O.fldOrder_ID
+                    INNER JOIN tblProduct AS P ON OI.fldProductId = P.fldProduct_ID
+                    INNER JOIN tblAddress AS A ON O.fldAddressId = A.fldAddress_ID
+                    INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID
+                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
                 WHERE 
                     PI.fldDefaultImage = 1
-                <cfif structKeyExists(arguments, 'orderId')>
-                    AND OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
-                </cfif>
+                    <cfif structKeyExists(arguments, 'orderId')>
+                        AND OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
+                    </cfif>
                 GROUP BY
                     OI.fldOrderId,
                     OI.fldProductId,
@@ -208,7 +204,8 @@
                 SELECT 
                     fldOrder_ID,
                     fldTotalPrice
-                FROM tblOrder 
+                FROM 
+                    tblOrder 
                 WHERE 
                     fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
             </cfquery>
@@ -230,7 +227,8 @@
             <cfquery name = "local.qryGetUserEmail" datasource = "#application.datasource#">
                 SELECT 
                     fldEmail
-                FROM tblUser 
+                FROM 
+                    tblUser 
                 WHERE 
                     fldUser_ID = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>

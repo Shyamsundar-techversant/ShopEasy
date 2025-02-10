@@ -36,8 +36,6 @@
         </div>
       </header>
     </section>
-
-
     <!--- Register Form --->
     <section class = "form-section">
         <div class = "container">

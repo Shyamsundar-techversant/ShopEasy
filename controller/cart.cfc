@@ -161,11 +161,11 @@
             <cfquery name="local.qryCheckUserEmail" datasource = "#application.datasource#">
                 SELECT fldEmail
         	    FROM 
-			        tblUser
-        	    WHERE 
-				    fldEmail = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
+                    tblUser
+                WHERE 
+                    fldEmail = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
                 AND fldUser_ID <> <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
-    	    </cfquery>
+            </cfquery>
             <cfif local.qryCheckUserEmail.recordCount GT 0>
                 <cfset arrayAppend(local.errors, '*Email id already exists')>  
             </cfif>

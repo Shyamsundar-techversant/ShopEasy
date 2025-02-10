@@ -1,3 +1,11 @@
+<cfset pass = 'Shyam@123'>
+<cfset salt = 'q1Y9Ls/IoY5RUVY3oojjOQ=='>
+<cfset saltedPass = pass&salt>
+<!---<cfset hashPass = hash(saltedPass,"SHA-256","UTF-8")>
+<cfdump var = "#hashPass#"><br>
+<cfoutput>037FC62C2202B4FBB97D55652E329D91419987E12E6B6A7210832F70908EA464
+</cfoutput>
+  q1Y9Ls/IoY5RUVY3oojjOQ==   --->
 <cfif structKeyExists(url, "logOut")>
   <cfset structDelete(session, "roleId","true")>
   <cfset structDelete(session, "adminId","true")>
@@ -12,7 +20,6 @@
     password = form.userPassword
   )>
 </cfif>
-<cfdump var = "#session#">
 <!DOCTYPE html>
 <html lang = "en">
   <head>
@@ -37,7 +44,6 @@
         </div>
       </header>
     </section>
-
     <!--- LogIn Form --->
     <section class = "form-section">
       <div class = "container">
@@ -68,7 +74,6 @@
                   />
                 </div>
               </div>
-
               <div class = "row mb-5">
                 <div class = "col">
                   <label for = "password" class = "form-label">Password </label>
@@ -100,7 +105,6 @@
 		    </div>
 			</div>
 		</section>
-  
     <script src = "../assets/js/bootstrap.bundle.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>

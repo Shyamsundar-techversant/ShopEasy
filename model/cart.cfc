@@ -12,7 +12,7 @@
                     tblCart 
                 WHERE 
                     fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
+                    AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfreturn local.qryCheckProductExist>
         <cfcatch type="exception">
@@ -46,7 +46,7 @@
                         </cfif>
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+                        AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfreturn 'Success'>
             <cfelse>
@@ -74,7 +74,7 @@
                         fldQuantity = <cfqueryparam value = "#local.updatedQuantity#">
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
+                        AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
                 </cfquery>
                 <cfreturn 'Success'>
             <cfelse>
@@ -113,22 +113,20 @@
                     SUM(TC.fldQuantity*((P.fldPrice*P.fldTax)/100)) AS totalTax
                 FROM       
                     tblCart AS TC
-                INNER JOIN tblProduct AS P
-                ON TC.fldProductId = P.fldProduct_ID
-                INNER JOIN tblBrands AS B
-                ON B.fldBrand_ID = P.fldBrandId
-                INNER JOIN tblProductImages AS IMG
-                ON IMG.fldProductId = P.fldProduct_ID
+                    INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
+                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
+                    INNER JOIN tblProductImages AS IMG ON IMG.fldProductId = P.fldProduct_ID
                 WHERE 
                     IMG.fldDefaultImage = 1
-                AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
-                AND TC.fldQuantity > 0
+                    AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
+                    AND TC.fldQuantity > 0
                 GROUP BY 
                     TC.fldCart_ID, 
                     TC.fldProductId,
                     P.fldProductName, 
                     B.fldBrandName, 
-                    P.fldPrice, P.fldTax, 
+                    P.fldPrice, 
+                    P.fldTax, 
                     TC.fldQuantity, 
                     IMG.fldImageFileName
             </cfquery>
@@ -202,10 +200,10 @@
                     tblAddress
                 WHERE 
                     fldActive = 1
-                AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
-                <cfif structKeyExists(arguments, 'addressId')>
-                    AND fldAddress_ID = <cfqueryparam value = "#arguments.addressId#" cfsqltype = "cf_sql_integer">
-                </cfif>
+                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
+                    <cfif structKeyExists(arguments, 'addressId')>
+                        AND fldAddress_ID = <cfqueryparam value = "#arguments.addressId#" cfsqltype = "cf_sql_integer">
+                    </cfif>
             </cfquery>
             <cfreturn local.qryGetUserAddress>
         <cfcatch type="exception">
@@ -224,8 +222,7 @@
                     fldActive = 0 
                 WHERE 
                     fldAddress_ID = <cfqueryparam value ="#arguments.addressId#" cfsqltype = "cf_sql_integer">
-                AND 
-                    fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
+                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
             </cfquery>
             <cfif local.qryRemoveAddress.recordCount EQ 1>
                 <cfreturn "Success">
