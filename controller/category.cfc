@@ -1,20 +1,17 @@
 <cfcomponent>
     <!---  DECRYPTION FUNCTION    --->
-    <cffunction name = "decryptionFunction" access = "private" returntype = "numeric">
+    <cffunction name = "decryptionFunction" access = "public" returntype = "numeric">
         <cfargument name = "encryptedId" type = "string" required = "false">
-        <cfset local.testVar = 0 >
         <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
-                                                arguments.encryptedId,
-                                                application.encryptionKey,
-                                                "AES",
-                                                "Hex"
-                                            )
-        
-            >
+                arguments.encryptedId,
+                application.encryptionKey,
+                "AES",
+                "Hex"
+            )>
             <cfreturn local.decryptedId>
         <cfelse>
-            <cfreturn local.testVar>
+            <cfreturn 0>
         </cfif>
     </cffunction>
     <!---  VALIDATE CATEGORY  --->
@@ -37,10 +34,8 @@
 		            <cfset arrayAppend(local.errors,"*Enter the category name")>
 		        </cfif>
                 <cfset  local.categExist = application.categModObj.checkCategory(
-                                                                                    categoryName = trim(arguments.categoryName)
-                                                                                )
-
-                >
+                    categoryName = trim(arguments.categoryName)
+                )>
                 <cfif local.categExist EQ "true">
                     <cfset arrayAppend(local.errors,"*Category already exist")>
                 </cfif>
@@ -53,9 +48,8 @@
                     <cfset arguments.categoryId = local.decryptedCategoryId >
                 </cfif>               
                 <cfset local.categAddEditResult = application.categModObj.categoryAddEdit(
-                                                                                            argumentCollection = arguments
-                                                                                        )
-                >
+                    argumentCollection = arguments
+                )>
                 <cfif local.categAddEditResult EQ "Success">
                     <cfset local.result = "Success">
                     <cfreturn local.result>
@@ -68,25 +62,22 @@
 
     <!---  GET CATEGORY  --->
     <cffunction name = "getCategory" access = "remote" returntype = "any" returnformat = "json">
-        <cfargument name = "categoryId" type = "string" required = "false" >
+        <cfargument name = "categoryId" type = "string" required = "false">
         <cftry>
             <cfif structKeyExists(arguments, "categoryId")>
                 <cfset local.decryptedCategoryId = decryptionFunction(arguments.categoryId)>
                 <cfset local.categoryData = application.categModObj.getCategory(
-                                                                                    categoryId = local.decryptedCategoryId
-                                                                                )
-                >
+                    categoryId = local.decryptedCategoryId
+                )>
                 <cfset local.categoryDataById = {
-                                                    'fldCategoryName' = local.categoryData.fldCategoryName,
-                                                    'fldCategory_ID' = local.categoryData.fldCategory_ID
-                                                }           
-                >
+                    'fldCategoryName' = local.categoryData.fldCategoryName,
+                    'fldCategory_ID' = local.categoryData.fldCategory_ID
+                }>
                 <cfreturn local.categoryDataById>
             <cfelse>
                 <cfset local.categoryData = application.categModObj.getCategory()>
                 <cfreturn local.categoryData >
             </cfif>
-            <cfdump var = "#local.categoryData#" >
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
         </cfcatch>
@@ -99,9 +90,8 @@
         <cfset local.result = " " >
         <cfset local.decryptedCategoryId = decryptionFunction(arguments.categoryId)>
         <cfset local.deleteResult = application.categModObj.deleteCategory(
-                                                                            categoryId = local.decryptedCategoryId
-                                                                        )
-        >
+            categoryId = local.decryptedCategoryId
+        )>
         <cfif local.deleteResult EQ "Success">
             <cfset local.result = "Success">
         <cfelse>
@@ -118,10 +108,8 @@
         <cfset local.errors = [] >
         <!---    VALIDATE CATEGORY ID      --->
         <cfset local.decryptedCategoryId = decryptionFunction(
-                                                                arguments.categoryId
-                                                            )
-
-        >
+            arguments.categoryId
+        )>
         <cfif local.decryptedCategoryId EQ 0>
             <cfset arrayAppend(local.errors, "*Invalid Category")>
         <cfelse>
@@ -143,11 +131,9 @@
 		    </cfif>
             <cfif local.decryptedCategoryId NEQ 0>
                 <cfset  local.subCategExist = application.categModObj.checkSubCategory(
-                                                                                        subCategoryName = trim(arguments.subCategoryName),
-                                                                                        categoryId = arguments.categoryId
-                                                                                    )
-
-                >
+                    subCategoryName = trim(arguments.subCategoryName),
+                    categoryId = arguments.categoryId
+                )>
                 <cfif local.subCategExist EQ "true">
                     <cfset arrayAppend(local.errors,"*SubCategory already exist")>
                 </cfif>
@@ -162,9 +148,8 @@
 
             </cfif>
             <cfset local.subCategAddEditResult = application.categModObj.subCategoryAddEdit(
-                                                                                             argumentCollection = arguments
-                                                                                            )
-            > 
+                argumentCollection = arguments
+            )> 
             <cfif local.subCategAddEditResult EQ "Success">
                 <cfset local.result = "Success">
                 <cfreturn local.result>
@@ -184,22 +169,18 @@
             <cfif structKeyExists(arguments, "subCategoryId")>
                 <cfset local.decryptedSubCategoryId = decryptionFunction(arguments.subCategoryId)>
                 <cfset local.subCategoryData = application.categModObj.getSubCategory(
-                                                                                        subCategoryId = local.decryptedSubCategoryId,
-                                                                                        categoryId = arguments.categoryId
-                                                                                    )
-                >
+                    subCategoryId = local.decryptedSubCategoryId,
+                    categoryId = arguments.categoryId
+                )>
                 <cfset local.subCategoryDataById = {
-                                                        'fldSubCategoryName' = local.subCategoryData.fldSubCategoryName,
-                                                        'fldSubCategory_ID' = local.subCategoryData.fldSubCategory_ID
-                                                    }           
-                >
+                    'fldSubCategoryName' = local.subCategoryData.fldSubCategoryName,
+                    'fldSubCategory_ID' = local.subCategoryData.fldSubCategory_ID
+                }>
                 <cfreturn local.subCategoryDataById>
             <cfelse>
                 <cfset local.subCategoryData = application.categModObj.getSubCategory(
-                                                                                        categoryId = arguments.categoryId
-                                                                                    )
-                
-                >
+                    categoryId = arguments.categoryId
+                )>
                 <cfreturn local.subCategoryData >
             </cfif>
         <cfcatch type="exception">
@@ -214,9 +195,8 @@
         <cfset local.result = " " >
         <cfset local.decryptedSubCategoryId = decryptionFunction(arguments.subCategoryId)> 
         <cfset local.deleteResult = application.categModObj.deleteSubCategory(
-                                                                                subCategoryId = local.decryptedSubCategoryId
-                                                                            )
-        >
+            subCategoryId = local.decryptedSubCategoryId
+        )>
         <cfif local.deleteResult EQ "Success">
             <cfset local.result = "Success">
         <cfelse>

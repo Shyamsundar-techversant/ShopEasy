@@ -2,14 +2,16 @@
   <cfset structDelete(session, "roleId","true")>
   <cfset structDelete(session, "adminId","true")>
   <cfset structDelete(session, "userId","true")>
+  <cfset structDelete(session, "productId","true")>
+  <cfset structDelete(session,"setOrder","true")>
 </cfif>
 <cfif structKeyExists(form, "userLogIn")>
   <cfset variables.logResult = application.userContObj.validateUserForm(
-                                    userName = form.userName,
-                                    password = form.userPassword
-                                  )
-  >
+    userName = form.userName,
+    password = form.userPassword
+  )>
 </cfif>
+<cfdump var = "#session#">
 <!DOCTYPE html>
 <html lang = "en">
   <head>

@@ -18,7 +18,7 @@ $(document).ready(function () {
     // Error function 
     function addError(error) {
         let errorList = $('.error');
-        errorList.html("") ;
+        errorList.html("");
         error.forEach((error) => {
             let li = document.createElement('li');
             li.textContent = error;
@@ -118,7 +118,7 @@ $(document).ready(function () {
                     });
                     var spanImg = $('<span>', { class: 'image-container' }).append(
                         $('<img>', {
-                            src: `../../uploadImg/${data[i].imageFile}`,
+                            src: `/uploadImg/${data[i].imageFile}`,
                             alt: 'prodimg',
                             width: 30,
                             height: 30
@@ -129,12 +129,69 @@ $(document).ready(function () {
                             class: [`image_${i}_name`, 'image_names'].join(' ')
                         })
                     );
+                    var radioButton = $('<input>', {
+                        type: 'radio',
+                        name: 'defaultImage',
+                        value: data[i].imageId,
+                        class: 'default-image-radio',
+                        id: `defaultImage_${i}`
+                    });
+                    if (data[i].defaultValue === 1) {
+                        radioButton.prop('checked', true);
+                    }
+                    var radioLabel = $('<label>', {
+                        for: `defaultImage_${i}`,
+                        text: 'Default'
+                    }).css({
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        marginLeft: '5px'
+                    });
+                    var radioWrapper = $('<span>').css({ display: 'flex', alignItems: 'center' }).append(radioButton, radioLabel);
+
                     var spanClose = $('<button>', { class: 'img-dlt-btn', img_id: data[i].imageId, type: 'button' }).append(
                         $('<i>', { class: 'fa-solid fa-x' })
                     );
-                    liItem.append(spanImg).append(spanClose);
+                    liItem.append(radioWrapper, spanImg, spanClose);
                     imgList.append(liItem);
+                }
+            },
+            error: function () {
+                console.log("Request failed");
+            }
+        });
+    });
 
+    let previousSelectedImageId ;
+
+    // STORE THE PREVIOUSLY SELECTED RADIO VALUE
+    $(document).on('focusin', '.default-image-radio', function () {
+        previousSelectedImageId = $('.default-image-radio:checked').val();
+    });
+
+
+    //CHANGE DEFAULT
+    $(document).on('change', '.default-image-radio', function () {
+        let defaultImageId = $(this).val();
+        console.log(previousSelectedImageId);
+        let formData = new FormData();
+        formData.append('defaultImageId', defaultImageId);
+        formData.append('previousSelectedImageId', previousSelectedImageId);
+        $.ajax({
+            url: "../../controller/product.cfc?method=changeDefaultImage",
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                let data = JSON.parse(response);
+                console.log(data);
+                if (data === "Success") {
+                    alert("Default Image Changed Successfully");
+                    location.reload();
+                }
+                else {
+                    console.log("Default image change failed");
                 }
             },
             error: function () {
@@ -167,6 +224,7 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 let data = JSON.parse(response);
+                console.log(data);
                 if (data === "Success") {
                     $('#productAddEditModal').modal('hide');
                     location.reload();
@@ -180,9 +238,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
-
 
     //IMAGE DELETE
     $('#img-list').on('click', '.img-dlt-btn', function () {
@@ -224,7 +279,7 @@ $(document).ready(function () {
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
-                    $('productDeleteModal').modal('hide');
+                    $('#productDeleteModal').modal('hide');
                     location.reload();
                 }
                 else {
@@ -235,5 +290,5 @@ $(document).ready(function () {
                 console.log("Request Failed");
             }
         });
-    })
+    });
 });
