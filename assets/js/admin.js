@@ -21,16 +21,13 @@ $(document).ready(function () {
         $('#categoryAddBtn').show();
         $('#categoryEditButton').hide();
     });
-    $('#categoryAddBtn').on('click', function (event) {
-        let formData = new FormData();
-        let categoryName = $('#categoryName').val();
-        formData.append('categoryName', categoryName);
+    $('#categoryAddBtn').on('click', function () {
         $.ajax({
             url: '../../controller/category.cfc?method=validateCategoryName',
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                categoryName: $('#categoryName').val()
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
@@ -54,17 +51,13 @@ $(document).ready(function () {
         $('#categoryTitle').text('Edit Category');
         $('#categoryAddBtn').hide();
         $('#categoryEditButton').show();
-
         categoryId = $(this).data('id');
-        console.log(categoryId);
-        let formData = new FormData();
-        formData.append('categoryId', categoryId);
         $.ajax({
             url: "../../controller/category.cfc?method=getCategory",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                categoryId: categoryId
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 $('#categoryName').val(data.fldCategoryName);
@@ -75,16 +68,13 @@ $(document).ready(function () {
         });
     })
     $('#categoryEditButton').on('click', function () {
-        let formData = new FormData();
-        let categoryName = $('#categoryName').val();
-        formData.append('categoryName', categoryName);
-        formData.append('categoryId', categoryId);
         $.ajax({
             url: "../../controller/category.cfc?method=validateCategoryName",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                categoryName: $('#categoryName').val(),
+                categoryId: categoryId
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
@@ -98,22 +88,19 @@ $(document).ready(function () {
             error: function () {
                 alert("Request failed");
             }
-
-        })
-    })
+        });
+    });
     //DELETE
     $('.categoryDeleteBtn').on('click', function () {
         categoryId = $(this).data('id');
     })
     $('#categoryDeleteBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('categoryId', categoryId);
         $.ajax({
             url: "../../controller/category.cfc?method=categoryDelete",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                categoryId: categoryId
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
@@ -136,18 +123,13 @@ $(document).ready(function () {
         $('#subCategoryEditButton').hide();
     });
     $('#subCategoryAddButton').on('click', function () {
-        let formData = new FormData();
-        let subCategoryName = $('#subCategName').val();
-        let categoryId = $('#categorySelect').val();
-        formData.append('subCategoryName', subCategoryName);
-        formData.append('categoryId', categoryId);
-        console.log(categoryId);
         $.ajax({
             url: "../../controller/category.cfc?method=validateSubCategory",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                subCategoryName : $('#subCategName').val(),
+                categoryId : $('#categorySelect').val()
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
@@ -173,15 +155,13 @@ $(document).ready(function () {
         $('#subCategoryEditButton').show();
         subCategoryId = $(this).data('id');
         categoryId = $(this).attr('data-categId');
-        let formData = new FormData();
-        formData.append('subcategoryId', subCategoryId);
-        formData.append('categoryId', categoryId);
         $.ajax({
             url: "../../controller/category.cfc?method=getSubCategory",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                subCategoryId : subCategoryId,
+                categoryId : categoryId
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 $('#subCategName').val(data.fldSubCategoryName);
@@ -192,19 +172,14 @@ $(document).ready(function () {
         });
     });
     $('#subCategoryEditButton').on('click', function () {
-        let subCategoryName = $('#subCategName').val();
-        let categoryId = $('#categorySelect').val();
-        let formData = new FormData();
-        formData.append('subcategoryId', subCategoryId);
-        formData.append('categoryId', categoryId);
-        formData.append('subCategoryName', subCategoryName);
-
         $.ajax({
             url: "../../controller/category.cfc?method=validateSubCategory",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                subCategoryId : subCategoryId,
+                categoryId : $('#categorySelect').val(),
+                subCategoryName : $('#subCategName').val()
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === "Success") {
