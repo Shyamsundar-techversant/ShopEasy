@@ -43,7 +43,7 @@
                 >
                     <h5 class = "card-head mb-3">SignUp</h5>
                     <form action = "" class = "user-reg-form" method = "post">
-                        <div class = "row">
+                        <div class = "row error-container" id = "sign-up-validation-error">
                             <cfif structKeyExists(variables, "registerResult") AND arrayLen(registerResult) GT 0>
                                 <cfoutput>
                                     <cfloop array = "#variables.registerResult#" index = "error">
@@ -131,7 +131,14 @@
             </div>
         </div>
 	</section>
-
+    <cfif structKeyExists(variables, "registerResult") AND arrayLen(registerResult) GT 0>
+        <script>
+            let errorDiv = document.getElementById("sign-up-validation-error");
+            if(errorDiv){
+                errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+            } 
+        </script>
+    </cfif>
     <script src = "../assets/js/bootstrap.bundle.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>

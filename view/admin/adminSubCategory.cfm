@@ -99,7 +99,7 @@
           <div class="modal-body">
             <form action = "" class = "categAddForm" method = "post" id = "productAddForm">
               <div class = "row mb-3 ">
-                <div class = "error">
+                <div class = "error" id = "product-validation-error">
 
                 </div>
               </div> 

@@ -12,7 +12,7 @@
                     <div class = "order-history-details p-2 mb-2">   
                         <div class = "row  order-item-details-history align-items-center">
                             <div class = "col order-items-id">
-                                    orderId : #variables.orderProduct.fldOrderId#
+                                orderId : #variables.orderProduct.fldOrderId#
                             </div>
                             <div class = "col d-flex justify-content-end align-items-center gap-3">
                                 <div class = "order-pdf">

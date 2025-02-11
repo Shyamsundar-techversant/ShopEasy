@@ -11,14 +11,19 @@
         <h1 style="text-align: center;">Order Details</h1>
         <cfoutput>
             <h2>Order ID: #variables.orderPdf.fldOrderId#</h2>
-            <p><strong>Ordered On:</strong> #DateFormat(variables.orderPdf.fldOrderedDate, "mmm d yyyy")#</p>
+            <p>
+                <strong>Ordered On:</strong> #DateFormat(variables.orderPdf.fldOrderedDate, "mmm d yyyy")#
+            </p>
             <p>
                 <strong>Shipping Address:</strong> 
                 #variables.orderPdf.fldFirstName#, 
                 #variables.orderPdf.fldAddressLine1#, 
                 #variables.orderPdf.fldAddressLine2#, 
-                #variables.orderPdf.fldCity#, #variables.orderPdf.fldState# - #variables.orderPdf.fldPincode#</p>
-            <p><strong>Contact:</strong> #variables.orderPdf.fldPhoneNumber#</p>
+                #variables.orderPdf.fldCity#, #variables.orderPdf.fldState# - #variables.orderPdf.fldPincode#
+            </p>
+            <p>
+                <strong>Contact:</strong> #variables.orderPdf.fldPhoneNumber#
+            </p>
             <table border="1" cellpadding="5" cellspacing="0" width="100%">
                 <thead style="background:##db4444;">
                     <tr>
@@ -41,7 +46,9 @@
                     </cfloop>
                 </tbody>
             </table>
-            <h3>Total Cost: <span style="color:##ffa500;"> $#variables.orderPdf.fldTotalPrice# </span></h3>
+            <h3>
+                Total Cost: <span style="color:##ffa500;"> $#variables.orderPdf.fldTotalPrice# </span>
+            </h3>
         </cfoutput>
     </cfdocument>
 <cfelse>

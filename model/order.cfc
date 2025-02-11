@@ -216,7 +216,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---   SEND MAIL TO USER   --->
     <cffunction name = "sendMailToUser" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">

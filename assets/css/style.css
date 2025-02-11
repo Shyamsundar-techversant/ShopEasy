@@ -105,7 +105,9 @@ button {
 .sign-link:hover {
   text-decoration: underline !important;
 }
-
+.error-container,.error{
+  background: #ffdfdf;
+}
 .errors,
 .error li {
   color: red !important;

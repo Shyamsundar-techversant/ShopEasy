@@ -62,6 +62,10 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("product-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
@@ -151,7 +155,7 @@ $(document).ready(function () {
             }
         });
     });
-    let previousSelectedImageId ;
+    let previousSelectedImageId;
     // STORE THE PREVIOUSLY SELECTED RADIO VALUE
     $(document).on('focusin', '.default-image-radio', function () {
         previousSelectedImageId = $('.default-image-radio:checked').val();

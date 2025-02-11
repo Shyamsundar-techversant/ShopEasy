@@ -45,7 +45,7 @@
           >
             <h5 class = "card-head">LogIn</h5>
             <form action = "" class = "user-reg-form" method = "post">
-              <div class = "row">
+              <div class = "row error-container">
                 <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
                   <cfoutput>
                     <cfloop array = "#variables.logResult#" index = "error">

@@ -1,10 +1,6 @@
 <cfinclude template = "header.cfm">
 <cfset variables.orderIds = application.orderModObj.getUniqueOrderId()>
-<cfset variables.orderIdList = valueList(orderIds.fldOrder_ID,",")>
-<cfif structKeyExists(variables, 'orderDetails')>
-<cfdump var = "#variables.orderDetails#"> 
-</cfif> 
-<cfset variables.email = application.orderModObj.sendMailToUser(orderId = '935BD7B6-DC8E-DDCE-DE30A22FDDE3F5A9')>
+<cfset variables.orderIdList = valueList(orderIds.fldOrder_ID,",")> 
 <cfif structKeyExists(form, 'searchOrder')>
     <cfset session.orderId = trim(form.searchOrder)>
     <cflocation  url="orderedProductDetails.cfm" addToken = "false">

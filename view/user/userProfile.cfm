@@ -115,7 +115,7 @@
             <div class="modal-body">
                 <form class = "address-add-form" method = "post" id = "editUserModalForm">
                     <div class = "row">
-                        <div class = "form-error">
+                        <div class = "form-errors">
 
                         </div>
                     </div>
@@ -185,7 +185,7 @@
             <div class="modal-body">
                 <form class = "address-add-form" method = "post" id = "addressAddForm">
                     <div class = "row">
-                        <div class = "form-error">
+                        <div class = "form-errors" id = "user-details-validation-error">
 
                         </div>
                     </div>

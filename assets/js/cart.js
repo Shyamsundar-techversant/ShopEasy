@@ -169,7 +169,11 @@ $(document).ready(function () {
                     location.reload();
                 }
                 else {
-                    addError(data);
+                    addError(data);   
+                    let errorDiv = document.getElementById("user-details-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
