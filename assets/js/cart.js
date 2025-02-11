@@ -237,22 +237,24 @@ $(document).ready(function () {
         $('.form-error').empty();
     });
     $('.pay-btn').on('click', function () {
+        let formData = new FormData();
         productId = $('.selected-order-product').data('id');
         addressId = $('.order-address-summary').data('id');
+        formData.append('cardNumber', $('#card-number').val());
+        formData.append('cvv', $('#cvv').val());
+        formData.append('productId', productId);
+        formData.append('addressId', addressId);
+        formData.append('unitPrice', unitPrice);
+        formData.append('unitTax', unitTax);
+        formData.append('totalPrice', totalCalculatedAmount);
+        formData.append('totalTax', totalTax);
+        formData.append('quantity', productQuantity);
         $.ajax({
             url: "../../controller/order.cfc?method=validateCardAndOrder",
             method: 'POST',
-            data: {
-                cardNumber: $('#card-number').val(),
-                cvv: $('#cvv').val(),
-                productId: productId,
-                addressId: addressId,
-                unitPrice: unitPrice,
-                unitTax: unitTax,
-                totalPrice: totalCalculatedAmount,
-                totalTax: totalTax,
-                quantity: productQuantity
-            },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === 'Success') {
@@ -269,7 +271,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                alert("Request failed");
+                console.log("Request failed");
             }
         });
     });

@@ -1,17 +1,14 @@
-
 <cfif structKeyExists(url, 'productId')>
     <cfset variables.addProductToCartResult = application.cartContObj.addProductToCart(
         productId = url.productId,
         userId = session.userId
     )>
-    
 </cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>
         <cflocation  url = "paymentDetails.cfm?addressId=#form.selectedAddress#" addToken = "false">
     </cfoutput>
 </cfif>
-
 <cfinclude  template="header.cfm">
 <!--- CART SECTION --->
     <section class = "cart-section">
@@ -87,7 +84,6 @@
                     class = "bought-together-btn"
                     data-bs-toggle = "modal"
                     data-bs-target = "#addressSelectModal"
-
                 >
                     Bought Together
                 </button>
@@ -111,7 +107,6 @@
             </div>
         </div>
     </div>
-
 <!--- ADDRESS SELECT MODAL --->
 <cfif structKeyExists(session,'userId')>
     <div 

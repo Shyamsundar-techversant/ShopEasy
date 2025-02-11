@@ -11,9 +11,9 @@
                     tblBrands
                 WHERE
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
-                <cfif structKeyExists(arguments, 'brandId')>
-                    AND fldBrand_ID = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
-                </cfif>
+                    <cfif structKeyExists(arguments, 'brandId')>
+                        AND fldBrand_ID = <cfqueryparam value = "#arguments.brandId#" cfsqltype = "cf_sql_integer">
+                    </cfif>
             </cfquery>
             <cfreturn local.qryGetBrands>
         <cfcatch type="exception">
@@ -183,8 +183,8 @@
         <cftry>
             <cfset local.errors = []>
             <cfif structKeyExists(arguments, 'productImages')>
-		        <cfset local.maxImgSize = 5*1024*1024>
-		        <cfset local.allowedExtensions = "jpeg,jpg,png,gif">
+                <cfset local.maxImgSize = 5*1024*1024>
+                <cfset local.allowedExtensions = "jpeg,jpg,png,gif">
                 <cfset local.uploadedImagePath = [] >
                 <cffile  
                     action = "uploadAll"
@@ -419,10 +419,7 @@
                             FROM    
                                 tblProductImages
                             WHERE 
-                                fldProductId = <cfqueryparam 
-                                                    value = "#arguments.productId#"
-                                                    cfsqltype = "cf_sql_integer"
-                                                >
+                                fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
                                 AND fldActive = 1
                             ORDER BY 
                                 fldProductImage_ID ASC 
@@ -434,10 +431,7 @@
                             SET 
                                 fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                             WHERE
-                                fldProductImage_ID = <cfqueryparam
-                                                        value = "#local.qryGetNextDefaultImage.fldProductImage_ID#"  
-                                                        cfsqltype = "cf_sql_integer"      
-                                                    >
+                                fldProductImage_ID = <cfqueryparam value = "#local.qryGetNextDefaultImage.fldProductImage_ID#" cfsqltype = "cf_sql_integer">
                                 AND fldActive = 1
                                 AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
                         </cfquery>  

@@ -1,16 +1,12 @@
 <cfif structKeyExists(url,'categId')>
     <cfset variables.getSubCategoryById = application.cateContObj.getSubCategory(
-
-                                                                            subCategoryId = url.subCategID,
-                                                                            categoryId = url.categId
-                                                                        )
-
-    >
+      subCategoryId = url.subCategID,
+      categoryId = url.categId
+    )>
     <cfset variables.getCategoryById = application.cateContObj.getCategory(categoryId = url.categId)>
     <cfset variables.allProducts = application.productContObj.getProduct(
-                                                                          subCategoryId = url.subCategID
-                                                                        )
-    > 
+      subCategoryId = url.subCategID
+    )> 
 </cfif>
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
@@ -36,25 +32,20 @@
                 <cfif structKeyExists(variables, 'allProducts') AND isQuery(variables.allProducts)>
                   <cfoutput query = "variables.allProducts">
                     <cfset encryptedId = encrypt(
-                                                  variables.allProducts.fldProduct_ID,
-                                                  application.encryptionKey,
-                                                  "AES",
-                                                  "Hex"
-                                                )
-                    >
+                      variables.allProducts.fldProduct_ID,
+                      application.encryptionKey,
+                      "AES",
+                      "Hex"
+                    )>
                     <tr class = "table-light">
                       <td>
                         <div class = "product-name">
                           <h5>#variables.allProducts.fldProductName#</h5>
-                          <cfset brandName = application.productContObj.getBrands(
-                                                                   
-                                                                    brandId = variables.allProducts.fldBrandId
-                                                                    
-                                                                  )
-                          >
+                          <cfset brandName = application.productContObj.getBrands(                                                                   
+                            brandId = variables.allProducts.fldBrandId                                                                   
+                          )>
                           <h6>#brandName.fldBrandName#</h6>
-                        </div>
-                  
+                        </div>                 
                       </td>
                       <td>
                         <button  type = "button" 
@@ -98,7 +89,6 @@
         </div>
       </div>
     </section>
-
     <!-- Product Add Edit Modal -->
     <div class="modal fade" id="productAddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -133,9 +123,8 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <cfset subCategoryValues = application.cateContObj.getSubCategory(
-                                                                                      categoryId = url.categId
-                                                                                    ) 
-                  >
+                    categoryId = url.categId
+                  )>
                   <lablel for = "subCategorySelect" class = "form-label">SubCategory Name</label>
                   <select class = "form-select" id = "subCategorySelect">
                     <cfoutput query = "subCategoryValues" >
@@ -150,7 +139,6 @@
                   </select>
                 </div>
               </div>
-
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productName" class = "form-label">Product Name </label>
@@ -220,7 +208,6 @@
         </div>
       </div>
     </div>
-
     <!-- SubCategory Delete Modal -->
     <div class="modal fade" id="productDeleteModal" tabindex="-1" aria-labelledby="productDeleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -238,7 +225,6 @@
         </div>
       </div>
     </div>
-
     <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/adminProduct.js"></script>
   </body>

@@ -22,7 +22,7 @@
     </cffunction>
     <!--- CHANGE PRODUCT QUANTITY --->
     <cffunction  name = "changeProductQuantity" access = "public" returntype = "any">
-        <cfargument name="productId" type = "string" required = "true">
+        <cfargument name="productId" type = "integer" required = "true">
         <cfargument name = "isDecreaseQuantity" type = "integer" required = "false">
         <cfargument name = "isIncreaseQuantity" type = "integer" required = "false">
         <cfargument name = "isRemoveProduct" type = "integer" required = "false">
@@ -31,19 +31,18 @@
                 argumentCollection = arguments
             )>
             <cfif local.isProductExist.recordCount GT 0>
+                <cfif structKeyExists(arguments, 'isDecreaseQuantity') >
+                    <cfset local.updatedQuantity = local.isProductExist.fldQuantity - 1> 
+                <cfelseif structKeyExists(arguments, 'isIncreaseQuantity')>
+                    <cfset local.updatedQuantity = local.isProductExist.fldQuantity + 1> 
+                <cfelseif structKeyExists(arguments, 'isRemoveProduct')>
+                    <cfset local.updatedQuantity = 0> 
+                </cfif>
                 <cfquery name = "local.qryChangeProductQuantity" datasource = "#application.datasource#">
                     UPDATE 
                         tblCart
                     SET 
-                        <cfif structKeyExists(arguments, 'isDecreaseQuantity') >
-                            <cfset local.updatedQuantity = local.isProductExist.fldQuantity - 1> 
-                            fldQuantity = <cfqueryparam value = "#local.updatedQuantity#" cfsqltype = "cf_sql_integer">
-                        <cfelseif structKeyExists(arguments, 'isIncreaseQuantity')>
-                            <cfset local.updatedQuantity = local.isProductExist.fldQuantity + 1> 
-                            fldQuantity = <cfqueryparam value = "#local.updatedQuantity#" cfsqltype = "cf_sql_integer">
-                        <cfelseif structKeyExists(arguments, 'isRemoveProduct')>
-                            fldQuantity = 0
-                        </cfif>
+                        fldQuantity = <cfqueryparam value = "#local.updatedQuantity#" cfsqltype = "cf_sql_integer">
                     WHERE 
                         fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
                         AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
@@ -222,7 +221,6 @@
                     fldActive = 0 
                 WHERE 
                     fldAddress_ID = <cfqueryparam value ="#arguments.addressId#" cfsqltype = "cf_sql_integer">
-                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_tinyint">
             </cfquery>
             <cfif local.qryRemoveAddress.recordCount EQ 1>
                 <cfreturn "Success">
@@ -254,7 +252,7 @@
         </cftry>
     </cffunction>
     <!--- VALIDATE USER DETAILS --->
-    <cffunction name = "validateUserDetails" access = "remote" returntype = "any">
+    <cffunction name = "updateUserDetails" access = "remote" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
         <cfargument name = "lastName" type = "string" required = "true">
         <cfargument name = "email" type = "string" required = "true">

@@ -108,7 +108,6 @@
             </div>
         </div>
     </section> 
-
     <!-- PLACE ORDER MODAL -->
     <div class="modal fade" id="orderPlaceModal" tabindex="-1" aria-labelledby="orderPlaceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -120,7 +119,6 @@
                     <form method = "post" class = "order-place-form" id= "order-place-form">
                         <div class = "row">
                             <div class = "form-error">
-
                             </div>
                         </div>
                         <div class = "row mb-3">
@@ -135,7 +133,7 @@
                             <div class = "col">
                                 <label for = "cvv" class = "form-label">CVV</label> 
                                 <input type = "text" class = "form-control" name = "cvv" id = "cvv"
-                                    placeholder = "0000"
+                                    placeholder = "000"
                                 >
                             </div>
                         </div>

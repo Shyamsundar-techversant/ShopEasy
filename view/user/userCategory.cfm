@@ -1,22 +1,18 @@
 <cfif structKeyExists(url,"categoryID")>
     <cfset variables.getSubCategoryByCategoryId = application.cateContObj.getSubCategory(
-                                                                                            categoryId = url.categoryID 
-                                                                                        )
-    >
+        categoryId = url.categoryID 
+    )>
 </cfif>
-
-
 <cfinclude template = "header.cfm">
     <cfif structKeyExists(variables, "getSubCategoryByCategoryId")>
         <cfset count = 1>
         <cfoutput query = "variables.getSubCategoryByCategoryId">
             <cfset encryptedSubCategoryId = encrypt(
-                                                        variables.getSubCategoryByCategoryId.fldSubCategory_ID,
-                                                        application.encryptionKey,
-                                                        "AES",
-                                                        "Hex"
-                                                     )
-            >
+                variables.getSubCategoryByCategoryId.fldSubCategory_ID,
+                application.encryptionKey,
+                "AES",
+                "Hex"
+            )>
             <section class = "category-app-section app-section-#count#">            
                 <div class = "container category-list-container">
                     <h5 class = "product-section-head">
@@ -30,12 +26,11 @@
                         <cfif structKeyExists(variables, 'getProductsBySubCategoryId')>
                             <cfloop query = "variables.getProductsBySubCategoryId" >
                                 <cfset encryptedProductId = encrypt(
-                                                                     variables.getProductsBySubCategoryId.idProduct,
-                                                                        application.encryptionKey,
-                                                                        "AES",
-                                                                        "Hex"
-                                                                    )
-                                >
+                                    variables.getProductsBySubCategoryId.idProduct,
+                                    application.encryptionKey,
+                                    "AES",
+                                    "Hex"
+                                )>
                                 <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
                                     <div class = "product-card">
                                         <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">

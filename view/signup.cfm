@@ -1,14 +1,12 @@
 <cfif structKeyExists(form, "userLogIn")>
-  <cfset variables.registerResult = application.userContObj.validateUserForm(
-                                    firstName = form.firstName,
-                                    lastName = form.lastName,
-                                    userEmail = form.userEmail,
-                                    phone = form.userPhoneNumber,
-                                    password = form.userPassword
-                                  )
-  >
+    <cfset variables.registerResult = application.userContObj.validateUserForm(
+        firstName = form.firstName,
+        lastName = form.lastName,
+        userEmail = form.userEmail,
+        phone = form.userPhoneNumber,
+        password = form.userPassword
+    )>
 </cfif>
-
 <!DOCTYPE html>
 <html lang = "en">
   <head>

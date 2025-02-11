@@ -1,15 +1,10 @@
 <cfif structKeyExists(url,'categId')>
     <cfset variables.getCategoryById = application.cateContObj.getCategory(
-
-                                                                            categoryId = url.categId
-
-                                                                        )
-
-    >
+      categoryId = url.categId
+    )>
     <cfset variables.getAllSubCategory = application.cateContObj.getSubCategory(
-                                                                                    categoryId = url.categId
-                                                                            )
-    >
+      categoryId = url.categId
+    )>
 </cfif>
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
@@ -35,12 +30,11 @@
                 <cfif structKeyExists(variables, "getAllSubCategory")  AND isQuery(variables.getAllSubCategory)>
                   <cfoutput query = "variables.getAllSubCategory">
                     <cfset encryptedId = encrypt(
-                                            variables.getAllSubCategory.fldSubCategory_ID,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                          )
-                    >
+                      variables.getAllSubCategory.fldSubCategory_ID,
+                      application.encryptionKey,
+                      "AES",
+                      "Hex"
+                    )>
                     <tr class = "table-light">
                       <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
                       <td>
@@ -105,13 +99,11 @@
                   <select class = "form-select" id = "categorySelect">
                     <cfoutput query = "categoryValues" >
                       <cfset encryptCategID = encrypt(
-                                                        categoryValues.fldCategory_ID,
-                                                        application.encryptionKey,
-                                                        "AES",
-                                                        "Hex"
-                                                    )
-                      
-                      >
+                        categoryValues.fldCategory_ID,
+                        application.encryptionKey,
+                        "AES",
+                        "Hex"
+                      )>
                       <option value = "#encryptCategID#"
                         <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
                           selected

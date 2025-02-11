@@ -36,7 +36,7 @@
                 <cfset arguments['orderId'] = local.orderId>
                 <cfif local.qryOrder.recordCount EQ 1>
                     <cfset local.orderItemResult = addOrderItems(
-                            argumentCollection = arguments
+                        argumentCollection = arguments
                     )>
                 </cfif>
             <cftransaction action = "commit">
@@ -117,8 +117,10 @@
         <cftry>
             <cfloop list = "arguments.productId" item = "local.productId" delimiters=",">
                 <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
-                    DELETE FROM tblCart 
-                    WHERE fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
+                    DELETE FROM 
+                        tblCart 
+                    WHERE 
+                        fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
                 </cfquery>
             </cfloop>
             <cfif local.qryDeleteCartItems.recordCount GT 0>
@@ -161,13 +163,12 @@
                     INNER JOIN tblOrder AS O ON OI.fldOrderId = O.fldOrder_ID
                     INNER JOIN tblProduct AS P ON OI.fldProductId = P.fldProduct_ID
                     INNER JOIN tblAddress AS A ON O.fldAddressId = A.fldAddress_ID
-                    INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID
-                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
-                WHERE 
-                    PI.fldDefaultImage = 1
-                    <cfif structKeyExists(arguments, 'orderId')>
-                        AND OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
-                    </cfif>
+                    INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID AND PI.fldDefaultImage = 1
+                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId              
+                <cfif structKeyExists(arguments, 'orderId')>
+                    WHERE
+                        OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
+                </cfif>
                 GROUP BY
                     OI.fldOrderId,
                     OI.fldProductId,
@@ -248,22 +249,26 @@
                         #local.orderInformation.fldCity#, 
                         #local.orderInformation.fldState#, 
                         #local.orderInformation.fldPincode#
-                    </p>">
-                <cfset local.emailBody &= "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Tax</th>
-                                            </tr>">
-            
+                    </p>"
+                >
+                <cfset local.emailBody &= 
+                    "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Tax</th>
+                        </tr>"
+                >
                 <cfloop query="local.orderInformation">
-                    <cfset local.emailBody &= "<tr>
-                                                <td>#local.orderInformation.fldProductName#</td>
-                                                <td>#local.orderInformation.fldQuantity#</td>
-                                                <td>#local.orderInformation.fldUnitPrice#</td>
-                                                <td>#local.orderInformation.fldUnitTax#</td>
-                                            </tr>">
+                    <cfset local.emailBody &= 
+                        "<tr>
+                        <td>#local.orderInformation.fldProductName#</td>
+                        <td>#local.orderInformation.fldQuantity#</td>
+                        <td>#local.orderInformation.fldUnitPrice#</td>
+                        <td>#local.orderInformation.fldUnitTax#</td>
+                        </tr>"
+                    >
                 </cfloop>
                 <cfset local.emailBody &= "</table>">
                 <cfset local.emailBody &= "<p><strong>Total Price:</strong> #local.orderInformation.fldTotalPrice#</p>">

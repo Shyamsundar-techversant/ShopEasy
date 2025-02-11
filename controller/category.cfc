@@ -31,8 +31,8 @@
             <!---       VALIDATE CATEGORY NAME        --->
             <cfif structKeyExists(arguments, "categoryName")>
                 <cfif len(trim(arguments.categoryName)) EQ 0>
-		            <cfset arrayAppend(local.errors,"*Enter the category name")>
-		        </cfif>
+                    <cfset arrayAppend(local.errors,"*Enter the category name")>
+                </cfif>
                 <cfset  local.categExist = application.categModObj.checkCategory(
                     categoryName = trim(arguments.categoryName)
                 )>
@@ -127,8 +127,8 @@
         <!---    SUBCATEGORY NAME VALIDATION      --->
         <cfif structKeyExists(arguments, "subCategoryName")>
             <cfif len(trim(arguments.subCategoryName)) EQ 0>
-		        <cfset arrayAppend(local.errors,"*Enter the category name")>
-		    </cfif>
+                <cfset arrayAppend(local.errors,"*Enter the category name")>
+            </cfif>
             <cfif local.decryptedCategoryId NEQ 0>
                 <cfset  local.subCategExist = application.categModObj.checkSubCategory(
                     subCategoryName = trim(arguments.subCategoryName),

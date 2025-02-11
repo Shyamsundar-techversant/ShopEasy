@@ -49,7 +49,7 @@
                                 <cfloop array = "#variables.getProductDataById#" index = "i" item = "image">
                                     <cfif i LT arrayLen(variables.getProductDataById)>
                                         <div class="carousel-item product-img-container <cfif variables.getProductDataById[i].defaultValue EQ 1 >active</cfif> ">
-                                            <img src="../../uploadImg/#variables.getProductDataById[i].imageFile#" class="d-block product-image" alt="...">
+                                            <img src="/uploadImg/#variables.getProductDataById[i].imageFile#" class="d-block product-image" alt="...">
                                         </div>
                                     </cfif>
                                 </cfloop>

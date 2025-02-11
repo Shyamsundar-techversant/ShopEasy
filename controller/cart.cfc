@@ -51,44 +51,44 @@
         <cfset local.errors = [] >
         <!---  Validate First name   --->
         <cfif len(trim(arguments.firstName)) EQ 0>
-		    <cfset arrayAppend(local.errors,"*Firstname is required")>
-	    <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.firstName)>
-		    <cfset arrayAppend(local.errors,"*Enter a valid firstname")>
-		</cfif>	
+            <cfset arrayAppend(local.errors,"*Firstname is required")>
+        <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.firstName)>
+            <cfset arrayAppend(local.errors,"*Enter a valid firstname")>
+        </cfif> 
         <!---  Validate Last Name     --->
         <cfif len(trim(arguments.lastName)) EQ 0>
-			<cfset arrayAppend(local.errors,"*Lastname is required")>
-		<cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.lastName)>
-			<cfset arrayAppend(local.errors,"*Enter a valid lastname")>
-		</cfif>	     
+            <cfset arrayAppend(local.errors,"*Lastname is required")>
+        <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.lastName)>
+            <cfset arrayAppend(local.errors,"*Enter a valid lastname")>
+        </cfif>	     
         <!---  Validate Address Line 1     --->
         <cfif len(trim(arguments.addressLine1)) EQ 0>
-			<cfset arrayAppend(local.errors,"*addressLine_1 is required")>
+            <cfset arrayAppend(local.errors,"*addressLine_1 is required")>
         </cfif>
         <!---  Validate Address Line 2     --->
         <cfif len(trim(arguments.addressLine2)) EQ 0>
-			<cfset arrayAppend(local.errors,"*addressLine_2 is required")>
+            <cfset arrayAppend(local.errors,"*addressLine_2 is required")>
         </cfif>
         <!---  Validate Address City  --->
         <cfif len(trim(arguments.city)) EQ 0>
-			<cfset arrayAppend(local.errors,"*city is required")>
+            <cfset arrayAppend(local.errors,"*city is required")>
         </cfif>
         <!---  Validate State    --->
         <cfif len(trim(arguments.state)) EQ 0>
-			<cfset arrayAppend(local.errors,"*state is required")>
+            <cfset arrayAppend(local.errors,"*state is required")>
         </cfif>
         <!---     Validate Pincode   --->  
-		<cfif len(trim(arguments.pincode)) EQ 0>
-			<cfset  arrayAppend(local.errors,"*Pincode is required")>
-		<cfelseif NOT reFindNoCase("^[1-9][0-9]{5}$",arguments.pincode)>
-			<cfset arrayAppend(local.errors,"*Enter a valid pincode")>
-		</cfif> 
+        <cfif len(trim(arguments.pincode)) EQ 0>
+            <cfset  arrayAppend(local.errors,"*Pincode is required")>
+        <cfelseif NOT reFindNoCase("^[1-9][0-9]{5}$",arguments.pincode)>
+            <cfset arrayAppend(local.errors,"*Enter a valid pincode")>
+        </cfif> 
         <!---    Validate Phone      --->    
         <cfif len(trim(arguments.phone)) EQ 0>
-			<cfset arrayAppend(local.errors,"*Phone number is required")>
-		<cfelseif NOT reFindNoCase("^[6-9]\d{9}$",arguments.phone)>
-		    <cfset arrayAppend(local.errors,"*Enter a valid phone number")>
-		</cfif>
+            <cfset arrayAppend(local.errors,"*Phone number is required")>
+        <cfelseif NOT reFindNoCase("^[6-9]\d{9}$",arguments.phone)>
+            <cfset arrayAppend(local.errors,"*Enter a valid phone number")>
+        </cfif>
         <cfif arrayLen(local.errors) GT 0 >
             <cfreturn local.errors>
         <cfelse>
@@ -160,7 +160,7 @@
         <cfelse>
             <cfquery name="local.qryCheckUserEmail" datasource = "#application.datasource#">
                 SELECT fldEmail
-        	    FROM 
+                FROM 
                     tblUser
                 WHERE 
                     fldEmail = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
@@ -179,7 +179,7 @@
         <cfif arrayLen(local.errors) GT 0>
             <cfreturn local.errors>
         <cfelse>
-            <cfset local.updateResult = application.cartModObj.validateUserDetails(
+            <cfset local.updateResult = application.cartModObj.updateUserDetails(
                 argumentCollection = arguments
             )>
             <cfif local.updateResult EQ 'Success'>

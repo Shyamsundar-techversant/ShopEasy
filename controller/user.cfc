@@ -11,47 +11,47 @@
         <!---  Validate First name   --->
         <cfif structKeyExists(arguments, "firstName")>
             <cfif len(trim(arguments.firstName)) EQ 0>
-		    	<cfset arrayAppend(local.errors,"*Firstname is required")>
-	    	<cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.firstName)>
-		    	<cfset arrayAppend(local.errors,"*Enter a valid firstname")>
-		    </cfif>	
+                <cfset arrayAppend(local.errors,"*Firstname is required")>
+            <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.firstName)>
+                <cfset arrayAppend(local.errors,"*Enter a valid firstname")>
+            </cfif>	
         </cfif>
         <!---  Validate Last Name     --->
         <cfif structKeyExists(arguments, "lastName") >
             <cfif len(trim(arguments.lastName)) EQ 0>
-			    <cfset arrayAppend(local.errors,"*Lastname is required")>
-		    <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.lastName)>
-			    <cfset arrayAppend(local.errors,"*Enter a valid lastname")>
-		    </cfif>	     
+                <cfset arrayAppend(local.errors,"*Lastname is required")>
+            <cfelseif NOT reFindNoCase("^[A-Za-z]+(\s[A-Za-z]+)?$",arguments.lastName)>
+                <cfset arrayAppend(local.errors,"*Enter a valid lastname")>
+            </cfif>	     
         </cfif>  
         <!---   Validate Email       --->
         <cfif structKeyExists(arguments,"email")>
             <cfif len(trim(arguments.userEmail)) EQ 0>
-			    <cfset arrayAppend(local.errors,"*Email is required")>
-		    <cfelseif NOT reFindNoCase("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",arguments.userEmail)>
-		    	<cfset arrayAppend(local.errors,"*Enter a valid email")>
-		    </cfif>
+                <cfset arrayAppend(local.errors,"*Email is required")>
+            <cfelseif NOT reFindNoCase("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",arguments.userEmail)>
+                <cfset arrayAppend(local.errors,"*Enter a valid email")>
+            </cfif>
         </cfif>
           <!---    Validate Phone   --->
         <cfif structKeyExists(arguments,"phone")>         
             <cfif len(trim(arguments.phone)) EQ 0>
-			    <cfset arrayAppend(local.errors,"*Phone number is required")>
-		    <cfelseif NOT reFindNoCase("^[6-9]\d{9}$",arguments.phone)>
-		    	<cfset arrayAppend(local.errors,"*Enter a valid phone number")>
-		    </cfif>
+                <cfset arrayAppend(local.errors,"*Phone number is required")>
+            <cfelseif NOT reFindNoCase("^[6-9]\d{9}$",arguments.phone)>
+                <cfset arrayAppend(local.errors,"*Enter a valid phone number")>
+            </cfif>
         </cfif>
         <!--- Validate UserName --->
         <cfif structKeyExists(arguments, "userName")>
             <cfif len(trim(arguments.userName)) EQ 0>
-		        <cfset arrayAppend(local.errors,"*Enter your username")>
-		    </cfif>
+                <cfset arrayAppend(local.errors,"*Enter your username")>
+            </cfif>
         </cfif>
         <!--- Validate Password --->
-		<cfif len(trim(arguments.password)) EQ 0>
-			<cfset arrayAppend(local.errors,"*Please enter the password")>
-		<cfelseif NOT reFindNoCase("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",arguments.password)>
-			<cfset arrayAppend(local.errors,"*Please enter a valid password")>
-		</cfif>
+        <cfif len(trim(arguments.password)) EQ 0>
+            <cfset arrayAppend(local.errors,"*Please enter the password")>
+        <cfelseif NOT reFindNoCase("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",arguments.password)>
+            <cfset arrayAppend(local.errors,"*Please enter a valid password")>
+        </cfif>
         <cfif arrayLen(local.errors) GT 0>
             <cfreturn local.errors>
         <cfelse>
