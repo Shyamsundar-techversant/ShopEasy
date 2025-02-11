@@ -60,7 +60,11 @@
                                 </cfif>
                             </div>
                             <div class = "sign-buttons">
-                                <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
+                                <cfif structKeyExists(session, 'userId')>
+                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
+                                <cfelse>
+                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogIn</button>
+                                </cfif>
                             </div>
                         </div>
                     </div>

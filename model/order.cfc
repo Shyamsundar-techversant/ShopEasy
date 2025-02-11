@@ -115,14 +115,11 @@
     <!---   DELETE CART ITEMS   --->
     <cffunction  name = "deleteCartProducts" access = "private" returntype = "string">
         <cftry>
-            <cfloop list = "arguments.productId" item = "local.productId" delimiters=",">
-                <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
-                    DELETE FROM 
-                        tblCart 
-                    WHERE 
-                        fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
-                </cfquery>
-            </cfloop>
+            <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
+                CALL deleteCartProduct(
+                    <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+                )
+            </cfquery>
             <cfif local.qryDeleteCartItems.recordCount GT 0>
                 <cfreturn 'Success'>
             </cfif>
@@ -164,11 +161,13 @@
                     INNER JOIN tblProduct AS P ON OI.fldProductId = P.fldProduct_ID
                     INNER JOIN tblAddress AS A ON O.fldAddressId = A.fldAddress_ID
                     INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID AND PI.fldDefaultImage = 1
-                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId              
-                <cfif structKeyExists(arguments, 'orderId')>
-                    WHERE
+                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
+                WHERE              
+                    <cfif structKeyExists(arguments, 'orderId')>
                         OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
-                </cfif>
+                    <cfelse>
+                        1 = 1
+                    </cfif>
                 GROUP BY
                     OI.fldOrderId,
                     OI.fldProductId,

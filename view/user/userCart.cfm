@@ -72,21 +72,23 @@
                     </cfoutput>
                 </cfif>
             </div>
-            <div class = "cart-total-price">
-                <cfoutput>
-                    <div class = "totl-price-details">
-                        <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
-                        <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
-                        <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
-                    </div>
-                </cfoutput>
-                <button 
-                    class = "bought-together-btn"
-                    data-bs-toggle = "modal"
-                    data-bs-target = "#addressSelectModal"
-                >
-                    Bought Together
-                </button>
+            <cfif structKeyExists(variables, 'totalCartProducts') AND variables.totalCartProducts.recordCount GT 0>
+                <div class = "cart-total-price">
+                    <cfoutput>
+                        <div class = "totl-price-details">
+                            <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
+                            <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
+                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
+                        </div>
+                    </cfoutput>
+                    <button 
+                        class = "bought-together-btn"
+                        data-bs-toggle = "modal"
+                        data-bs-target = "#addressSelectModal"
+                    >
+                        Bought Together
+                    </button>
+            </cfif>
             </div>
         </div>
     </section>
@@ -193,7 +195,7 @@
                 <div class="modal-body">
                     <form class = "address-add-form" method = "post" id = "addressAddForm">
                         <div class = "row">
-                            <div class = "form-errors">
+                            <div class = "form-error" id = "address-validation-error">
 
                             </div>
                         </div>

@@ -596,11 +596,11 @@ section {
 .address-add {
   padding: 15px 0 !important;
 }
-.form-errors {
+.form-error {
   background: #ffdfdf !important;
 }
 .error li,
-.form-errors li {
+.form-error li {
   color: red !important;
   font-size: 14px !important;
 }

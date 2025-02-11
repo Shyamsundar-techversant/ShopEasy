@@ -165,7 +165,7 @@
                 <div class="modal-body">
                     <form class = "address-add-form" method = "post" id = "addressAddForm">
                         <div class = "row">
-                            <div class = "form-errors">
+                            <div class = "form-error" id = "address-validation-error">
 
                             </div>
                         </div>

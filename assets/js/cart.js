@@ -100,6 +100,10 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("address-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {

@@ -118,7 +118,7 @@
                 <div class="modal-body">
                     <form method = "post" class = "order-place-form" id= "order-place-form">
                         <div class = "row">
-                            <div class = "form-errors">
+                            <div class = "form-error">
                             </div>
                         </div>
                         <div class = "row mb-3">
