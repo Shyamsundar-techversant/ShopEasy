@@ -2,9 +2,6 @@
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
-<cfset variables.orderDetails = application.orderModObj.getOrderedProductsDetails('8F49D0E9-E49F-B95A-54635F8290ACFD1E')>
-<cfdump var = "#variables.orderDetails#" >
-
 <!DOCTYPE html>
 <html lang = "en">
     <head>
@@ -44,15 +41,15 @@
                             </div>
                             <cfif structKeyExists(variables, 'totalCartProducts')>
                                 <div class = "user-cart">
-                                    <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
-                                        <i class="fa-solid fa-cart-shopping"></i>
-                                        <cfif variables.totalCartProducts.recordCount GT 0>
+                                    <cfif variables.totalCartProducts.recordCount GT 0>
+                                        <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                            <i class="fa-solid fa-cart-shopping"></i>
                                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                                 <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
                                                 <span class="visually-hidden">unread messages</span>
-                                            </span>  
-                                        </cfif>      
-                                    </button>
+                                            </span>          
+                                        </button>
+                                    </cfif>
                                 </div>
                             </cfif>
                             <div class = "user-profile" title = "user">
@@ -63,7 +60,11 @@
                                 </cfif>
                             </div>
                             <div class = "sign-buttons">
-                                <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
+                                <cfif structKeyExists(session, 'userId')>
+                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
+                                <cfelse>
+                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogIn</button>
+                                </cfif>
                             </div>
                         </div>
                     </div>

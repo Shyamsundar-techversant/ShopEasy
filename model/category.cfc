@@ -90,9 +90,9 @@
                     tblCategory
                 WHERE 
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">  
-                <cfif structKeyExists(arguments, "categoryId")>
-                    AND fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">              
-                </cfif>
+                    <cfif structKeyExists(arguments, "categoryId")>
+                        AND fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">              
+                    </cfif>
             </cfquery>
             <cfreturn local.qryGetCategory>
         <cfcatch type="exception">
@@ -230,9 +230,9 @@
                 WHERE
                     fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
                     AND fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">                
-                <cfif structKeyExists(arguments, "subCategoryId")>
-                    AND fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">               
-                </cfif>
+                    <cfif structKeyExists(arguments, "subCategoryId")>
+                        AND fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">               
+                    </cfif>
             </cfquery>
             <cfreturn local.qryGetSubCategory>
         <cfcatch type="exception">

@@ -406,7 +406,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding:10px 10px 0px 10px !important;
+  padding: 10px 10px 0px 10px !important;
 }
 .cart-products {
   justify-content: space-between;
@@ -414,7 +414,7 @@ section {
   box-shadow: 0px 13px 19px 0px rgba(0, 0, 0, 0.3);
   padding: 10px;
   margin-bottom: 20px !important;
-  border:1px solid rgb(223 223 223 );
+  border: 1px solid rgb(223 223 223);
 }
 .cart-container {
   display: flex !important;
@@ -441,98 +441,98 @@ section {
   font-weight: 500;
   color: black;
 }
-.cart-product-image{
-  max-width:100%;
-  width:100px;
-  height:100px;
+.cart-product-image {
+  max-width: 100%;
+  width: 100px;
+  height: 100px;
 }
-.remove-from-cart-btn{
+.remove-from-cart-btn {
   background: none !important;
-  padding:8px 10px !important;
-  font-size:14px;
+  padding: 8px 10px !important;
+  font-size: 14px;
   font-weight: 500;
-  color:#fff;
+  color: #fff;
   background: #db4444 !important;
-  border-radius:16px;
+  border-radius: 16px;
 }
 
-.card-product-count-input{
-  width:40px;
-  border:1px solid #db4444 !important;
+.card-product-count-input {
+  width: 40px;
+  border: 1px solid #db4444 !important;
   padding-left: 10px;
 }
-.card-product-count-input:focus{
-  border:1px solid #db4444 !important;
-  box-shadow:none !important;
+.card-product-count-input:focus {
+  border: 1px solid #db4444 !important;
+  box-shadow: none !important;
   outline: none !important;
 }
-#productRemoveModalTitle{
-  font-size:20px;
+#productRemoveModalTitle {
+  font-size: 20px;
   font-weight: 600;
 }
-.product-remove-modal-body{
-  font-size:16px !important;
+.product-remove-modal-body {
+  font-size: 16px !important;
   font-weight: 500 !important;
 }
-.delete-items{
+.delete-items {
   background: red !important;
   color: #fff !important;
 }
-.totl-price-details{
-  border:1px solid #db4444;
-  border-radius:16px;
-  padding:10px;
+.totl-price-details {
+  border: 1px solid #db4444;
+  border-radius: 16px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap:20px;
+  gap: 20px;
 }
-.cart-product-total{
+.cart-product-total {
   font-size: 16px;
   font-weight: 500;
   color: black;
 }
-.total-value{
+.total-value {
   font-size: 16px;
   font-weight: 500;
   color: #db4444;
 }
-.cart-total-price{
-  width:50% !important;
-  max-width:350px !important;
+.cart-total-price {
+  width: 50% !important;
+  max-width: 350px !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap:10px;
+  gap: 10px;
 }
-.bought-together-btn{
+.bought-together-btn {
   background: none !important;
-  border:1px solid #db4444 !important;
-  padding:10px 15px ;
-  border-radius:16px;
-  font-size:16px;
+  border: 1px solid #db4444 !important;
+  padding: 10px 15px;
+  border-radius: 16px;
+  font-size: 16px;
   font-weight: 600;
-  color:#db4444;
-  width:100%;
+  color: #db4444;
+  width: 100%;
 }
-.user-profile-btn{
-  background:none;
-  padding:3px;
-  width:30px;
-  height:30px;
-  border-radius:50%;
-  font-size:16px;
-  border: 1px solid black !important; 
+.user-profile-btn {
+  background: none;
+  padding: 3px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  border: 1px solid black !important;
 }
-.user-profile-section{
-  padding:70px 0;
+.user-profile-section {
+  padding: 70px 0;
 }
-.user-profile-contaier{
+.user-profile-contaier {
   display: flex !important;
   align-items: center;
   flex-direction: column;
-  gap:15px;
+  gap: 15px;
 }
 .card {
   width: 100%;
@@ -540,99 +540,103 @@ section {
   padding: 10px;
   box-shadow: 0px 13px 19px 0px rgba(0, 0, 0, 0.3);
 }
-.profile-card{
-  display:flex !important;
+.profile-card {
+  display: flex !important;
   flex-direction: row !important;
   justify-content: space-between;
   align-items: center !important;
 }
-.profile-card-btn{
+.profile-card-btn {
   background: #db4444 !important;
-  color:#fff !important;
-  border:none !important;
-  width:60px !important;
-  height:60px !important;
+  color: #fff !important;
+  border: none !important;
+  width: 60px !important;
+  height: 60px !important;
   font-size: 24px !important;
 }
-.intro{
-  font-size:20px !important;
+.intro {
+  font-size: 20px !important;
   font-weight: 500 !important;
   color: black !important;
 }
-.user-name{
-  font-size:30px !important;
+.user-name {
+  font-size: 30px !important;
   font-weight: 500 !important;
   color: black !important;
 }
-.user-email{
-  font-size:16px !important;
+.user-email {
+  font-size: 16px !important;
   font-weight: 500 !important;
   color: black !important;
 }
-.profile-photo{
-  padding:10px !important;
+.profile-photo {
+  padding: 10px !important;
 }
-.profile-card-title{
-  font-size:16px !important;
+.profile-card-title {
+  font-size: 16px !important;
   font-weight: 600 !important;
-  color:#ff5959 !important;
+  color: #ff5959 !important;
 }
 
-.profile-btn{
-  background:none;
-  padding:10px 15px ;
-  border-radius:16px; 
-  font-size:16px;
+.profile-btn {
+  background: none;
+  padding: 10px 15px;
+  border-radius: 16px;
+  font-size: 16px;
   font-weight: 600;
 }
-.address-add-btn{
-  background : #db4444 !important;
-  color:#fff !important;
+.address-add-btn {
+  background: #db4444 !important;
+  color: #fff !important;
 }
-.order-details-btn{
-  border:1px solid #db4444 !important;
-  color:#db4444 !important;
+.order-details-btn {
+  border: 1px solid #db4444 !important;
+  color: #db4444 !important;
 }
-.address-add{
-  padding:15px 0 !important;
+.address-add {
+  padding: 15px 0 !important;
 }
-.error li ,.form-error li{
+.form-error {
+  background: #ffdfdf !important;
+}
+.error li,
+.form-error li {
   color: red !important;
   font-size: 14px !important;
 }
-.address-add-button{
+.address-add-button {
   background: #db4444 !important;
-  color:#ffff !important;
+  color: #ffff !important;
 }
-.user-addresses{
-  border:1px solid #dddddd !important;
+.user-addresses {
+  border: 1px solid #dddddd !important;
   align-items: center !important;
   display: flex;
-  gap:10px;
+  gap: 10px;
 }
-.user-saved-address{
+.user-saved-address {
   display: flex;
-  gap:10px;
+  gap: 10px;
   align-items: center;
 }
-.address-remove-btn{
-  padding:8px 10px !important;
-  border-radius:16px !important;
+.address-remove-btn {
+  padding: 8px 10px !important;
+  border-radius: 16px !important;
   background: red !important;
-  color:#fff !important;
+  color: #fff !important;
 }
-.address-removal{
+.address-removal {
   display: flex !important;
   justify-content: end;
   align-items: end;
 }
-.edit-user-detail{
-  display:flex;
+.edit-user-detail {
+  display: flex;
   justify-content: end;
   align-items: end;
 }
-.edit-user-detail-btn{
-  padding:8px 10px !important;
-  font-size:20px !important;
-  background:  none;
+.edit-user-detail-btn {
+  padding: 8px 10px !important;
+  font-size: 20px !important;
+  background: none;
 }

@@ -1,13 +1,9 @@
-
-
-
 <cfinclude template = "header.cfm">
     <section class = "product-section order-section">
         <div class = "container">
 
         </div>
     </section>
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -25,8 +21,6 @@
     </div>
   </div>
 </div>
-
-
 <script>
   // Wait for the DOM to be fully loaded
   document.addEventListener("DOMContentLoaded", function() {
@@ -34,5 +28,4 @@
     myModal.show(); // Show the modal automatically
   });
 </script>
-
 <cfinclude template = "footer.cfm">

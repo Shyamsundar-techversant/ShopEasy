@@ -1,4 +1,3 @@
-
 <cfparam name = "form.searchProduct" default = "">
 <cfif form.searchProduct NEQ "">
     <cfset variables.searchResult = application.productContObj.getSearchedProduct(
@@ -23,14 +22,12 @@
                     <cfoutput query = "variables.searchResult">
                         <cfif variables.searchResult.fldDefaultImage EQ 1>
                             <cfset encryptedProductId = encrypt(
-                                                                    variables.searchResult.idProduct,
-                                                                    application.encryptionKey,
-                                                                    "AES",
-                                                                    "Hex"
-                                                                )
-                            >
-                            <div class = "col-md-3 pb-3" data-aos="zoom-in-down">
-                                
+                                variables.searchResult.idProduct,
+                                application.encryptionKey,
+                                "AES",
+                                "Hex"
+                            )>
+                            <div class = "col-md-3 pb-3" data-aos="zoom-in-down">  
                                 <div class = "product-card">
                                     <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
                                         <img src = "/uploadImg/#variables.searchResult.fldImageFileName#" alt = "ProductImage" 

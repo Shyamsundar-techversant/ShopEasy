@@ -13,7 +13,6 @@
     <link href = "https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">  
   </head>
   <body>
-
     <!-- Header -->
     <section class = "header-section">
       <header class = "header">
@@ -21,7 +20,11 @@
           <div class = "header-content">
             <div class = "brand-name">ShopEasy</div>
             <div class = "sign-buttons">
-              <button class = "reg-btn btn" onclick = "window.location.href = '../../view/logIn.cfm?logOut=1' ">LogOut</button>
+              <cfif structKeyExists(session, 'userId')>
+                <button class = "reg-btn btn" onclick = "window.location.href = '../../view/logIn.cfm?logOut=1' ">LogOut</button>
+              <cfelse>
+                <button class = "reg-btn btn" onclick = "window.location.href = '../../view/logIn.cfm?logOut=1' ">LogIn</button>
+              </cfif>
             </div>
           </div>
         </div>

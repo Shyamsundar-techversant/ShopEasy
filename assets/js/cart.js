@@ -13,44 +13,43 @@ $(document).ready(function () {
     let productId;
     $('.qty-decrease').on('click', function () {
         productId = $(this).data('id');
-        let decreaseQuantity = 1;
-        let formData = new FormData();
-        formData.append('productId', productId);
-        formData.append('decreaseQuantity', decreaseQuantity);
-        $.ajax({
-            url: "../../controller/cart.cfc?method=changeProductQuantity",
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function () {
-                console.log("Request Failed");
-            }
-
-        });
+        let isDecreaseQuantity = 1;
+        let closestDiv = $(this).closest(".cart-prod-details");
+        let inputField = closestDiv.find(".card-product-count-input");
+        let currentQuantity = parseInt(inputField.val(), 10);
+        if (currentQuantity > 1) {
+            $.ajax({
+                url: "../../controller/cart.cfc?method=changeProductQuantity",
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    isDecreaseQuantity: isDecreaseQuantity
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Request failed");
+                }
+            });
+        }
     });
     $('.qty-increase').on('click', function () {
         productId = $(this).data('id');
-        let increaseQuantity = 1;
+        let isIncreaseQuantity = 1;
         let formData = new FormData();
-        formData.append('productId', productId);
-        formData.append('increaseQuantity', increaseQuantity);
         $.ajax({
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                productId: productId,
+                isIncreaseQuantity: isIncreaseQuantity
+            },
             success: function (response) {
-                console.log(response);
                 location.reload();
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");;
             }
 
         });
@@ -67,43 +66,38 @@ $(document).ready(function () {
         $.ajax({
             url: "../../controller/cart.cfc?method=changeProductQuantity",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                productId: productId,
+                isRemoveProduct: isRemoveProduct
+            },
             success: function (response) {
-                console.log(response);
                 location.reload();
             },
             error: function () {
-                console.log("Request Failed");
+                alert("Request failed");
             }
         });
     });
-
     //USER PROFILE
     $('.address-add-btn').on('click', function () {
         $('#addressAddForm').trigger('reset');
         $('.form-error').text('');
     });
-
     $('#addAddressBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('firstName', $('#firstname').val());
-        formData.append('lastName', $('#lastname').val());
-        formData.append('addressLine_1', $('#addressLine1').val());
-        formData.append('addressLine_2', $('#addressLine2').val());
-        formData.append('city', $('#city').val());
-        formData.append('state', $('#state').val());
-        formData.append('pincode', $('#pincode').val());
-        formData.append('phone', $('#phone').val());
         $.ajax({
             url: "../../controller/cart.cfc?method=addUserAddress",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                firstName: $('#firstname').val(),
+                lastName: $('#lastname').val(),
+                addressLine1: $('#addressLine1').val(),
+                addressLine2: $('#addressLine2').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+                pincode: $('#pincode').val(),
+                phone: $('#phone').val()
+            },
             success: function (response) {
-                console.log(response);
                 let data = JSON.parse(response);
                 if (data === 'Success') {
                     $('#addressAddModal').modal('hide');
@@ -111,11 +105,14 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("address-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
-
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         })
     });
@@ -125,16 +122,11 @@ $(document).ready(function () {
         addressId = $(this).data('id');
     });
     $('#addressRemoveBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('addressId', addressId);
         $.ajax({
             url: "../../controller/cart.cfc?method=removeUserAddress",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: { addressId: addressId },
             success: function (response) {
-                console.log(response);
                 let data = JSON.parse(response);
                 if (data === 'Success') {
                     $('#addressRemoveModal').modal('hide');
@@ -142,25 +134,20 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     // EDIT USER DETAIS
     let userId;
     $('.edit-user-detail-btn').on('click', function () {
         $('#editUserModalForm').trigger('reset');
         $('.form-error').text('');
         userId = $(this).data('id');
-        let formData = new FormData();
-        formData.append('userId', userId);
         $.ajax({
             url: "../../controller/cart.cfc?method=getUserDetails",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: { userId: userId },
             success: function (response) {
                 let data = JSON.parse(response);
                 $('#userFirstname').val(data.DATA[0][0]);
@@ -169,23 +156,21 @@ $(document).ready(function () {
                 $('#phoneNumber').val(data.DATA[0][2]);
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
     $('#editUserModalBtn').on('click', function () {
-        let formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('firstName', $('#userFirstname').val());
-        formData.append('lastName', $('#userLastname').val());
-        formData.append('email', $('#emailId').val());
-        formData.append('phone', $('#phoneNumber').val());
         $.ajax({
             url: "../../controller/cart.cfc?method=validateUserDetails",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: {
+                userId: userId,
+                firstName: $('#userFirstname').val(),
+                lastName: $('#userLastname').val(),
+                email: $('#emailId').val(),
+                phone: $('#phoneNumber').val()
+            },
             success: function (response) {
                 let data = JSON.parse(response);
                 if (data === 'Success') {
@@ -194,31 +179,26 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("user-details-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });
-
     // SET SESSION VARIABLE FOR ORDER NOW
     $('#order-now-btn').on('click', function () {
-        let formData = new FormData();
         productId = $(this).data('id');
-        formData.append('setOrder', 1);
-        formData.append('productId', productId);
         $.ajax({
             url: "../../controller/cart.cfc?method=setSessionValue",
             method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                console.log('hhh');
-            },
-            error: function () {
-                console.log("Request failed");
+            data: {
+                setOrder: 1,
+                productId: productId
             }
         });
     });
@@ -240,17 +220,16 @@ $(document).ready(function () {
         $('#addressAddModal').modal('hide');
         $('.form-error').text('');
     });
-
     // ORDER SUMMARY
     let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
-    let unitPrice = parseFloat($('.payable-order-price').text());
+    let unitPrice = parseFloat($(".actual-order-price").text().replace("$", "").trim());
     let unitTax = parseFloat($('.actual-order-tax').text());
-    let totalCalculatedAmount = unitPrice;
+    let totalCalculatedAmount = (unitPrice )+(unitPrice*unitTax)/100;
     let totalTax = (unitTax * unitPrice) / 100;
     $('.qty-add-btn').on('click', function () {
         productQuantity += 1;
         $('#orderQuantity').val(productQuantity);
-        totalCalculatedAmount = productQuantity * unitPrice;
+        totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
         $('.payable-order-price').text(totalCalculatedAmount);
         totalTax = (productQuantity * unitPrice * unitTax) / 100;
     });
@@ -258,23 +237,22 @@ $(document).ready(function () {
         productQuantity -= 1;
         $('#orderQuantity').val(productQuantity);
         productId = $(this).data('id');
-        totalCalculatedAmount = productQuantity * unitPrice;
+        totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
         totalTax = (productQuantity * unitTax * unitPrice) / 100;
         $('.payable-order-price').text(totalCalculatedAmount);
         if (productQuantity <= 0) {
             window.location.href = `userProduct.cfm?productId=${productId}`;
         }
     });
-
-
     // ORDER PAYMENT
     $('.place-order-btn').on('click', function () {
         $('#order-place-form').trigger('reset');
         $('.form-error').empty();
     });
     $('.pay-btn').on('click', function () {
-        console.log($('#card-number').val());
         let formData = new FormData();
+        totalCalculatedAmount = productQuantity*(unitPrice+(unitPrice*unitTax)/100);
+        totalTax = (productQuantity*unitPrice*unitTax)/100 ;
         productId = $('.selected-order-product').data('id');
         addressId = $('.order-address-summary').data('id');
         formData.append('cardNumber', $('#card-number').val());
@@ -299,6 +277,8 @@ $(document).ready(function () {
                     Swal.fire({
                         title: "Payment Successful",
                         icon: "success"
+                    }).then(() => {
+                        window.location.href = 'orderHistory.cfm';
                     });
                 }
                 else {
@@ -306,7 +286,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });

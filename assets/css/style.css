@@ -8,7 +8,6 @@
   list-style-type: none;
   font-family: "Montserrat", serif;
 }
-
 button {
   border: none !important;
   box-shadow: none !important;
@@ -44,7 +43,6 @@ button {
   background: #db4444;
   color: #fff !important;
 }
-
 /* Registration */
 .user-registration {
   display: flex;
@@ -105,13 +103,14 @@ button {
 .sign-link:hover {
   text-decoration: underline !important;
 }
-
+.error-container,.error{
+  background: #ffdfdf;
+}
 .errors,
 .error li {
   color: red !important;
   font-size: 14px !important;
 }
-
 .form-label {
   color: black !important;
   font-weight: 400 !important;
@@ -124,11 +123,8 @@ button {
   box-shadow: none !important;
   border: 1px solid #db4444 !important;
 }
-
 /* Admin Dashboard */
-
 /* Category */
-
 .category-container {
   display: flex;
   justify-content: center;
@@ -183,14 +179,12 @@ tbody tr {
   align-items: center !important;
   background: #e9e9e9 !important;
 }
-
 .categ-add-btns {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 15px;
 }
-
 .categ-alt-btn,
 .categ-subCateg-btn {
   background: none !important;
@@ -198,7 +192,6 @@ tbody tr {
   border-radius: 10px !important;
   border: 1px solid #db4444 !important;
 }
-
 .modal-header {
   background: #db4444 !important;
 }
@@ -225,6 +218,17 @@ tbody tr {
   background: #ededec !important;
   color: black !important;
 }
+.naviagate-back{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-right: 20px;
+}
+.page-back-btn{
+  background: none !important;
+  padding:5px !important;
+  font-size: 22px !important;
+}
 /* Product */
 .product-name {
   display: flex;
@@ -232,7 +236,6 @@ tbody tr {
   justify-content: center;
   align-items: center;
 }
-
 /* Product image */
 .image-container {
   display: flex;
@@ -253,7 +256,6 @@ tbody tr {
 .img-dlt-btn:hover {
   background: rgb(231, 183, 183) !important;
 }
-
 /*  Individual product*/
 .product-details-container {
   display: flex;
@@ -264,9 +266,6 @@ tbody tr {
   width: 100px !important;
   height: 200px;
 }
-/* .product-details{
-  flex:1 !important;
-} */
 .carousel {
   background: #ededed !important;
 }
