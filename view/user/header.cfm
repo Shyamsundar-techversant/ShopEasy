@@ -41,15 +41,15 @@
                             </div>
                             <cfif structKeyExists(variables, 'totalCartProducts')>
                                 <div class = "user-cart">
-                                    <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
-                                        <i class="fa-solid fa-cart-shopping"></i>
-                                        <cfif variables.totalCartProducts.recordCount GT 0>
+                                    <cfif variables.totalCartProducts.recordCount GT 0>
+                                        <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                            <i class="fa-solid fa-cart-shopping"></i>
                                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                                 <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
                                                 <span class="visually-hidden">unread messages</span>
-                                            </span>  
-                                        </cfif>      
-                                    </button>
+                                            </span>          
+                                        </button>
+                                    </cfif>
                                 </div>
                             </cfif>
                             <div class = "user-profile" title = "user">
