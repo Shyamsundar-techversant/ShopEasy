@@ -22,7 +22,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---  ADD EDIT CATEGORY    --->
     <cffunction  name="categoryAddEdit" access = "public" returntype = "any">
         <cfargument name = "categoryName" type = "string" required = "true" >
@@ -31,21 +30,19 @@
         <cftry>
             <cfif NOT structKeyExists(arguments, "categoryId")>                      
                 <cfquery datasource = "#application.datasource#" result ="local.qryAddCategory">
-                    INSERT INTO 
-                            tblCategory(
-                                fldCategoryName,
-                                fldActive,
-                                fldCreatedById,
-                                fldUpdatedById,
-                                fldUpdatedDate
-                            )
-                    VALUES(
-                            <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
-                            <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
-                        )
+                    INSERT INTO tblCategory(
+                        fldCategoryName,
+                        fldActive,
+                        fldCreatedById,
+                        fldUpdatedById,
+                        fldUpdatedDate
+                    )VALUES(
+                        <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    )
                 </cfquery>
                 <cfif local.qryAddCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -77,7 +74,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---  GET  CATEGORY    --->
     <cffunction name = "getCategory" access = "public" returntype = "any">
         <cfargument  name="categoryId" type = "integer" required = "false">
@@ -100,7 +96,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---  DELETE CATEGORY    --->
     <cffunction name = "deleteCategory" access = "remote" returntype = "any">
         <cfargument name = "categoryId" type = "integer" required = "true">
@@ -129,8 +124,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
-
     <!---   SUB CATEGORY CHECK   --->
     <cffunction  name="checkSubCategory" access = "public" returntype = "string">
         <cfargument name = "subCategoryName" type = "string" required = "true" >
@@ -156,7 +149,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---   SUBCATEGORY ADD EDIT   --->
     <cffunction  name="subCategoryAddEdit" access = "public" returntype = "any">
         <cfargument name = "subCategoryName" type = "string" required = "true" >
@@ -166,23 +158,21 @@
         <cftry>
             <cfif NOT structKeyExists(arguments, "subCategoryId")>                     
                 <cfquery datasource = "#application.datasource#" result ="local.qryAddSubCategory">
-                    INSERT INTO 
-                            tblSubCategory(
-                                fldCategoryId,
-                                fldSubCategoryName,
-                                fldActive,
-                                fldCreatedById,
-                                fldUpdatedById,
-                                fldUpdatedDate                               
-                            )
-                    VALUES(
-                            <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_varchar">,
-                            <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
-                            <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                            <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
-                        )
+                    INSERT INTO tblSubCategory(
+                        fldCategoryId,
+                        fldSubCategoryName,
+                        fldActive,
+                        fldCreatedById,
+                        fldUpdatedById,
+                        fldUpdatedDate                               
+                    )VALUES(
+                        <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
+                        <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
+                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    )
                 </cfquery>
                 <cfif local.qryAddSubCategory.recordCount EQ 1>
                     <cfset local.result = "Success">
@@ -215,7 +205,6 @@
         </cfcatch>
         </cftry>
     </cffunction> 
-
     <!---  GET SUB CATEGORY    --->
     <cffunction name = "getSubCategory" access = "public" returntype = "any">
         <cfargument name ="subCategoryId" type = "integer" required = "false">
@@ -240,7 +229,6 @@
         </cfcatch>
         </cftry>
     </cffunction>   
-
     <!---   DELETE SUBCATEGORY   --->
     <cffunction name = "deleteSubCategory" access = "remote" returntype = "any">
         <cfargument name = "subCategoryId" type = "integer" required = "true">

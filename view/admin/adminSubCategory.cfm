@@ -25,10 +25,14 @@
                     <cfoutput>#variables.getSubCategoryById.fldSubcategoryName#</cfoutput>
                 </span>
                 <span>
-                    <button type="button" class="category-btn" data-bs-toggle="modal" 
-                              data-bs-target="#productAddEditModal" id = "productButton"                              
+                    <button 
+                      type="button" 
+                      class="category-btn" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#productAddEditModal" 
+                      id = "productButton"                              
                     >
-                        +  
+                      +  
                     </button>
                 </span> 
             </div>
@@ -55,32 +59,35 @@
                         </div>                 
                       </td>
                       <td>
-                        <button  type = "button" 
-                                class = "categ-alt-btn product-edit-btn"
-                                data-bs-toggle = "modal"
-                                data-bs-target = "##productAddEditModal"
-                                data-id = "#variables.allProducts.fldProduct_ID#"
-                                data-subCategId = "#url.subCategID#"
+                        <button  
+                          type = "button" 
+                          class = "categ-alt-btn product-edit-btn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##productAddEditModal"
+                          data-id = "#variables.allProducts.fldProduct_ID#"
+                          data-subCategId = "#url.subCategID#"
                         >
                           EDIT
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-alt-btn product-dlt-btn"
-                                data-bs-toggle = "modal"
-                                data-bs-target = "##productDeleteModal"
-                                data-id = "#variables.allProducts.fldProduct_ID#"
-                                data-subCategId = "#url.subCategID#"
+                        <button 
+                          type = "button"
+                          class = "categ-alt-btn product-dlt-btn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##productDeleteModal"
+                          data-id = "#variables.allProducts.fldProduct_ID#"
+                          data-subCategId = "#url.subCategID#"
                         >
                           DELETE
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-subCateg-btn categ-dlt-btn"
-                                data-id = "#variables.allProducts.fldProduct_ID#"
-                                onclick = "window.location.href = 'adminProduct.cfm?productId=#encryptedId#&subCategID=#url.subCategID#&categId=#url.categId#' "
+                        <button 
+                          type = "button"
+                          class = "categ-subCateg-btn categ-dlt-btn"
+                          data-id = "#variables.allProducts.fldProduct_ID#"
+                          onclick = "window.location.href = 'adminProduct.cfm?productId=#encryptedId#&subCategID=#url.subCategID#&categId=#url.categId#' "
                         >       
                           VIEW
                         </button>             
@@ -116,7 +123,8 @@
                   <lablel for = "categorySelect" class = "form-label">Category Name </label>
                   <select class = "form-select" id = "categorySelect">
                     <cfoutput query = "categoryValues" >
-                      <option value = "#categoryValues.fldCategory_ID#"
+                      <option 
+                        value = "#categoryValues.fldCategory_ID#"
                         <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
                           selected
                         </cfif> 
@@ -135,7 +143,8 @@
                   <lablel for = "subCategorySelect" class = "form-label">SubCategory Name</label>
                   <select class = "form-select" id = "subCategorySelect">
                     <cfoutput query = "subCategoryValues" >
-                      <option value = "#subCategoryValues.fldSubCategory_ID#"
+                      <option 
+                        value = "#subCategoryValues.fldSubCategory_ID#"
                         <cfif subCategoryValues.fldSubCategory_ID EQ variables.getSubCategoryById.fldSubCategory_ID>
                           selected
                         </cfif>
@@ -149,7 +158,11 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productName" class = "form-label">Product Name </label>
-                  <input type = "text" class = "form-control" id = "productName" name = "productName"
+                  <input 
+                    type = "text" 
+                    class = "form-control" 
+                    id = "productName" 
+                    name = "productName"
                     placeholder = "Enter the product name you want to add"
                   >
                 </div>
@@ -170,7 +183,11 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productDescription" class = "form-label">Product Description </label>
-                  <input type = "text" class = "form-control" id = "productDescription" name = "productDescription"
+                  <input 
+                    type = "text" 
+                    class = "form-control" 
+                    id = "productDescription" 
+                    name = "productDescription"
                     placeholder = "Description about the product"
                   >
                 </div>
@@ -178,7 +195,11 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productPrice" class = "form-label">Product Price </label>
-                  <input type = "number" class = "form-control" id = "productPrice" name = "productPrice"
+                  <input 
+                    type = "number" 
+                    class = "form-control" 
+                    id = "productPrice" 
+                    name = "productPrice"
                     placeholder = "Enter the price of the product" min = "0"
                   >
                 </div>
@@ -186,7 +207,11 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productTax" class = "form-label">Product Tax </label>
-                  <input type = "number" class = "form-control" id = "productTax" name = "productTax"
+                  <input 
+                    type = "number" 
+                    class = "form-control" 
+                    id = "productTax" 
+                    name = "productTax"
                     placeholder = "Enter the product name you want to add" min = "0"
                   >
                 </div>
@@ -194,8 +219,12 @@
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "productImages" class = "form-label">Product Images </label>
-                  <input type = "file" class = "form-control" id = "productImages" name = "productImages"
-                                multiple
+                  <input 
+                    type = "file" 
+                    class = "form-control" 
+                    id = "productImages" 
+                    name = "productImages"
+                    multiple
                   >                 
                 </div>
               </div>

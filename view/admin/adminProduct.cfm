@@ -43,9 +43,15 @@
                                 <cfset count = 0>
                                 <cfloop array = "#variables.getProductDataById#" index = "i" item = "image">
                                     <cfif i LT arrayLen(variables.getProductDataById)>
-                                        <button type="button" data-bs-target="##productImageCarousel" data-bs-slide-to="#count#" 
-                                                <cfif variables.getProductDataById[i].defaultValue EQ 1 >class = "active" </cfif>
-                                                aria-current="true" aria-label="Slide #count#"
+                                        <button 
+                                            type="button" 
+                                            data-bs-target="##productImageCarousel" 
+                                            data-bs-slide-to="#count#" 
+                                            <cfif variables.getProductDataById[i].defaultValue EQ 1 >
+                                                class = "active" 
+                                            </cfif>
+                                            aria-current="true" 
+                                            aria-label="Slide #count#"
                                         >
                                         </button>
                                         <cfset count = count +1 >

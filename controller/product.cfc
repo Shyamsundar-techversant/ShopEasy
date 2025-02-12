@@ -117,7 +117,6 @@
             <cfreturn local.productData> 
         </cfif>
     </cffunction>
-
     <!--- CHANGE DEFAULT IMAGE --->
     <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
         <cfargument name = "defaultImageId" type = "integer" required = "true">
@@ -129,8 +128,6 @@
             <cfreturn "Success">
         </cfif>
     </cffunction>
-
-
     <!---  DELETE IMAGE    --->
     <cffunction  name = "deleteImage" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "imageId" type = "integer" required = "true">

@@ -51,7 +51,7 @@
                                                 <span class = "order-product-pay-price">Payable amount : 
                                                     <span class = "order-product-pay-price-value">$</span>
                                                     <span class = "payable-order-price order-product-pay-price-value">
-                                                    #(variables.selectedProduct.fldPrice)+
+                                                        #(variables.selectedProduct.fldPrice)+
                                                         (variables.selectedProduct.fldPrice)*(variables.selectedProduct.fldTax/100)#
                                                     </span>
                                                 </span>
@@ -124,7 +124,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "card-number" class = "form-label">Card Number</label> 
-                                <input type = "text" class = "form-control" name = "cardNumber" id = "card-number"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "cardNumber" 
+                                    id = "card-number"
                                     placeholder = "000-000-000-00"
                                 >
                             </div>
@@ -132,7 +136,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "cvv" class = "form-label">CVV</label> 
-                                <input type = "text" class = "form-control" name = "cvv" id = "cvv"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "cvv" 
+                                    id = "cvv"
                                     placeholder = "000"
                                 >
                             </div>
