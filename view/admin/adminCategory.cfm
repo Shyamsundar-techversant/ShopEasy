@@ -10,6 +10,11 @@
     <section class = "category-section">
       <div class = "container category-container">
         <div class = "card category-card" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="300">
+          <div class = "naviagate-back">
+            <button class = "page-back-btn" onclick = "window.location.href='adminDashboard.cfm'">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+          </div>
           <div class = "card-head">
             <div class = "cardhead-content">
                 <span class = "category-head">

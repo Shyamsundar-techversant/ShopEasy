@@ -12,7 +12,14 @@
     <section class = "category-section">
       <div class = "container category-container">
         <div class = "card category-card" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="300">
-          <div class = "card-head">
+          <div class = "naviagate-back">
+            <cfoutput>
+              <button class = "page-back-btn" onclick = "window.location.href='adminCategory.cfm?categId=#url.categId#'">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+            </cfoutput>
+          </div>         
+          <div class = "card-head">   
             <div class = "cardhead-content">
                 <span class = "category-head">
                     <cfoutput>#variables.getSubCategoryById.fldSubcategoryName#</cfoutput>
@@ -73,7 +80,7 @@
                         <button type = "button"
                                 class = "categ-subCateg-btn categ-dlt-btn"
                                 data-id = "#variables.allProducts.fldProduct_ID#"
-                                onclick = "window.location.href = 'adminProduct.cfm?productId=#encryptedId#&subCategID=#url.subCategID#' "
+                                onclick = "window.location.href = 'adminProduct.cfm?productId=#encryptedId#&subCategID=#url.subCategID#&categId=#url.categId#' "
                         >       
                           VIEW
                         </button>             

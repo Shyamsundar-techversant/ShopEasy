@@ -218,6 +218,17 @@ tbody tr {
   background: #ededec !important;
   color: black !important;
 }
+.naviagate-back{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-right: 20px;
+}
+.page-back-btn{
+  background: none !important;
+  padding:5px !important;
+  font-size: 22px !important;
+}
 /* Product */
 .product-name {
   display: flex;
