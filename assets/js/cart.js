@@ -222,14 +222,14 @@ $(document).ready(function () {
     });
     // ORDER SUMMARY
     let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
-    let unitPrice = parseFloat($('.payable-order-price').text());
+    let unitPrice = parseFloat($(".actual-order-price").text().replace("$", "").trim());
     let unitTax = parseFloat($('.actual-order-tax').text());
-    let totalCalculatedAmount = unitPrice;
+    let totalCalculatedAmount = (unitPrice )+(unitPrice*unitTax)/100;
     let totalTax = (unitTax * unitPrice) / 100;
     $('.qty-add-btn').on('click', function () {
         productQuantity += 1;
         $('#orderQuantity').val(productQuantity);
-        totalCalculatedAmount = productQuantity * unitPrice;
+        totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
         $('.payable-order-price').text(totalCalculatedAmount);
         totalTax = (productQuantity * unitPrice * unitTax) / 100;
     });
@@ -237,7 +237,7 @@ $(document).ready(function () {
         productQuantity -= 1;
         $('#orderQuantity').val(productQuantity);
         productId = $(this).data('id');
-        totalCalculatedAmount = productQuantity * unitPrice;
+        totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
         totalTax = (productQuantity * unitTax * unitPrice) / 100;
         $('.payable-order-price').text(totalCalculatedAmount);
         if (productQuantity <= 0) {
@@ -286,7 +286,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                console.log("Request failed");
+                alert("Request failed");
             }
         });
     });

@@ -27,10 +27,10 @@
                         <cfqueryparam value = "#local.orderId#" cfsqltype = "cf_sql_varchar">,
                         <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#arguments.addressId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#arguments.totalPrice#" cfsqltype = "cf_sql_decimal">,
-                        <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "cf_sql_decimal">,
+                        <cfqueryparam value = "#arguments.totalPrice#" cfsqltype = "cf_sql_float">,
+                        <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "cf_sql_float">,
                         <cfqueryparam value = "#local.cardPart#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_timestamp">
                     )      
                 </cfquery>
                 <cfset arguments['orderId'] = local.orderId>
@@ -142,7 +142,7 @@
                     A.fldPhoneNumber,
                     PI.fldImageFileName,
                     B.fldBrandName,
-                    SUM(OI.fldQuantity * (OI.fldUnitPrice + (OI.fldUnitPrice * OI.fldUnitTax) / 100)) AS totalPrice
+                    ROUND(SUM(OI.fldQuantity * (OI.fldUnitPrice + (OI.fldUnitPrice * OI.fldUnitTax) / 100)),2) AS totalPrice
                 FROM 
                     tblOrderItems AS OI
                     INNER JOIN tblOrder AS O ON OI.fldOrderId = O.fldOrder_ID
@@ -195,6 +195,7 @@
                     tblOrder 
                 WHERE 
                     fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
+                ORDER BY fldOrderedDate DESC
             </cfquery>
             <cfreturn local.qryGetUniqueOrderId>
         <cfcatch type="exception">
