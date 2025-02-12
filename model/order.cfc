@@ -142,7 +142,7 @@
                     A.fldPhoneNumber,
                     PI.fldImageFileName,
                     B.fldBrandName,
-                    SUM(OI.fldQuantity*(OI.fldUnitPrice + (OI.fldUnitPrice*OI.fldUnitTax)/100)) AS totalPrice
+                    SUM(OI.fldQuantity * (OI.fldUnitPrice + (OI.fldUnitPrice * OI.fldUnitTax) / 100)) AS totalPrice
                 FROM 
                     tblOrderItems AS OI
                     INNER JOIN tblOrder AS O ON OI.fldOrderId = O.fldOrder_ID

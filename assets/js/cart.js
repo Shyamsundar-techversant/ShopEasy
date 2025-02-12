@@ -251,6 +251,8 @@ $(document).ready(function () {
     });
     $('.pay-btn').on('click', function () {
         let formData = new FormData();
+        totalCalculatedAmount = productQuantity*(unitPrice+(unitPrice*unitTax)/100);
+        totalTax = (productQuantity*unitPrice*unitTax)/100 ;
         productId = $('.selected-order-product').data('id');
         addressId = $('.order-address-summary').data('id');
         formData.append('cardNumber', $('#card-number').val());

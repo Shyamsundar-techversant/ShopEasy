@@ -57,8 +57,8 @@
                                     $#variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))#
                                 </div>
                                 <cfset variables.totalCartProductsPrice = variables.totalCartProductsPrice + variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))>  
-                                <div class = "cart-prod-tax">Tax : $#variables.totalCartProducts.fldTax# %</div>
-                                <div class = "actual-price">Actual Price : #variables.totalCartProducts.fldPrice#</div>
+                                <div class = "cart-prod-tax">Tax : #variables.totalCartProducts.fldTax# %</div>
+                                <div class = "actual-price">Actual Price : $#variables.totalCartProducts.fldPrice#</div>
                                 <button 
                                     class = "remove-from-cart-btn" 
                                     data-id = "#local.encryptedProductId#"
