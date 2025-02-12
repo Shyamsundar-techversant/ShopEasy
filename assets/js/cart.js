@@ -14,20 +14,25 @@ $(document).ready(function () {
     $('.qty-decrease').on('click', function () {
         productId = $(this).data('id');
         let isDecreaseQuantity = 1;
-        $.ajax({
-            url: "../../controller/cart.cfc?method=changeProductQuantity",
-            method: 'POST',
-            data: {
-                productId: productId,
-                isDecreaseQuantity: isDecreaseQuantity
-            },
-            success: function (response) {
-                location.reload();
-            },
-            error: function () {
-                alert("Request failed");
-            }
-        });
+        let closestDiv = $(this).closest(".cart-prod-details");
+        let inputField = closestDiv.find(".card-product-count-input");
+        let currentQuantity = parseInt(inputField.val(), 10);
+        if (currentQuantity > 1) {
+            $.ajax({
+                url: "../../controller/cart.cfc?method=changeProductQuantity",
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    isDecreaseQuantity: isDecreaseQuantity
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Request failed");
+                }
+            });
+        }
     });
     $('.qty-increase').on('click', function () {
         productId = $(this).data('id');
@@ -173,7 +178,7 @@ $(document).ready(function () {
                     location.reload();
                 }
                 else {
-                    addError(data);   
+                    addError(data);
                     let errorDiv = document.getElementById("user-details-validation-error");
                     if (errorDiv) {
                         errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });

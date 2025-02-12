@@ -103,25 +103,13 @@
                     <cfset local.sendMail = sendMailToUser(
                         orderId = arguments.orderId
                     )>
-                    <cfset local.deleteCartItems = deleteCartProducts()>
+                    <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
+                        CALL spDeleteCartProduct(
+                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
+                        )
+                    </cfquery>
                     <cfreturn 'Success'>
                 </cfif>
-            </cfif>
-        <cfcatch type="exception">
-            <cfdump var = "#cfcatch#">
-        </cfcatch>
-        </cftry>
-    </cffunction>
-    <!---   DELETE CART ITEMS   --->
-    <cffunction  name = "deleteCartProducts" access = "private" returntype = "string">
-        <cftry>
-            <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
-                CALL deleteCartProduct(
-                    <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
-                )
-            </cfquery>
-            <cfif local.qryDeleteCartItems.recordCount GT 0>
-                <cfreturn 'Success'>
             </cfif>
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#">
@@ -196,7 +184,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---GET UNIQUE ORDER ID  --->
     <cffunction name = "getUniqueOrderId" access = "public" returntype = "query">
         <cftry>

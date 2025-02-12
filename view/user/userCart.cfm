@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class = "card-product-count">
-                                    <input type = "text" class = "card-product-count-input" value = "#variables.totalCartProducts.fldQuantity#">
+                                    <input type = "number" class = "card-product-count-input" value = "#variables.totalCartProducts.fldQuantity#" min = "1">
                                 </div>
                             </div>
                             <div class = "col-md-3 cart-prod-details">

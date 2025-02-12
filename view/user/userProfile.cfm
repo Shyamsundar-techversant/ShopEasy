@@ -28,6 +28,9 @@
                         <div class = "user-email">
                             #variables.userData.fldEmail#
                         </div>
+                        <div class = "user-mobile-number">
+                            #variables.userData.fldPhone#
+                        </div>
                     </cfoutput>
                 </cfif>
             </div>

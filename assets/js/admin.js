@@ -127,8 +127,8 @@ $(document).ready(function () {
             url: "../../controller/category.cfc?method=validateSubCategory",
             method: 'POST',
             data: {
-                subCategoryName : $('#subCategName').val(),
-                categoryId : $('#categorySelect').val()
+                subCategoryName: $('#subCategName').val(),
+                categoryId: $('#categorySelect').val()
             },
             success: function (response) {
                 let data = JSON.parse(response);
@@ -159,8 +159,8 @@ $(document).ready(function () {
             url: "../../controller/category.cfc?method=getSubCategory",
             method: 'POST',
             data: {
-                subCategoryId : subCategoryId,
-                categoryId : categoryId
+                subCategoryId: subCategoryId,
+                categoryId: categoryId
             },
             success: function (response) {
                 let data = JSON.parse(response);
@@ -176,9 +176,9 @@ $(document).ready(function () {
             url: "../../controller/category.cfc?method=validateSubCategory",
             method: 'POST',
             data: {
-                subCategoryId : subCategoryId,
-                categoryId : $('#categorySelect').val(),
-                subCategoryName : $('#subCategName').val()
+                subCategoryId: subCategoryId,
+                categoryId: $('#categorySelect').val(),
+                subCategoryName: $('#subCategName').val()
             },
             success: function (response) {
                 let data = JSON.parse(response);
