@@ -20,9 +20,8 @@
                     </h5>
                     <div class = "row">
                         <cfset variables.getProductsBySubCategoryId = application.productContObj.getProductWithDefaultImage(
-                                                                                                                            subCategoryID = encryptedSubCategoryId
-                                                                                                                        )
-                        >
+                            subCategoryID = encryptedSubCategoryId
+                        )>
                         <cfif structKeyExists(variables, 'getProductsBySubCategoryId')>
                             <cfloop query = "variables.getProductsBySubCategoryId" >
                                 <cfset encryptedProductId = encrypt(
@@ -34,7 +33,9 @@
                                 <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
                                     <div class = "product-card">
                                         <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                            <img src = "/uploadImg/#variables.getProductsBySubCategoryId.fldImageFileName#" alt = "ProductImage" 
+                                            <img 
+                                                src = "/uploadImg/#variables.getProductsBySubCategoryId.fldImageFileName#" 
+                                                alt = "ProductImage" 
                                                 class = "product-image-default"
                                             >
                                         </a>

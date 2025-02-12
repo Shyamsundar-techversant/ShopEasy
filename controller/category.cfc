@@ -19,7 +19,6 @@
         <cfargument name = "categoryName" type = "string" required = "true">
         <cfargument name = "categoryId" type = "string" required = "false" >
             <cfset local.errors = [] >
-
             <!---      VALIDATE CATEGORY ID        --->
             <cfif structKeyExists(arguments,"categoryId")>
                 <cfset local.decryptedCategoryId = decryptionFunction(arguments.categoryId)>
@@ -27,7 +26,6 @@
                     <cfset arrayAppend(local.errors, "*Invalid data") >
                 </cfif>
             </cfif>
-
             <!---       VALIDATE CATEGORY NAME        --->
             <cfif structKeyExists(arguments, "categoryName")>
                 <cfif len(trim(arguments.categoryName)) EQ 0>
@@ -40,7 +38,6 @@
                     <cfset arrayAppend(local.errors,"*Category already exist")>
                 </cfif>
             </cfif>
-
             <cfif arrayLen(local.errors) GT 0 >
                 <cfreturn local.errors >
             <cfelse>
@@ -59,7 +56,6 @@
                 </cfif>
             </cfif>
     </cffunction>
-
     <!---  GET CATEGORY  --->
     <cffunction name = "getCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "false">
@@ -83,7 +79,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---  DELETE CATEGORY    --->
     <cffunction name = "categoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "true">
@@ -99,7 +94,6 @@
         </cfif>
         <cfreturn local.result>
     </cffunction>
-
     <!---  SUBCATEGORY VALIDATION   --->
     <cffunction  name="validateSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryName" type = "string" required = "true">
@@ -115,7 +109,6 @@
         <cfelse>
             <cfset arguments.categoryId = local.decryptedCategoryId>
         </cfif>
-
         <!---     CATEGORY VALIDATION     --->
         <cfset local.allCategory = application.categModObj.getCategory()>
         <cfset local.categoryList = valueList(local.allCategory.fldCategory_ID) >
@@ -123,7 +116,6 @@
         <cfif NOT local.categoryExist>
             <cfset arrayAppend(local.errors, "*Category does not exist")>
         </cfif>
-
         <!---    SUBCATEGORY NAME VALIDATION      --->
         <cfif structKeyExists(arguments, "subCategoryName")>
             <cfif len(trim(arguments.subCategoryName)) EQ 0>
@@ -159,7 +151,6 @@
             </cfif>
         </cfif>
     </cffunction>
-
     <!---  GET SUBCATEGORY    --->
     <cffunction name = "getSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
@@ -188,7 +179,6 @@
         </cfcatch>
         </cftry>
     </cffunction>
-
     <!---   DELETE SUBCATEGORY   --->
     <cffunction name = "subCategoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">

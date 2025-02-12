@@ -20,7 +20,10 @@
                             </label>
                         </div>
                         <div class = "search-text p-1">
-                            <input type = "text" id = "serach-order" placeholder = "OrderID"
+                            <input 
+                                type = "text" 
+                                id = "serach-order" 
+                                placeholder = "OrderID"
                                 name = "searchOrder"
                             >
                         </div>
@@ -39,7 +42,9 @@
                             </div>
                             <div class = "col d-flex justify-content-end align-items-center gap-3">
                                 <div class = "order-pdf">
-                                    <button class = "order-history-btn" title = "Download Pdf"
+                                    <button 
+                                        class = "order-history-btn" 
+                                        title = "Download Pdf"
                                         onclick = "window.location.href='orderPdf.cfm?orderId=#variables.orderIds.fldOrder_ID#'"
                                     >
                                         PDF

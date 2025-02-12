@@ -21,10 +21,14 @@
                     <cfoutput>#variables.getCategoryById.fldCategoryName#</cfoutput>
                 </span>
                 <span>
-                    <button type="button" class="category-btn" data-bs-toggle="modal" 
-                              data-bs-target="#subCategoryAddEditModal" id = "subCategoryButton"                              
+                    <button 
+                      type="button" 
+                      class="category-btn" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#subCategoryAddEditModal" 
+                      id = "subCategoryButton"                              
                     >
-                        +  
+                      +  
                     </button>
                 </span> 
             </div>
@@ -43,33 +47,36 @@
                     <tr class = "table-light">
                       <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
                       <td>
-                        <button type = "button" 
-                                  class = "categ-alt-btn subcategory-edit-btn"
-                                  data-bs-toggle = "modal"
-                                  data-bs-target = "##subCategoryAddEditModal"
-                                  data-id = "#encryptedId#"
-                                  data-categId = "#url.categId#"
+                        <button 
+                          type = "button" 
+                          class = "categ-alt-btn subcategory-edit-btn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##subCategoryAddEditModal"
+                          data-id = "#encryptedId#"
+                          data-categId = "#url.categId#"
                         >
                           EDIT
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-alt-btn subcategory-delete-btn"
-                                data-bs-toggle = "modal"
-                                data-bs-target = "##categoryDeleteModal"
-                                data-id = "#encryptedId#"
-                                data-categId = "#url.categId#"
+                        <button 
+                          type = "button"
+                          class = "categ-alt-btn subcategory-delete-btn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##categoryDeleteModal"
+                          data-id = "#encryptedId#"
+                          data-categId = "#url.categId#"
                         >
                           DELETE
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-subCateg-btn product-btn"
-                                data-id = "#encryptedId#"
-                                onclick = 
-                                "window.location.href = 'adminSubcategory.cfm?subCategID=#encryptedId#&categId=#url.categId#'"
+                        <button 
+                          type = "button"
+                          class = "categ-subCateg-btn product-btn"
+                          data-id = "#encryptedId#"
+                          onclick = 
+                            "window.location.href = 'adminSubcategory.cfm?subCategID=#encryptedId#&categId=#url.categId#'"
                         >       
                           VIEW
                         </button>             
@@ -83,7 +90,6 @@
         </div>
       </div>
     </section>
-
     <!--Sub Category Add Edit Modal -->
     <div class="modal fade" id="subCategoryAddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -120,7 +126,6 @@
                   </select>
                 </div>
               </div>
-
               <div class = "row mb-3">
                 <div class = "col">
                   <label for = "subCategName" class = "form-label">Enter Subcategory Name </label>
@@ -129,7 +134,6 @@
                   >
                 </div>
               </div>
-
               <div class = "row mb-3 ">
                 <div class = "col categ-add-btns">
                   <button type="button" class="btn btn-secondary close-modal-btn" data-bs-dismiss="modal">Close</button>
@@ -142,7 +146,6 @@
         </div>
       </div>
     </div>
-
     <!-- SubCategory Delete Modal -->
     <div class="modal fade" id="categoryDeleteModal" tabindex="-1" aria-labelledby="categoryDeleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

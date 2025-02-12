@@ -34,9 +34,9 @@
                 >
                     <div class = "filter p-4">
                         
-                        <button class = "filter-btn" 
-                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&order=1'"
-                        
+                        <button 
+                            class = "filter-btn" 
+                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&order=1'"                     
                         >                      
                             High To Low
                         </button>

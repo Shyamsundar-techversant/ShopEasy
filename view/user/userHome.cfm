@@ -10,7 +10,9 @@
                 </h6>
             </div>
             <div class = "banner-image">
-                <img src = "../../assets/images/bannerimg1" alt = "Banner Image"
+                <img 
+                    src = "../../assets/images/bannerimg1" 
+                    alt = "Banner Image"
                     class = "banner-img"
                 >
             </div>
@@ -32,7 +34,9 @@
                     <div class = "col-md-3" data-aos="zoom-in-down">
                         <div class = "product-card">
                             <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                <img src = "/uploadImg/#randomProducts.fldImageFileName#" alt = "ProductImage" 
+                                <img 
+                                    src = "/uploadImg/#randomProducts.fldImageFileName#" 
+                                    alt = "ProductImage" 
                                     class = "product-image-default"
                                 >
                             </a>

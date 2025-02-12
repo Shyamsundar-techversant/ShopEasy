@@ -115,9 +115,9 @@
                     INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
                     INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
                     INNER JOIN tblProductImages AS IMG ON IMG.fldProductId = P.fldProduct_ID
-                WHERE 
-                    IMG.fldDefaultImage = 1
-                    AND TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
+                        AND IMG.fldDefaultImage = 1
+                WHERE                 
+                    TC.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer"> 
                     AND TC.fldQuantity > 0
                 GROUP BY 
                     TC.fldCart_ID, 

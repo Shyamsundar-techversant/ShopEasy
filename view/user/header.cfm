@@ -95,7 +95,8 @@
                                                                         )
                                     >
                                     <li>
-                                        <a class="dropdown-item subcategory-link" 
+                                        <a 
+                                            class="dropdown-item subcategory-link" 
                                             href="userCategory.cfm?categoryID=#encryptedCategoryId_1#"
                                         >
                                             #variables.getCategory.fldCategoryName#
@@ -109,33 +110,34 @@
                     <cfif structKeyExists(variables, "getCategory")>
                         <cfoutput query = "variables.getCategory">
                             <div class="dropdown">
-                                <button class="btn category-list-btn dropdown-toggle" type="button" 
-                                        id="dropdownMenuButton#count#"
-                                        data-bs-toggle="dropdown" aria-expanded="false" 
-                                        data-id = "#variables.getCategory.fldCategory_ID#"
+                                <button 
+                                    class="btn category-list-btn dropdown-toggle" 
+                                    type="button" 
+                                    id="dropdownMenuButton#count#"
+                                    data-bs-toggle="dropdown" aria-expanded="false" 
+                                    data-id = "#variables.getCategory.fldCategory_ID#"
                                 >
                                     #variables.getCategory.fldCategoryName#
                                 </button>
                                 <cfset encryptedCategoryId = encrypt(
-                                                                        variables.getCategory.fldCategory_ID,
-                                                                        application.encryptionKey,
-                                                                        "AES",
-                                                                        "Hex"
-                                                                    )
-                                >
+                                    variables.getCategory.fldCategory_ID,
+                                    application.encryptionKey,
+                                    "AES",
+                                    "Hex"
+                                )>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <cfset variables.getSubCategory = application.cateContObj.getSubCategory(categoryId = encryptedCategoryId )>
                                     <cfif structKeyExists(variables,"getSubCategory")>
                                         <cfloop query = "variables.getSubCategory">
                                             <cfset encryptedSubCategoryId = encrypt(
-                                                                                    variables.getSubCategory.fldSubCategory_ID,
-                                                                                    application.encryptionKey,
-                                                                                    "AES",
-                                                                                    "Hex"
-                                                                                )
-                                            >
+                                                variables.getSubCategory.fldSubCategory_ID,
+                                                application.encryptionKey,
+                                                "AES",
+                                                "Hex"
+                                            )>
                                             <li>
-                                                <a class="dropdown-item subcategory-link" 
+                                                <a 
+                                                    class="dropdown-item subcategory-link" 
                                                     href="userSubCategory.cfm?subCategoryID=#encryptedSubCategoryId#"
                                                 >
                                                     #variables.getSubCategory.fldSubCategoryName#

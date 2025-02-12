@@ -140,7 +140,11 @@
                                 )>
                                 <div class = "row user-addresses mb-3">
                                     <div class = "col user-saved-address">
-                                        <input type = "radio" id = "radio#index#" name = "selectedAddress" value="#encryptedAddressId #" 
+                                        <input 
+                                            type = "radio" 
+                                            id = "radio#index#" 
+                                            name = "selectedAddress" 
+                                            value="#encryptedAddressId #" 
                                             <cfif index EQ 1>checked</cfif>
                                         >
                                         <label for="radio#index#">
@@ -202,7 +206,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "firstname" class = "form-label">Firstname</label> 
-                                <input type = "text" class = "form-control" name = "firstName" id = "firstname"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "firstName" 
+                                    id = "firstname"
                                     placeholder = "Enter first name"
                                 >
                             </div>
@@ -210,7 +218,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "lastname" class = "form-label">Lastname</label> 
-                                <input type = "text" class = "form-control" name = "lastname" id = "lastname"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "lastname" 
+                                    id = "lastname"
                                     placeholder = "Enter last name"
                                 >
                             </div>
@@ -218,7 +230,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "addressLine1" class = "form-label">Address Line 1</label> 
-                                <input type = "text" class = "form-control" name = "addresLine_1" id = "addressLine1"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "addresLine_1" 
+                                    id = "addressLine1"
                                     placeholder = "Enter Address Line 1"
                                 >
                             </div>
@@ -226,7 +242,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "addressLine2" class = "form-label">Address Line 2</label> 
-                                <input type = "text" class = "form-control" name = "addresLine_2" id = "addressLine2"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control"
+                                     name = "addresLine_2" 
+                                     id = "addressLine2"
                                     placeholder = "Enter Address Line 2"
                                 >
                             </div>
@@ -234,7 +254,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "city" class = "form-label">City</label> 
-                                <input type = "text" class = "form-control" name = "city" id = "city"
+                                <input 
+                                    type = "text"
+                                     class = "form-control" 
+                                     name = "city" 
+                                     id = "city"
                                     placeholder = "Enter city name"
                                 >   
                             </div>
@@ -242,7 +266,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "state" class = "form-label">State</label> 
-                                <input type = "text" class = "form-control" name = "state" id = "state"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "state" 
+                                    id = "state"
                                     placeholder = "Enter state name"
                                 >
                             </div>
@@ -250,7 +278,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "pincode" class = "form-label">Pincode</label> 
-                                <input type = "text" class = "form-control" name = "pincode" id = "pincode"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control" 
+                                    name = "pincode" 
+                                    id = "pincode"
                                     placeholder = "Enter your pincode"
                                 >
                             </div>
@@ -258,7 +290,11 @@
                         <div class = "row mb-3">
                             <div class = "col">
                                 <label for = "phone" class = "form-label">Phone</label> 
-                                <input type = "text" class = "form-control" name = "phone" id = "phone"
+                                <input 
+                                    type = "text" 
+                                    class = "form-control"
+                                    name = "phone" 
+                                    id = "phone"
                                     placeholder = "Enter your phone"
                                 >
                             </div>

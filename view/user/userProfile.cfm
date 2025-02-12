@@ -75,7 +75,7 @@
                                     data-id = #encryptedAddressId#
                                     data-bs-toggle="modal" 
                                     data-bs-target="##addressRemoveModal"
-                            >
+                                >
                                 Remove
                             </button>
                             </div>
@@ -93,14 +93,16 @@
                 >
                     Add New Address
                 </button>
-                <button class = "order-details-btn profile-btn" 
+                <button 
+                    class = "order-details-btn profile-btn" 
                     onclick = "window.location.href='orderHistory.cfm'"
-                >Order Details</button>
+                >
+                    Order Details
+                </button>
             </div>
         </div>
     </div>
 </section>
-
 <!--- EDIT USER DETAILS --->
 <div 
     class="modal fade" 
@@ -125,7 +127,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "userFirstname" class = "form-label">Firstname</label> 
-                            <input type = "text" class = "form-control" name = "firstName" id = "userFirstname"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "firstName" 
+                                id = "userFirstname"
                                 placeholder = "Enter first name"
                             >
                         </div>
@@ -133,7 +139,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "userLastname" class = "form-label">Lastname</label> 
-                            <input type = "text" class = "form-control" name = "lastname" id = "userLastname"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "lastname" 
+                                id = "userLastname"
                                 placeholder = "Enter last name"
                             >
                         </div>
@@ -141,7 +151,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "emailId" class = "form-label">Email</label> 
-                            <input type = "email" class = "form-control" name = "userEmail" id = "emailId"
+                            <input 
+                                type = "email" 
+                                class = "form-control" 
+                                name = "userEmail" 
+                                id = "emailId"
                                 placeholder = "Enter user email"
                             >
                         </div>
@@ -149,7 +163,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "phoneNumber" class = "form-label">Phone</label> 
-                            <input type = "text" class = "form-control" name = "phone" id = "phoneNumber"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "phone" 
+                                id = "phoneNumber"
                                 placeholder = "Enter your phone"
                             >
                         </div>
@@ -195,7 +213,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "firstname" class = "form-label">Firstname</label> 
-                            <input type = "text" class = "form-control" name = "firstName" id = "firstname"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "firstName" 
+                                id = "firstname"
                                 placeholder = "Enter first name"
                             >
                         </div>
@@ -203,7 +225,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "lastname" class = "form-label">Lastname</label> 
-                            <input type = "text" class = "form-control" name = "lastname" id = "lastname"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "lastname" 
+                                id = "lastname"
                                 placeholder = "Enter last name"
                             >
                         </div>
@@ -211,7 +237,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "addressLine1" class = "form-label">Address Line 1</label> 
-                            <input type = "text" class = "form-control" name = "addresLine_1" id = "addressLine1"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "addresLine_1" 
+                                id = "addressLine1"
                                 placeholder = "Enter Address Line 1"
                             >
                         </div>
@@ -219,7 +249,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "addressLine2" class = "form-label">Address Line 2</label> 
-                            <input type = "text" class = "form-control" name = "addresLine_2" id = "addressLine2"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "addresLine_2" 
+                                id = "addressLine2"
                                 placeholder = "Enter Address Line 2"
                             >
                         </div>
@@ -227,7 +261,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "city" class = "form-label">City</label> 
-                            <input type = "text" class = "form-control" name = "city" id = "city"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "city" 
+                                id = "city"
                                 placeholder = "Enter city name"
                             >
                         </div>
@@ -235,7 +273,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "state" class = "form-label">State</label> 
-                            <input type = "text" class = "form-control" name = "state" id = "state"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "state" 
+                                id = "state"
                                 placeholder = "Enter state name"
                             >
                         </div>
@@ -243,7 +285,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "pincode" class = "form-label">Pincode</label> 
-                            <input type = "text" class = "form-control" name = "pincode" id = "pincode"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "pincode" 
+                                id = "pincode"
                                 placeholder = "Enter your pincode"
                             >
                         </div>
@@ -251,7 +297,11 @@
                     <div class = "row mb-3">
                         <div class = "col">
                             <label for = "phone" class = "form-label">Phone</label> 
-                            <input type = "text" class = "form-control" name = "phone" id = "phone"
+                            <input 
+                                type = "text" 
+                                class = "form-control" 
+                                name = "phone" 
+                                id = "phone"
                                 placeholder = "Enter your phone"
                             >
                         </div>

@@ -29,31 +29,33 @@
                     <tr class = "table-light">
                       <td>#variables.getCategory.fldCategoryName#</td>
                       <td>
-                        <button type = "button" 
-                                  class = "categ-alt-btn categoryEditBtn"
-                                  data-bs-toggle = "modal"
-                                  data-bs-target = "##categoryAddModal"
-                                  data-id = "#encryptedId#"
+                        <button 
+                          type = "button" 
+                          class = "categ-alt-btn categoryEditBtn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##categoryAddModal"
+                          data-id = "#encryptedId#"
                         >
                           EDIT
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-alt-btn categoryDeleteBtn"
-                                data-bs-toggle = "modal"
-                                data-bs-target = "##categoryDeleteModal"
-                                data-id = "#encryptedId#"
+                        <button 
+                          type = "button"
+                          class = "categ-alt-btn categoryDeleteBtn"
+                          data-bs-toggle = "modal"
+                          data-bs-target = "##categoryDeleteModal"
+                          data-id = "#encryptedId#"
                         >
                           DELETE
                         </button>
                       </td>
                       <td>
-                        <button type = "button"
-                                class = "categ-subCateg-btn"
-                                data-id = "#encryptedId#"
-                                onclick = 
-                                "window.location.href = 'adminCategory.cfm?categId=#encryptedId#' "
+                        <button 
+                          type = "button"
+                          class = "categ-subCateg-btn"
+                          data-id = "#encryptedId#"
+                          onclick = "window.location.href = 'adminCategory.cfm?categId=#encryptedId#'"
                         >       
                           VIEW 
                         </button>             
