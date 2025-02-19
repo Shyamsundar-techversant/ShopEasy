@@ -148,7 +148,8 @@
                     INNER JOIN tblOrder AS O ON OI.fldOrderId = O.fldOrder_ID
                     INNER JOIN tblProduct AS P ON OI.fldProductId = P.fldProduct_ID
                     INNER JOIN tblAddress AS A ON O.fldAddressId = A.fldAddress_ID
-                    INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID AND PI.fldDefaultImage = 1
+                    INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID 
+                        AND PI.fldDefaultImage = 1
                     INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
                 WHERE              
                     <cfif structKeyExists(arguments, 'orderId')>

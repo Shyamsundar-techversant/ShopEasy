@@ -3,6 +3,13 @@
         categoryId = url.categoryID 
     )>
 </cfif>
+<cfif NOT isQuery(variables.getSubCategoryByCategoryId) OR variables.getSubCategoryByCategoryId.recordCount EQ 0>
+    <cfoutput>
+        <div class="alert alert-danger alertInfo" role="alert">
+            No category Exists.
+        </div>
+    </cfoutput>
+</cfif>
 <cfinclude template = "header.cfm">
     <cfif structKeyExists(variables, "getSubCategoryByCategoryId")>
         <cfset count = 1>

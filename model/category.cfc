@@ -256,4 +256,26 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
+    <!---  GET CATEGORY AND SUBCATEGORY    --->
+    <cffunction  name = "getCategoryAndSubCategory" access = "public" returntype = "any">
+        <cftry>
+            <cfquery name = "local.qryGetCategoryAndSubCategory" datasource = "#application.datasource#">
+                SELECT
+                    SUB.fldSubCategory_ID,
+                    SUB.fldSubCategoryName,
+                    CAT.fldCategoryName,
+                    CAT.fldCategory_ID
+                FROM 
+                    tblSubCategory AS SUB
+                    INNER JOIN tblCategory AS CAT ON SUB.fldCategoryId = CAT.fldCategory_ID
+                        AND CAT.fldActive = 1
+                        AND SUB.fldActive = 1                               
+            </cfquery>
+            <cfreturn local.qryGetCategoryAndSubCategory>
+        <cfcatch type="exception">
+            <cfdump  var="#cfcatch#">
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>

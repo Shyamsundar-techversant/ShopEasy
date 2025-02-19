@@ -7,6 +7,13 @@
         productId = session.productId
     )>
 </cfif>
+<cfif NOT isQuery(variables.productData)>
+    <cfoutput>
+        <div class="alert alert-danger alertInfo" role="alert">
+            No Product Exist.
+        </div>
+    </cfoutput>
+</cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>
         <cfif structKeyExists(url, 'productId')>
@@ -49,7 +56,7 @@
                                         <button 
                                             class = "order-product"
                                             id = "order-now-btn"
-                                            onclick = "window.location.href='userOrder.cfm'"    
+                                            onclick = "window.location.href='paymentDetails.cfm'"    
                                             data-id = "#url.productId#"                                  
                                         >
                                             Order Now
