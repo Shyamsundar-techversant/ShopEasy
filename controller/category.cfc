@@ -194,4 +194,13 @@
         </cfif>
         <cfreturn local.result>
     </cffunction>     
+    <!---  GET CATEGORY AND SUBCATEGORY    --->
+    <cffunction  name = "getCategoryAndSubCategory" access = "public" returntype = "any">
+        <cfset local.getCategoryAndSubCategory = application.categModObj.getCategoryAndSubCategory()>  
+        <cfif local.getCategoryAndSubCategory.recordCount GT 0>
+            <cfreturn local.getCategoryAndSubCategory>
+        <cfelse>
+            <cfreturn "No category exist">
+        </cfif>
+    </cffunction>
 </cfcomponent>

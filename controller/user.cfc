@@ -6,7 +6,7 @@
         <cfargument name = "userEmail" type = "string" required = "false" >
         <cfargument name = "phone" type = "string" required = "false" >
         <cfargument name = "userName" type = "string" required = "false" >
-        <cfargument name = "password" type = "string" required = "true" >     
+        <cfargument name = "password" type = "string" required = "true" >   
         <cfset local.errors = [] >
         <!---  Validate First name   --->
         <cfif structKeyExists(arguments, "firstName")>
@@ -25,7 +25,7 @@
             </cfif>	     
         </cfif>  
         <!---   Validate Email       --->
-        <cfif structKeyExists(arguments,"email")>
+        <cfif structKeyExists(arguments,"userEmail")>
             <cfif len(trim(arguments.userEmail)) EQ 0>
                 <cfset arrayAppend(local.errors,"*Email is required")>
             <cfelseif NOT reFindNoCase("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",arguments.userEmail)>

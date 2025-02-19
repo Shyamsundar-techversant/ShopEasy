@@ -10,6 +10,13 @@
     </cfoutput>
 </cfif>
 <cfinclude  template="header.cfm">
+    <cfif NOT structKeyExists(variables, 'totalCartProducts')>
+        <cfoutput>
+            <div class="alert alert-danger alertInfo" role="alert">
+                Cart is empty.
+            </div>
+        </cfoutput>
+    </cfif>
 <!--- CART SECTION --->
     <section class = "cart-section">
         <div class = "container">

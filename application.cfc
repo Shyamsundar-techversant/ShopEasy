@@ -25,7 +25,7 @@
             "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm","adminProduct.cfm"
         ]>
         <cfset local.userPages = [
-            'userCart.cfm','userOrder.cfm','userProfile.cfm','userOrder.cfm','paymentDetails.cfm','orderHistory.cfm','orderPdf.cfm'
+            'userCart.cfm','userProfile.cfm','paymentDetails.cfm','orderHistory.cfm','orderPdf.cfm'
         ]>
         <cfset local.currentPage = listLast(CGI.SCRIPT_NAME, '/')>
         <cfset local.productId = structKeyExists(url,"productId") ? url.productId : "">

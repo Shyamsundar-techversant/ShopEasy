@@ -17,7 +17,7 @@
         )>       
     </cfif>
 </cfif>
-<cfif NOT isQuery(variables.getProducts)>
+<cfif NOT isQuery(variables.getProducts) OR variables.getProducts.recordCount EQ 0>
     <cfoutput>
         <div class="alert alert-danger alertInfo" role="alert">
             #variables.getProducts#

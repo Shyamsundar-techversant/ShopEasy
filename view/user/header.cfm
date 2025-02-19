@@ -1,4 +1,25 @@
-<cfset variables.getCategory = application.cateContObj.getCategory()>
+<cfset variables.getCategoryAndSubCategory = application.cateContObj.getCategoryAndSubCategory()>
+<cfset categoryArray = []>
+<cfset categoryWithSubCategory = structNew()>
+<cfloop query = "variables.getCategoryAndSubCategory">
+  <cfset categoryId = variables.getCategoryAndSubCategory.fldCategory_ID>
+  <cfset categoryName = variables.getCategoryAndSubCategory.fldCategoryName>
+  <cfset subCategoryId = variables.getCategoryAndSubCategory.fldSubCategory_ID>
+  <cfset subCategoryName = variables.getCategoryAndSubCategory.fldSubCategoryName>
+  <cfif NOT structKeyExists(categoryWithSubCategory, categoryId)>
+    <cfset categoryStruct = {
+      'categoryId' : categoryId,
+      'categoryName' : categoryName,
+      'subCategories' : []    
+    }>
+    <cfset categoryWithSubCategory[categoryId] = categoryStruct>
+    <cfset arrayAppend(categoryArray, categoryStruct)>
+  </cfif>
+    <cfset arrayAppend(categoryWithSubCategory[categoryId]['subCategories'],{
+        'subCategoryId' : subCategoryId,
+        'subCategoryName' : subCategoryName
+    })>
+</cfloop>
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
@@ -19,118 +40,118 @@
     </head>
     <body>
     <!-- Header -->
-        <section class = "header-section">
-            <header class = "header">
-                <div class = "container">
-                    <div class = "header-content">
-                        <div class = "brand-name">ShopEasy</div>
-                        <div class = "user-content">
-                            <div class = "search-container">
-                                <form class = "prdouct-search-form" method = "post" action = 'searchProductResult.cfm'>
-                                    <div class = "search-icon">
-                                        <label for = "serach-product">
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </label>
+        <cfoutput>
+            <section class = "header-section">
+                <header class = "header">
+                    <div class = "container">
+                        <div class = "header-content">
+                            <div class = "brand-name">ShopEasy</div>
+                            <div class = "user-content">
+                                <div class = "search-container">
+                                    <form class = "prdouct-search-form" method = "post" action = 'searchProductResult.cfm'>
+                                        <div class = "search-icon">
+                                            <label for = "serach-product">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </label>
+                                        </div>
+                                        <div class = "search-text">
+                                            <input type = "text" id = "serach-product" placeholder = "search products"
+                                                name = "searchProduct"
+                                            >
+                                        </div>
+                                    </form>
+                                </div>
+                                <cfif structKeyExists(variables, 'totalCartProducts')>
+                                    <div class = "user-cart">
+                                        <cfif variables.totalCartProducts.recordCount GT 0>
+                                            <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    #variables.totalCartProducts.recordCount#
+                                                    <span class="visually-hidden">unread messages</span>
+                                                </span>          
+                                            </button>
+                                        </cfif>
                                     </div>
-                                    <div class = "search-text">
-                                        <input type = "text" id = "serach-product" placeholder = "search products"
-                                            name = "searchProduct"
-                                        >
-                                    </div>
-                                </form>
-                            </div>
-                            <cfif structKeyExists(variables, 'totalCartProducts')>
-                                <div class = "user-cart">
-                                    <cfif variables.totalCartProducts.recordCount GT 0>
-                                        <button type="button" class="btn  position-relative cart-nav-btn" onclick = "window.location.href='userCart.cfm'">
-                                            <i class="fa-solid fa-cart-shopping"></i>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                <cfoutput>#variables.totalCartProducts.recordCount#</cfoutput>
-                                                <span class="visually-hidden">unread messages</span>
-                                            </span>          
+                                </cfif>
+                                <div class = "user-profile" title = "user">
+                                    <cfif structKeyExists(session, 'userId')>
+                                        <button class = "user-profile-btn" onclick = "window.location.href='userProfile.cfm'">
+                                            <i class="fa-regular fa-user"></i>
                                         </button>
                                     </cfif>
                                 </div>
-                            </cfif>
-                            <div class = "user-profile" title = "user">
-                                <cfif structKeyExists(session, 'userId')>
-                                    <button class = "user-profile-btn" onclick = "window.location.href='userProfile.cfm'">
-                                        <i class="fa-regular fa-user"></i>
-                                    </button>
-                                </cfif>
-                            </div>
-                            <div class = "sign-buttons">
-                                <cfif structKeyExists(session, 'userId')>
-                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
-                                <cfelse>
-                                    <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogIn</button>
-                                </cfif>
+                                <div class = "sign-buttons">
+                                    <cfif structKeyExists(session, 'roleId') AND session.roleId EQ 1>
+                                        <button class = "reg-btn btn" onclick = "window.location.href = '../../view/admin/adminDashboard.cfm'">Admin</button>
+                                    </cfif>
+                                    <cfif structKeyExists(session, 'userId')>
+                                        <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
+                                    <cfelse>
+                                        <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogIn</button>
+                                    </cfif>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </header>
-        </section>
-
-        <section class = "app-section category-navigation-section">
-            <div class = "container">
-                <nav class = "category-navigation">
-                    <div class = "home-page">
-                        <button class = "category-list-btn" onclick = "window.location.href ='userHome.cfm'">
-                            <i class="fa-solid fa-house"></i>
-                        </button>
-                    </div>
-                    <div class="dropdown">
-                        <button class="btn category-list-btn dropdown-toggle" type="button" id="dropdownMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                            Menu
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
-                            <cfif structKeyExists(variables, "getCategory")>
-                                <cfoutput query = "variables.getCategory">
-                                    <cfset encryptedCategoryId_1 = encrypt(
-                                                                            variables.getCategory.fldCategory_ID,
-                                                                            application.encryptionKey,
-                                                                            "AES",
-                                                                            "Hex"
-                                                                        )
+                </header>
+            </section>        
+            <section class = "app-section category-navigation-section">
+                <div class = "container">
+                    <nav class = "category-navigation">
+                        <div class = "home-page">
+                            <button class = "category-list-btn" onclick = "window.location.href ='userHome.cfm'">
+                                <i class="fa-solid fa-house"></i>
+                            </button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn category-list-btn dropdown-toggle" type="button" id="dropdownMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menu
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
+                                <cfif structKeyExists(variables, "categoryArray")>
+                                    <cfloop array = "#variables.categoryArray#" index = "category">
+                                        <cfset encryptedCategoryId_1 = encrypt(
+                                            variables.category.categoryId,
+                                            application.encryptionKey,
+                                            "AES",
+                                            "Hex"
+                                        )>
+                                        <li>
+                                            <a 
+                                                class="dropdown-item subcategory-link" 
+                                                href="userCategory.cfm?categoryID=#encryptedCategoryId_1#"
+                                            >
+                                                #variables.category.categoryName#
+                                            </a>                                   
+                                        </li>                               
+                                    </cfloop>
+                                </cfif>
+                            </ul>
+                        </div>
+                        <cfset count = 1>
+                        <cfif structKeyExists(variables, "categoryArray")>
+                            <cfloop array = "#variables.categoryArray#" index = "category">
+                                <div class="dropdown">
+                                    <button 
+                                        class="btn category-list-btn dropdown-toggle" 
+                                        type="button" 
+                                        id="dropdownMenuButton#count#"
+                                        data-bs-toggle="dropdown" aria-expanded="false" 
+                                        data-id = "#variables.category.categoryId#"
                                     >
-                                    <li>
-                                        <a 
-                                            class="dropdown-item subcategory-link" 
-                                            href="userCategory.cfm?categoryID=#encryptedCategoryId_1#"
-                                        >
-                                            #variables.getCategory.fldCategoryName#
-                                        </a>                                   
-                                    </li>                               
-                                </cfoutput>
-                            </cfif>
-                        </ul>
-                    </div>
-                    <cfset count = 1>
-                    <cfif structKeyExists(variables, "getCategory")>
-                        <cfoutput query = "variables.getCategory">
-                            <div class="dropdown">
-                                <button 
-                                    class="btn category-list-btn dropdown-toggle" 
-                                    type="button" 
-                                    id="dropdownMenuButton#count#"
-                                    data-bs-toggle="dropdown" aria-expanded="false" 
-                                    data-id = "#variables.getCategory.fldCategory_ID#"
-                                >
-                                    #variables.getCategory.fldCategoryName#
-                                </button>
-                                <cfset encryptedCategoryId = encrypt(
-                                    variables.getCategory.fldCategory_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
-                                )>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <cfset variables.getSubCategory = application.cateContObj.getSubCategory(categoryId = encryptedCategoryId )>
-                                    <cfif structKeyExists(variables,"getSubCategory")>
-                                        <cfloop query = "variables.getSubCategory">
+                                        #variables.category.categoryName#
+                                    </button>
+                                    <cfset encryptedCategoryId = encrypt(
+                                        variables.category.categoryId,
+                                        application.encryptionKey,
+                                        "AES",
+                                        "Hex"
+                                    )>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <cfloop array = "#category.subCategories#" index = "subCategory">
                                             <cfset encryptedSubCategoryId = encrypt(
-                                                variables.getSubCategory.fldSubCategory_ID,
+                                                variables.subCategory.subCategoryId,
                                                 application.encryptionKey,
                                                 "AES",
                                                 "Hex"
@@ -140,16 +161,16 @@
                                                     class="dropdown-item subcategory-link" 
                                                     href="userSubCategory.cfm?subCategoryID=#encryptedSubCategoryId#"
                                                 >
-                                                    #variables.getSubCategory.fldSubCategoryName#
+                                                    #variables.subCategory.subCategoryName#
                                                 </a>
                                             </li>
                                         </cfloop>
-                                    </cfif>
-                                </ul>
-                            </div> 
-                            <cfset count  = count + 1 >
-                        </cfoutput>   
-                    </cfif>                   
-                </nav>
-            </div>
-        </section>
+                                    </ul>
+                                </div> 
+                                <cfset count  = count + 1 >
+                            </cfloop>   
+                        </cfif>                   
+                    </nav>
+                </div>
+            </section>
+        </cfoutput>
