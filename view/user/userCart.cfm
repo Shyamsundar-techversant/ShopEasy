@@ -1,17 +1,14 @@
-
 <cfif structKeyExists(url, 'productId')>
     <cfset variables.addProductToCartResult = application.cartContObj.addProductToCart(
         productId = url.productId,
         userId = session.userId
     )>
-    
 </cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>
         <cflocation  url = "paymentDetails.cfm?addressId=#form.selectedAddress#" addToken = "false">
     </cfoutput>
 </cfif>
-
 <cfinclude  template="header.cfm">
 <!--- CART SECTION --->
     <section class = "cart-section">
@@ -52,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class = "card-product-count">
-                                    <input type = "text" class = "card-product-count-input" value = "#variables.totalCartProducts.fldQuantity#">
+                                    <input type = "number" class = "card-product-count-input" value = "#variables.totalCartProducts.fldQuantity#" min = "1">
                                 </div>
                             </div>
                             <div class = "col-md-3 cart-prod-details">
@@ -60,8 +57,8 @@
                                     $#variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))#
                                 </div>
                                 <cfset variables.totalCartProductsPrice = variables.totalCartProductsPrice + variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))>  
-                                <div class = "cart-prod-tax">Tax : $#variables.totalCartProducts.fldTax# %</div>
-                                <div class = "actual-price">Actual Price : #variables.totalCartProducts.fldPrice#</div>
+                                <div class = "cart-prod-tax">Tax : #variables.totalCartProducts.fldTax# %</div>
+                                <div class = "actual-price">Actual Price : $#variables.totalCartProducts.fldPrice#</div>
                                 <button 
                                     class = "remove-from-cart-btn" 
                                     data-id = "#local.encryptedProductId#"
@@ -75,22 +72,23 @@
                     </cfoutput>
                 </cfif>
             </div>
-            <div class = "cart-total-price">
-                <cfoutput>
-                    <div class = "totl-price-details">
-                        <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
-                        <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
-                        <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
-                    </div>
-                </cfoutput>
-                <button 
-                    class = "bought-together-btn"
-                    data-bs-toggle = "modal"
-                    data-bs-target = "#addressSelectModal"
-
-                >
-                    Bought Together
-                </button>
+            <cfif structKeyExists(variables, 'totalCartProducts') AND variables.totalCartProducts.recordCount GT 0>
+                <div class = "cart-total-price">
+                    <cfoutput>
+                        <div class = "totl-price-details">
+                            <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
+                            <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
+                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
+                        </div>
+                    </cfoutput>
+                    <button 
+                        class = "bought-together-btn"
+                        data-bs-toggle = "modal"
+                        data-bs-target = "#addressSelectModal"
+                    >
+                        Bought Together
+                    </button>
+            </cfif>
             </div>
         </div>
     </section>
@@ -111,7 +109,6 @@
             </div>
         </div>
     </div>
-
 <!--- ADDRESS SELECT MODAL --->
 <cfif structKeyExists(session,'userId')>
     <div 
@@ -198,7 +195,7 @@
                 <div class="modal-body">
                     <form class = "address-add-form" method = "post" id = "addressAddForm">
                         <div class = "row">
-                            <div class = "form-error">
+                            <div class = "form-error" id = "address-validation-error">
 
                             </div>
                         </div>

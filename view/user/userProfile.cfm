@@ -28,6 +28,9 @@
                         <div class = "user-email">
                             #variables.userData.fldEmail#
                         </div>
+                        <div class = "user-mobile-number">
+                            #variables.userData.fldPhone#
+                        </div>
                     </cfoutput>
                 </cfif>
             </div>
@@ -90,7 +93,9 @@
                 >
                     Add New Address
                 </button>
-                <button class = "order-details-btn profile-btn">Order Details</button>
+                <button class = "order-details-btn profile-btn" 
+                    onclick = "window.location.href='orderHistory.cfm'"
+                >Order Details</button>
             </div>
         </div>
     </div>
@@ -113,7 +118,7 @@
             <div class="modal-body">
                 <form class = "address-add-form" method = "post" id = "editUserModalForm">
                     <div class = "row">
-                        <div class = "form-error">
+                        <div class = "form-error" id = "user-details-validation-error">
 
                         </div>
                     </div>
@@ -183,7 +188,7 @@
             <div class="modal-body">
                 <form class = "address-add-form" method = "post" id = "addressAddForm">
                     <div class = "row">
-                        <div class = "form-error">
+                        <div class = "form-error" id = "address-validation-error">
 
                         </div>
                     </div>

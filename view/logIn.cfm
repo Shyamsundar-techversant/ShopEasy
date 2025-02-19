@@ -4,6 +4,7 @@
   <cfset structDelete(session, "userId","true")>
   <cfset structDelete(session, "productId","true")>
   <cfset structDelete(session,"setOrder","true")>
+  <cfset structDelete(session, 'orderId',"true")>
 </cfif>
 <cfif structKeyExists(form, "userLogIn")>
   <cfset variables.logResult = application.userContObj.validateUserForm(
@@ -11,7 +12,6 @@
     password = form.userPassword
   )>
 </cfif>
-<cfdump var = "#session#">
 <!DOCTYPE html>
 <html lang = "en">
   <head>
@@ -36,7 +36,6 @@
         </div>
       </header>
     </section>
-
     <!--- LogIn Form --->
     <section class = "form-section">
       <div class = "container">
@@ -46,7 +45,7 @@
           >
             <h5 class = "card-head">LogIn</h5>
             <form action = "" class = "user-reg-form" method = "post">
-              <div class = "row">
+              <div class = "row error-container">
                 <cfif structKeyExists(variables, "logResult") AND arrayLen(logResult) GT 0>
                   <cfoutput>
                     <cfloop array = "#variables.logResult#" index = "error">
@@ -67,7 +66,6 @@
                   />
                 </div>
               </div>
-
               <div class = "row mb-5">
                 <div class = "col">
                   <label for = "password" class = "form-label">Password </label>
@@ -99,7 +97,6 @@
 		    </div>
 			</div>
 		</section>
-  
     <script src = "../assets/js/bootstrap.bundle.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>

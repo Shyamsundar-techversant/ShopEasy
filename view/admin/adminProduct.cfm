@@ -14,6 +14,13 @@
     <section class = "category-section">
         <div class = "container category-container">
             <div class = "card">
+                <div class = "naviagate-back">
+                    <cfoutput>
+                        <button class = "page-back-btn" onclick = "window.location.href='adminSubCategory.cfm?categId=#url.categId#&subCategID=#url.subCategID#'">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                    </cfoutput>
+                </div>
                 <cfoutput>
                     <div class = "card-head">                    
                         <div class = "cardhead-content">
@@ -49,7 +56,7 @@
                                 <cfloop array = "#variables.getProductDataById#" index = "i" item = "image">
                                     <cfif i LT arrayLen(variables.getProductDataById)>
                                         <div class="carousel-item product-img-container <cfif variables.getProductDataById[i].defaultValue EQ 1 >active</cfif> ">
-                                            <img src="../../uploadImg/#variables.getProductDataById[i].imageFile#" class="d-block product-image" alt="...">
+                                            <img src="/uploadImg/#variables.getProductDataById[i].imageFile#" class="d-block product-image" alt="...">
                                         </div>
                                     </cfif>
                                 </cfloop>

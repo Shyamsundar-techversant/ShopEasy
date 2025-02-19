@@ -12,14 +12,14 @@
     </cffunction>
     <!---  PRODUCT VALIDATION    --->
     <cffunction  name = "validateProduct" access = "remote" returntype = "any" returnformat = "json">
-        <cfargument name = "categoryId" type = "integer" required = "true" >
-        <cfargument name = "subCategoryId" type = "integer" required = "true" >
-        <cfargument name = "productId" type = "integer" required = "false" >
+        <cfargument name = "categoryId" type = "numeric" required = "true" >
+        <cfargument name = "subCategoryId" type = "numeric" required = "true" >
+        <cfargument name = "productId" type = "numeric" required = "false" >
         <cfargument name = "productName" type = "string" required = "true">
-        <cfargument name = "productBrand" type = "integer" required = "true">
+        <cfargument name = "productBrand" type = "numeric" required = "true">
         <cfargument name = "productDescription" type = "string" required = "true">
-        <cfargument name = "productPrice" type = "numeric" required = "true">
-        <cfargument name = "productTax" type = "numeric" required = "true" >
+        <cfargument name = "productPrice" type = "string" required = "true">
+        <cfargument name = "productTax" type = "string" required = "true" >
         <cfargument name = "productImages" type = "any" required = "false">
         <cfset local.errors = [] >
         <cfset local.checkCategVar = 1>
@@ -48,8 +48,8 @@
         <!---    PRODUCT NAME VALIDATION   ---> 
         <cfif structKeyExists(arguments, "productName")>
             <cfif len(trim(arguments.productName)) EQ 0>
-		        <cfset arrayAppend(local.errors,"*Enter the product name")>
-		    </cfif>
+                <cfset arrayAppend(local.errors,"*Enter the product name")>
+            </cfif>
             <cfif local.checkSubCategVar NEQ 0 AND local.checkBrandVar NEQ 0>
                 <cfset  local.productExist = application.productModObj.checkProductExist(
                     subCategoryId= trim(arguments.subCategoryId),
@@ -64,9 +64,9 @@
             </cfif>
         </cfif>
         <!---    VALIDATE PRODUCT DESCRIPTION      --->
-		<cfif len(trim(arguments.productDescription)) EQ 0>
-			<cfset arrayAppend(local.errors,"*Product description is required")>
-		</cfif>
+        <cfif len(trim(arguments.productDescription)) EQ 0>
+            <cfset arrayAppend(local.errors,"*Product description is required")>
+        </cfif>
         <!--- VALIDATE PRODUCT PRICE   --->
         <cfif NOT isNumeric(arguments.productPrice)>
             <cfset arrayAppend(local.errors,"*Entered price is not a type of number")>
@@ -81,7 +81,6 @@
         <cfif arguments.productTax LT 0 >
             <cfset arrayAppend(local.errors,"*Product tax must be greater than or equal to zero")>
         </cfif>
-
         <cfif arrayLen(local.errors) GT 0 >
             <cfreturn local.errors >
         <cfelse>

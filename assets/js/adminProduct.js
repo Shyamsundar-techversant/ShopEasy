@@ -1,9 +1,7 @@
 $(document).ready(function () {
-
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
     }
-
     let subCategoryId, productId, imageId;
     let categorySelected = $('#categorySelect'),
         subCategorySelected = $('#subCategorySelect'),
@@ -12,9 +10,6 @@ $(document).ready(function () {
         productDescription = $('#productDescription'),
         productPrice = $('#productPrice'),
         productTax = $('#productTax');
-
-
-
     // Error function 
     function addError(error) {
         let errorList = $('.error');
@@ -25,7 +20,6 @@ $(document).ready(function () {
             errorList.append(li);
         });
     }
-
     //PRODUCT ADD
     $('#productButton').on('click', function () {
         $('#productAddBtn').show();
@@ -35,8 +29,6 @@ $(document).ready(function () {
         $('#img-list').empty();
         $('#productAddForm').trigger('reset');
     });
-
-
     $('#productAddBtn').on('click', function () {
         $('#img-list').empty();
         let formData = new FormData();
@@ -47,7 +39,6 @@ $(document).ready(function () {
         formData.append('productDescription', productDescription.val());
         formData.append('productPrice', productPrice.val());
         formData.append('productTax', productTax.val());
-
         let productImages = $('#productImages')[0].files;
         if (productImages.length < 3) {
             alert('Please select atleast 3 images for products');
@@ -71,6 +62,10 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("product-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
@@ -78,7 +73,6 @@ $(document).ready(function () {
             }
         });
     });
-
     //PRODUCT EDIT
     $('.product-edit-btn').on('click', function () {
         $('#img-list').empty();
@@ -161,15 +155,11 @@ $(document).ready(function () {
             }
         });
     });
-
-    let previousSelectedImageId ;
-
+    let previousSelectedImageId;
     // STORE THE PREVIOUSLY SELECTED RADIO VALUE
     $(document).on('focusin', '.default-image-radio', function () {
         previousSelectedImageId = $('.default-image-radio:checked').val();
     });
-
-
     //CHANGE DEFAULT
     $(document).on('change', '.default-image-radio', function () {
         let defaultImageId = $(this).val();
@@ -185,13 +175,9 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 let data = JSON.parse(response);
-                console.log(data);
                 if (data === "Success") {
                     alert("Default Image Changed Successfully");
                     location.reload();
-                }
-                else {
-                    console.log("Default image change failed");
                 }
             },
             error: function () {
@@ -199,7 +185,6 @@ $(document).ready(function () {
             }
         });
     });
-
     $('#productEditBtn').on('click', function () {
         let formData = new FormData();
         formData.append('categoryId', categorySelected.val());
@@ -238,7 +223,6 @@ $(document).ready(function () {
             }
         });
     });
-
     //IMAGE DELETE
     $('#img-list').on('click', '.img-dlt-btn', function () {
         imageId = $(this).attr('img_id');
@@ -266,7 +250,6 @@ $(document).ready(function () {
             }
         })
     });
-
     //DELETE PRODUCT
     $('.product-dlt-btn').on('click', function () {
         productId = $(this).data('id');

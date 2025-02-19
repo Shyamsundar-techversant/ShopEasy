@@ -1,16 +1,4 @@
-
 <cfset variables.getCategory = application.cateContObj.getCategory()>
-<!---  
-<cfset variables.categoryList = valueList(variables.getCategory.fldCategory_ID)>
-<cfset a = 67>
-<cfset categoryExistCheck = listFind(variables.categoryList, a)>
-
-<cfif NOT categoryExistCheck>
-  <cfoutput>
-    Haii
-  </cfoutput>
-</cfif> --->
-
 <cfinclude template = "header.cfm" >
     <section class = "category-section">
       <div class = "container category-container">
@@ -33,12 +21,11 @@
                 <cfif structKeyExists(variables, "getCategory")>
                   <cfoutput query = "variables.getCategory">
                     <cfset encryptedId = encrypt(
-                                            getCategory.fldCategory_ID,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
-                                          )
-                    >
+                      getCategory.fldCategory_ID,
+                      application.encryptionKey,
+                      "AES",
+                      "Hex"
+                    )>
                     <tr class = "table-light">
                       <td>#variables.getCategory.fldCategoryName#</td>
                       <td>
@@ -73,16 +60,13 @@
                       </td>
                     </tr>   
                   </cfoutput>                 
-
                 </cfif>
-
               </tbody>
             </table>           
           </div>
         </div>
       </div>
     </section>
-
     <!-- Category Add Edit Modal -->
     <div class="modal fade" id="categoryAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -134,7 +118,6 @@
         </div>
       </div>
     </div>
-
     <cfinclude  template = "footer.cfm">
     <script src = "../../assets/js/admin.js"></script>
   </body>

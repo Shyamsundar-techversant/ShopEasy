@@ -2,22 +2,19 @@
 <cfif structKeyExists(url,"subCategoryID")>
     <cfif structKeyExists(form, "filterProduct")>
         <cfset variables.getProducts = application.productContObj.getFilteredProduct(
-                                                                                        subCategoryID = url.subCategoryID,
-                                                                                        minPrice = form.minPrice,
-                                                                                        maxPrice = form.maxPrice
-                                                                                    )
-        >
+            subCategoryID = url.subCategoryID,
+            minPrice = form.minPrice,
+            maxPrice = form.maxPrice
+        )>
     <cfelseif NOT structKeyExists(url, "order")>
         <cfset variables.getProducts = application.productContObj.getProductWithDefaultImage(
-                                                                                                subCategoryID = url.subCategoryID
-                                                                                            )
-        >
+            subCategoryID = url.subCategoryID
+        )>
     <cfelseif structKeyExists(url, "order")>
         <cfset variables.getProducts = application.productContObj.getProductWithDefaultImage(
-                                                                                                subCategoryID = url.subCategoryID,
-                                                                                                productOrder = url.order
-                                                                                            )
-        >       
+            subCategoryID = url.subCategoryID,
+            productOrder = url.order
+        )>       
     </cfif>
 </cfif>
 <cfif NOT isQuery(variables.getProducts)>
@@ -56,12 +53,11 @@
                     </div>                                       
                     <cfoutput query = "variables.getProducts">
                         <cfset encryptedProductId = encrypt(
-                                                                variables.getProducts.idProduct,
-                                                                application.encryptionKey,
-                                                                "AES",
-                                                                "Hex"
-                                                            )
-                        >
+                            variables.getProducts.idProduct,
+                            application.encryptionKey,
+                            "AES",
+                            "Hex"
+                        )>
                         <div class = "col-md-3" data-aos="zoom-in-down">
                             <div class = "product-card">
                                 <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
