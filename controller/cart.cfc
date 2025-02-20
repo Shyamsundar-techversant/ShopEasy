@@ -20,6 +20,7 @@
             <cfreturn local.cartAddResult>
         </cfif>
     </cffunction>
+
     <!---  CHANGE PRODUCT QUANTITY    --->
     <cffunction name = "changeProductQuantity" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name="productId" type = "string" required = "true">
@@ -33,11 +34,13 @@
          )>
         <cfreturn local.result>
     </cffunction>
+
     <!---   GET CART PRODUCTS   --->
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cfset local.getCartProductResult = application.cartModObj.getCartProducts()>
         <cfreturn local.getCartProductResult>
     </cffunction>
+
     <!---   USER ADDRESS ADD      --->
     <cffunction name = "addUserAddress" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "firstName" type = "string" required = "true">
@@ -98,6 +101,7 @@
             <cfreturn local.addressAddResult>
         </cfif>
     </cffunction>
+
     <!---   GET ADDRESS   --->
     <cffunction name = "getAddresses" access = "remote" returntype = "query" returnformat = "json">
         <cfargument name = "addressId" type = "string" required = "false">
@@ -111,6 +115,7 @@
         </cfif>
         <cfreturn local.userAddress>
     </cffunction>
+
     <!---   REMOVE ADDRESS   --->
     <cffunction name = "removeUserAddress" access = "remote" returntype = "string" returnformat = "json">
         <cfargument name = "addressId" type = "string" required = "true">
@@ -122,6 +127,7 @@
             <cfreturn local.addressRemoveResult>
         </cfif>
     </cffunction>
+
     <!---  GET USER DETAILS   --->
     <cffunction  name="getUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name="userId" type = "string" required = "true">
@@ -131,6 +137,7 @@
         )>
         <cfreturn local.userDetails>
     </cffunction>
+
     <!--- VALIDATE USER DETAILS --->
     <cffunction name = "validateUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "userId" type = "string" required = "true">
@@ -190,6 +197,7 @@
             </cfif>
         </cfif>
     </cffunction>
+
     <!--- SET SESSION VALUE  --->
     <cffunction  name = "setSessionValue" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "setOrder" type = "numeric" required = "true">
@@ -201,4 +209,5 @@
             <cfset session.productId = arguments.productId>
         </cfif>
     </cffunction>
+    
 </cfcomponent>

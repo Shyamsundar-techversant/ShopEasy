@@ -50,6 +50,7 @@
             </cfif>
         </cfif>
     </cffunction>
+
     <!--- GET ORDER DETAILS     --->
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "false">
@@ -67,4 +68,5 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    
 </cfcomponent>

@@ -1,4 +1,5 @@
 <cfcomponent>
+    <!--- ORDER PRODUCT --->
     <cffunction name = "orderProduct" access = "remote" returntype = "any">
         <cfargument name = "cardNumber" type = "string" required = "true">
         <cfargument name = "cvv" type = "string" required = "true">
@@ -47,6 +48,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  INSERT DETAILS INTO ORDER ITEMS    --->
     <cffunction name = "addOrderItems" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">
@@ -116,6 +118,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  GET ORDER DETAILS    --->
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "false">
@@ -185,6 +188,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---GET UNIQUE ORDER ID  --->
     <cffunction name = "getUniqueOrderId" access = "public" returntype = "query">
         <cftry>
@@ -204,6 +208,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   SEND MAIL TO USER   --->
     <cffunction name = "sendMailToUser" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">
@@ -272,4 +277,5 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    
 </cfcomponent>

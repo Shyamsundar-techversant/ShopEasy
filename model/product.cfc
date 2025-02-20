@@ -21,6 +21,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   CHECK PRODUCT EXIST   --->
     <cffunction name = "checkProductExist" access = "public" returntype = "string">
         <cfargument name = "subCategoryId" type = "integer" required = "true" >
@@ -48,6 +49,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---    PRODUCT ADD EDIT FUNCTION  --->
     <cffunction name = "productAddEdit" access = "public" returntype = "any">
         <cfargument name = "categoryId" type = "integer" required = "true" >
@@ -152,6 +154,7 @@
             </cftry>
         </cfif>
     </cffunction>
+
     <!---  GET PRODUCT IMAGE COUNT    --->
     <cffunction  name="getProductImageCount" access = "private" returntype = "any">
         <cfargument  name="productId" type = "integer" required = "true">
@@ -175,6 +178,7 @@
         </cfcatch>
         </cftry>       
     </cffunction>
+
     <!---  ADD IMAGE  --->
     <cffunction name = "addImage" access = "private" returntype = "any">
         <cfargument  name = "productId" type = "integer" required = "true">
@@ -241,6 +245,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- GET PRODUCTS     --->
     <cffunction name = "getProduct" access = "public" returntype = "any">
         <cfargument name = "subCategoryId" type = "integer" required = "true">
@@ -297,6 +302,7 @@
             </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  GET IMAGES    --->
     <cffunction name = "getProductImages" access = "public" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
@@ -330,6 +336,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- CHANGE DEFAULT IMAGE --->
     <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
         <cfargument  name = "defaultImageId" type = "integer" required = "true">
@@ -359,6 +366,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- DELETE IMAGE SUB FUNCTION --->
     <cffunction  name="imageDeleteFunction" access = "private" returntype = "any">
         <cfargument name = "imageId" type = "integer" required = "true">
@@ -393,6 +401,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  DELETE IMAGE    --->
     <cffunction  name="deleteImage" access = "public" returntype = "any" returnformat = "json">
         <cfargument  name="imageId" type = "integer" required = "true">
@@ -453,6 +462,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- DELETE PRODUCT --->
     <cffunction  name="deleteProduct" access = "public" returntype = "string">
         <cfargument name = "productId" type = "integer" required = "true">
@@ -495,6 +505,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- GET RANDOM PRODUCTS   --->
     <cffunction name = "getRandomProducts" access = "public" returntype = "any">
         <cftry>
@@ -529,6 +540,7 @@
         </cfcatch>
         </cftry> 
     </cffunction>
+
     <!---  GET PRODUCT WITH DEFAULT IMAGE    --->
     <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "integer" required = "false">
@@ -576,6 +588,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- PRODUCT SEARCH    --->
     <cffunction name = "getSearchedProduct" access = "public" returntype = "any">
         <cfargument name = "searchWord" type = "any" required = "true">
@@ -608,6 +621,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   FILTER PRODUCTS  --->
     <cffunction name = "getFilteredProduct" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "integer" required = "true">
@@ -647,4 +661,5 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    
 </cfcomponent>

@@ -2,6 +2,7 @@
     <cfset this.name = "ShoppingCart" >
     <cfset this.sessionManagement = "true" >
     <cfset this.sessionTimeOut = createTimespan(0, 0, 30, 0) >
+    <cfset this.applicationTimeOut = createTimespan(1, 0, 0, 0)>
     <cffunction  name = "onApplicationStart" returntype = "void">
         <cfset application.datasource = "shoppingcart">
         <cfset application.encryptionKey = generateSecretKey('AES') >
@@ -17,6 +18,7 @@
         <cfset application.orderContObj = createObject("component","controller.order")>
         <cfset application.orderModObj = createObject("component","model.order")>
     </cffunction>
+
     <cffunction  name = "onRequestStart" returntype = "void">
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>
             <cfset onApplicationStart()>

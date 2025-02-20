@@ -1,11 +1,46 @@
+<!--- SET DEFAULT VALUE FOR INPUT FIELDS --->
+<cfset variables.firstName = "">
+<cfset variables.lastName = "">
+<cfset variables.userEmail = "">
+<cfset variables.userPhone = "">
+<cfset variables.userPassword = "">
+
+<!--- CHECK ALL INPUT FIELDS ARE IN FORM WHILE FORM SUBMISSION --->
 <cfif structKeyExists(form, "userLogIn")>
-    <cfset variables.registerResult = application.userContObj.validateUserForm(
-        firstName = form.firstName,
-        lastName = form.lastName,
-        userEmail = form.userEmail,
-        phone = form.userPhoneNumber,
-        password = form.userPassword
-    )>
+    <cfif 
+        structKeyExists(form, 'firstName') 
+        AND structKeyExists(form, 'lastName')
+        AND structKeyExists(form, 'userEmail')
+        AND structKeyExists(form, 'userPhoneNumber')
+        AND structKeyExists(form, 'userPassword')
+    >
+        <cfset variables.arguments = {
+            'firstName' : form.firstName,
+            'lastName' : form.lastName,
+            'userEmail' : form.userEmail,
+            'phone' : form.userPhoneNumber,
+            'password' : form.userPassword 
+        }>
+        <cfset variables.registerResult = application.userContObj.validateSignUpForm(
+            argumentCollection = variables.arguments
+        )>
+                <!--- IF NO ERRORS --->
+        <cfif structKeyExists(variables, 'registerResult')>
+            <cfif arrayLen(variables.registerResult) EQ 0>
+                <cfset variables.userRegisterResult = application.userContObj.userRegister(
+                    argumentCollection = variables.arguments
+                )>
+            <cfelse>
+                <cfset variables.firstName = form.firstName>
+                <cfset variables.lastName = form.lastName>
+                <cfset variables.userEmail = form.userEmail>
+                <cfset variables.userPhone = form.userPhoneNumber>
+                <cfset variables.userPassword = form.userPassword>
+            </cfif>
+        </cfif>   
+    <cfelse>
+        <cfset variables.registerResult = ['*Required input field is missing']>
+    </cfif>
 </cfif>
 <!DOCTYPE html>
 <html lang = "en">
@@ -38,94 +73,97 @@
     <section class = "form-section">
         <div class = "container">
             <div class = "user-registration">         
-                <div class = "card user-reg-card"  data-aos="flip-right" data-aos-easing="ease-out-cubic"
-                              data-aos-duration="1000"   
-                >
+                <div class = "card user-reg-card">
                     <h5 class = "card-head mb-3">SignUp</h5>
                     <form action = "" class = "user-reg-form" method = "post">
-                        <div class = "row error-container" id = "sign-up-validation-error">
-                            <cfif structKeyExists(variables, "registerResult") AND arrayLen(registerResult) GT 0>
-                                <cfoutput>
+                        <cfoutput>
+                            <div class = "row error-container" id = "sign-up-validation-error">
+                                <cfif structKeyExists(variables, "registerResult") AND arrayLen(registerResult) GT 0>
                                     <cfloop array = "#variables.registerResult#" index = "error">
                                         <span class = "errors" >#error#</span><br>
                                     </cfloop>
-                                </cfoutput>
-                            </cfif>
-                        </div>
-                        <div class = "row mb-3">
-                            <div class = "col">
-                                <label for = "Firstname" class = "form-label">Firstname </label>
-                                <input
-                                    type = "text"
-                                    class = "form-control"
-                                    placeholder = "Enter your firstname"
-                                    name = "firstName"
-                                    id = "Firstname"
-                                />
+                                </cfif>
                             </div>
-                        </div>
-                        <div class = "row mb-3">
-                            <div class = "col">
-                                <label for = "Lastname" class = "form-label">Lastname </label>
-                                <input
-                                    type = "text"
-                                    class = "form-control"
-                                    placeholder = "Enter your lastsname"
-                                    name = "LastName"
-                                    id = "Lastname"
-                                />
+                            <div class = "row mb-3">
+                                <div class = "col">
+                                    <label for = "Firstname" class = "form-label">Firstname </label>
+                                    <input
+                                        type = "text"
+                                        class = "form-control"
+                                        placeholder = "Enter your firstname"
+                                        name = "firstName"
+                                        id = "Firstname"
+                                        value = "#variables.firstName#"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class = "row mb-3">
-                            <div class = "col">
-                                <label for = "email" class = "form-label">Email </label>
-                                <input
-                                    type = "text"
-                                    class = "form-control"
-                                    placeholder = "Enter your email"
-                                    name = "userEmail"
-                                    id = "email"
-                                />
+                            <div class = "row mb-3">
+                                <div class = "col">
+                                    <label for = "Lastname" class = "form-label">Lastname </label>
+                                    <input
+                                        type = "text"
+                                        class = "form-control"
+                                        placeholder = "Enter your lastsname"
+                                        name = "LastName"
+                                        id = "Lastname"
+                                        value = "#variables.lastName#"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class = "row mb-3">
-                            <div class = "col">
-                                <label for = "phone" class = "form-label">Phone </label>
-                                <input
-                                    type = "text"
-                                    class = "form-control"
-                                    placeholder = "Enter your phone number"
-                                    name = "userPhoneNumber"
-                                    id = "phone"
-                                />
+                            <div class = "row mb-3">
+                                <div class = "col">
+                                    <label for = "email" class = "form-label">Email </label>
+                                    <input
+                                        type = "text"
+                                        class = "form-control"
+                                        placeholder = "Enter your email"
+                                        name = "userEmail"
+                                        id = "email"
+                                        value = "#variables.userEmail#"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class = "row mb-5">
-                            <div class = "col">
-                                <label for = "password" class = "form-label">Password </label>
-                                <input
-                                    type = "password"
-                                    class = "form-control"
-                                    placeholder = "Enter your password"
-                                    name = "userPassword"
-                                    id = "password"
-                                />
+                            <div class = "row mb-3">
+                                <div class = "col">
+                                    <label for = "phone" class = "form-label">Phone </label>
+                                    <input
+                                        type = "text"
+                                        class = "form-control"
+                                        placeholder = "Enter your phone number"
+                                        name = "userPhoneNumber"
+                                        id = "phone"
+                                        value = "#variables.userPhone#"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class = "row mb-3">
-                            <div class = "col submit-log-form">
-                                <button
-                                    class = "btn user-submit"
-                                    type = "submit"
-                                    name = "userLogIn"
-                                >
-                                    Submit
-                                </button>
+                            <div class = "row mb-5">
+                                <div class = "col">
+                                    <label for = "password" class = "form-label">Password </label>
+                                    <input
+                                        type = "password"
+                                        class = "form-control"
+                                        placeholder = "Enter your password"
+                                        name = "userPassword"
+                                        id = "password"
+                                        value = "#variables.userPassword#"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class = "row mb-3" >
-                            <a href = "logIn.cfm" class = "sign-link"> Already have an account? Please LogIn</a>
-                        </div>
+                            <div class = "row mb-3">
+                                <div class = "col submit-log-form">
+                                    <button
+                                        class = "btn user-submit"
+                                        type = "submit"
+                                        name = "userLogIn"
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                            <div class = "row mb-3" >
+                                <a href = "logIn.cfm" class = "sign-link"> Already have an account? Please LogIn</a>
+                            </div>
+                        </cfoutput>
                     </form>
                 </div>						
             </div>

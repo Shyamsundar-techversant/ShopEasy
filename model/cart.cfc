@@ -20,6 +20,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- CHANGE PRODUCT QUANTITY --->
     <cffunction  name = "changeProductQuantity" access = "public" returntype = "any">
         <cfargument name="productId" type = "integer" required = "true">
@@ -56,6 +57,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- ADD PRODUCT TO CART --->
     <cffunction name = "addProductToCart" access = "public" returntype = "any">
         <cfargument  name="productId" type = "integer" required = "true">
@@ -95,6 +97,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
      <!---   GET CART PRODUCTS   --->
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cftry>
@@ -135,6 +138,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   USER ADDRESS ADD      --->
     <cffunction name = "addUserAddress" access = "public" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
@@ -179,6 +183,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   GET USER ADDRESS   --->
     <cffunction name = "getUserAddress" access = "public" returntype = "query">
         <cfargument name = "addressId" type = "integer" required = "false">
@@ -210,6 +215,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   REMOVE ADDRESS   --->
     <cffunction name = "removeUserAddress" access = "remote" returntype = "any">
         <cfargument name = "addressId" type = "string" required = "true">
@@ -230,6 +236,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  GET USER DETAILS   --->
     <cffunction  name="getUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name="userId" type = "string" required = "true">
@@ -251,6 +258,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- VALIDATE USER DETAILS --->
     <cffunction name = "updateUserDetails" access = "remote" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
@@ -279,4 +287,5 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    
 </cfcomponent>

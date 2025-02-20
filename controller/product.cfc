@@ -10,6 +10,7 @@
             <cfreturn local.brands >           
         </cfif>
     </cffunction>
+
     <!---  PRODUCT VALIDATION    --->
     <cffunction  name = "validateProduct" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "numeric" required = "true" >
@@ -99,6 +100,7 @@
             </cfif> 
         </cfif> 
     </cffunction>
+
     <!--- GET PRODUCTS     --->
     <cffunction name = "getProduct" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">
@@ -117,6 +119,7 @@
             <cfreturn local.productData> 
         </cfif>
     </cffunction>
+
     <!--- CHANGE DEFAULT IMAGE --->
     <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
         <cfargument name = "defaultImageId" type = "integer" required = "true">
@@ -128,6 +131,7 @@
             <cfreturn "Success">
         </cfif>
     </cffunction>
+
     <!---  DELETE IMAGE    --->
     <cffunction  name = "deleteImage" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "imageId" type = "integer" required = "true">
@@ -144,6 +148,7 @@
             <cfreturn local.errors>
         </cfif>
     </cffunction>
+
     <!--- DELETE PRODUCT --->
     <cffunction  name="deleteProduct" access = "remote" returntype = "string" returnformat = "json">
         <cfargument name = "productId" type = "integer" required = "true">
@@ -156,11 +161,13 @@
             <cfreturn "Failed">
         </cfif>
     </cffunction>
+
     <!--- GET RANDOM PRODUCTS   --->
     <cffunction name = "getRandomProducts" access = "public" returntype = "any">
         <cfset local.randomProducts = application.productModObj.getRandomProducts()>
         <cfreturn local.randomProducts >
     </cffunction>
+
     <!---  GET PRODUCT WITH DEFAULT IMAGE    --->
     <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "string" required = "false">
@@ -186,6 +193,7 @@
         </cfif>
         <cfreturn local.getProduct>
     </cffunction>
+
     <!--- PRODUCT SEARCH    --->
     <cffunction name = "getSearchedProduct" access = "public">
         <cfargument name = "searchText" type = "string" required = "true">
@@ -199,6 +207,7 @@
             <cfreturn "No product Exist">
         </cfif>
     </cffunction>
+
     <!---   FILTER PRODUCTS  --->
     <cffunction name = "getFilteredProduct" access = "public" returntype = "any">
         <cfargument name = 'subCategoryID' type = "string" required = "true">
@@ -217,4 +226,5 @@
         )>
         <cfreturn local.productFilterResult>
     </cffunction>
+    
 </cfcomponent>

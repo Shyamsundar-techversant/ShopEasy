@@ -1,14 +1,15 @@
 <cfcomponent>
     <!---  HASH PASSWORD  --->
-    <cffunction name = "hashPassword" access = "private" returntype = "string">
+    <cffunction name = "hashPassword" access = "public" returntype = "string">
         <cfargument name = "password" type = "string" required = "true" >
         <cfargument name = "saltString" type = "string" required = "true">
         <cfset local.saltedPass = arguments.password & arguments.saltString>
         <cfset local.hashedPassword = hash(local.saltedPass,"SHA-256","UTF-8")>
         <cfreturn local.hashedPassword>
     </cffunction>
+
     <!---   CHECK USER ALREADY EXIST   --->
-    <cffunction name = "checkUserExist" access = "private" returntype = "any">
+    <cffunction name = "checkUserExist" access = "public" returntype = "any">
         <cfargument name = "userEmail" type = "string" required = "false" >
         <cfargument name = "userName" type = "string" required = "false">
         <cfargument name = "phone" type = "string" required = "false" >       
@@ -38,6 +39,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!--- REGISTER USER --->
     <cffunction name = "userRegister" access = "public" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true" >
@@ -46,102 +48,77 @@
         <cfargument name = "phone" type = "string" required = "true" >
         <cfargument name = "password" type = "string" required = "true" >   
         <cftry>
-            <cfset local.checkUserExistResult = checkUserExist(
-                userEmail = arguments.userEmail,
-                phone = arguments.phone
+            <cfset local.salt = generateSecretKey('AES')>
+            <cfset local.hashedPassword = hashPassword(
+                password = arguments.password,
+                saltString = local.salt                 
             )>
-            <cfif local.checkUserExistResult.recordCount GT 0>
-                <cfreturn "Email or Phone already exists">
+            <cfquery result = "local.qryUserRegister" datasource = "#application.datasource#">
+                INSERT INTO tblUser(
+                    fldFirstName,
+                    fldLastName,
+                    fldEmail,
+                    fldPhone,
+                    fldRoleId,
+                    fldHashedPassword,
+                    fldUserSaltString,
+                    fldActive,
+                    fldUpdatedDate
+                )VALUES(
+                    <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.userEmail#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
+                    <cfqueryparam value = "#local.hashedPassword#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "#local.salt#" cfsqltype = "cf_sql_varchar">,
+                    <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
+                    <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                )
+            </cfquery>
+            <cfif local.qryUserRegister.recordCount EQ 1>
+                <cflocation url = 'logIn.cfm' addtoken = "false">
             <cfelse>
-                <cfset local.salt = generateSecretKey('AES')>
-                <cfset local.hashedPassword = hashPassword(
-                    password = arguments.password,
-                    saltString = local.salt                 
-                )>
-                <cfquery result = "local.qryUserRegister" datasource = "#application.datasource#">
-                    INSERT INTO tblUser(
-                        fldFirstName,
-                        fldLastName,
-                        fldEmail,
-                        fldPhone,
-                        fldRoleId,
-                        fldHashedPassword,
-                        fldUserSaltString,
-                        fldActive,
-                        fldUpdatedDate
-                    )VALUES(
-                        <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#arguments.userEmail#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
-                        <cfqueryparam value = "#local.hashedPassword#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#local.salt#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
-                    )
-                </cfquery>
-                <cfif local.qryUserRegister.recordCount EQ 1>
-                    <cfset local.result = "LogIn Successful">
-                    <cflocation url = 'logIn.cfm' addtoken = "false">
-                <cfelse>
-                    <cfset local.result = "Invalid data">
-                </cfif>
-                <cfreturn local.result >
+                <cfset local.result = "Invalid data">
             </cfif>
+            <cfreturn local.result >
         <cfcatch type = "exception">
             <cfdump var = "#cfcatch#">
         </cfcatch>
         </cftry>
     </cffunction>
+    
     <!---   USER LOGIN  --->
     <cffunction name = "userLogIn" access = "public" returntype = "any" >
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
         <cftry>
-            <!---   CHECK USER EXIST --->
             <cfset local.checkUserExistResult = checkUserExist(
-                argumentCollection = arguments
+                userName = arguments.userName
             )>  
-            <!---      PASSWORD CHECK     --->
-            <cfif local.checkUserExistResult.recordCount EQ 1>
-                <cfset local.salt = local.checkUserExistResult.fldUserSaltString >
-                <cfset local.hashPass = hashPassword(
-                    password = arguments.password,
-                    saltString = local.salt                      
+            <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>                 
+            <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
+            <!--- IF USER REDIRECTED TO LOGIN WITHOUT LOGIN AND ADD PRODUCT FROM  'userProduct.cfm'  --->
+            <cfif structKeyExists(session, "productId") AND NOT structKeyExists(session, 'setOrder')>
+                <cfset local.addProductToCart = application.cartContObj.addProductToCart(
+                    productId = session.productId,
+                    userId = session.userId              
                 )>
-                <cfif local.hashPass EQ local.checkUserExistResult.fldHashedPassword>
-                    <cfset local.result = "LogIn Successful" >
-                    <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>                 
-                    <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
-                    <!--- IF USER REDIRECTED TO LOGIN WITHOUT LOGIN AND ADD PRODUCT FROM  'userProduct.cfm'  --->
-                    <cfif structKeyExists(session, "productId") AND NOT structKeyExists(session, 'setOrder')>
-                        <cfset local.addProductToCart = application.cartContObj.addProductToCart(
-                            productId = session.productId,
-                            userId = session.userId              
-                        )>
-                        <cfif local.addProductToCart EQ 'Success'>
-                            <cflocation url = "user/userCart.cfm" addtoken = "false">
-                        </cfif> 
-                        <!--- ORDER NOW WITHOUT LOGIN --->
-                    <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, "productId")>
-                        <cfoutput>
-                            <cflocation  url="user/userProduct.cfm" addtoken = "false">
-                        </cfoutput>    
-                    <cfelse>
-                        <cfif local.checkUserExistResult.fldRoleId EQ 1>
-                            <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">
-                        <cfelse>
-                            <cflocation  url="./user/userHome.cfm" addtoken = "false">
-                        </cfif>
-                    </cfif>                
-                <cfelse>
-                    <cfset local.result = "Invalid Data" >
-                </cfif>     
+                <cfif local.addProductToCart EQ 'Success'>
+                    <cflocation url = "user/userCart.cfm" addtoken = "false">
+                </cfif> 
+                <!--- ORDER NOW WITHOUT LOGIN --->
+            <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, "productId")>
+                <cfoutput>
+                    <cflocation  url="user/userProduct.cfm" addtoken = "false">
+                </cfoutput>    
             <cfelse>
-                <cfset local.result = "Incorrect username or password">        
-            </cfif>          
-            <cfreturn local.result>
+                <cfif local.checkUserExistResult.fldRoleId EQ 1>
+                    <cflocation  url="./admin/adminDashBoard.cfm" addtoken = "false">
+                <cfelse>
+                    <cflocation  url="./user/userHome.cfm" addtoken = "false">
+                </cfif>
+            </cfif>                        
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#">
         </cfcatch>

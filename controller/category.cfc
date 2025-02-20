@@ -14,6 +14,7 @@
             <cfreturn 0>
         </cfif>
     </cffunction>
+
     <!---  VALIDATE CATEGORY  --->
     <cffunction  name="validateCategoryName" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryName" type = "string" required = "true">
@@ -56,6 +57,7 @@
                 </cfif>
             </cfif>
     </cffunction>
+
     <!---  GET CATEGORY  --->
     <cffunction name = "getCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "false">
@@ -79,6 +81,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  DELETE CATEGORY    --->
     <cffunction name = "categoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "true">
@@ -94,6 +97,7 @@
         </cfif>
         <cfreturn local.result>
     </cffunction>
+
     <!---  SUBCATEGORY VALIDATION   --->
     <cffunction  name="validateSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryName" type = "string" required = "true">
@@ -151,6 +155,7 @@
             </cfif>
         </cfif>
     </cffunction>
+
     <!---  GET SUBCATEGORY    --->
     <cffunction name = "getSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
@@ -179,6 +184,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   DELETE SUBCATEGORY   --->
     <cffunction name = "subCategoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">
@@ -193,7 +199,8 @@
             <cfset local.result = "Failed">
         </cfif>
         <cfreturn local.result>
-    </cffunction>     
+    </cffunction>    
+
     <!---  GET CATEGORY AND SUBCATEGORY    --->
     <cffunction  name = "getCategoryAndSubCategory" access = "public" returntype = "any">
         <cfset local.getCategoryAndSubCategory = application.categModObj.getCategoryAndSubCategory()>  
@@ -203,4 +210,5 @@
             <cfreturn "No category exist">
         </cfif>
     </cffunction>
+    
 </cfcomponent>

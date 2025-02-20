@@ -22,6 +22,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  ADD EDIT CATEGORY    --->
     <cffunction  name="categoryAddEdit" access = "public" returntype = "any">
         <cfargument name = "categoryName" type = "string" required = "true" >
@@ -74,6 +75,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  GET  CATEGORY    --->
     <cffunction name = "getCategory" access = "public" returntype = "any">
         <cfargument  name="categoryId" type = "integer" required = "false">
@@ -96,6 +98,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  DELETE CATEGORY    --->
     <cffunction name = "deleteCategory" access = "remote" returntype = "any">
         <cfargument name = "categoryId" type = "integer" required = "true">
@@ -124,6 +127,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   SUB CATEGORY CHECK   --->
     <cffunction  name="checkSubCategory" access = "public" returntype = "string">
         <cfargument name = "subCategoryName" type = "string" required = "true" >
@@ -149,6 +153,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   SUBCATEGORY ADD EDIT   --->
     <cffunction  name="subCategoryAddEdit" access = "public" returntype = "any">
         <cfargument name = "subCategoryName" type = "string" required = "true" >
@@ -204,7 +209,8 @@
             <cfdump var = "#cfcatch#" >
         </cfcatch>
         </cftry>
-    </cffunction> 
+    </cffunction>
+
     <!---  GET SUB CATEGORY    --->
     <cffunction name = "getSubCategory" access = "public" returntype = "any">
         <cfargument name ="subCategoryId" type = "integer" required = "false">
@@ -228,7 +234,8 @@
             <cfdump var = "#cfcatch#" >
         </cfcatch>
         </cftry>
-    </cffunction>   
+    </cffunction>
+
     <!---   DELETE SUBCATEGORY   --->
     <cffunction name = "deleteSubCategory" access = "remote" returntype = "any">
         <cfargument name = "subCategoryId" type = "integer" required = "true">
@@ -278,4 +285,5 @@
         </cfcatch>
         </cftry>
     </cffunction>
+    
 </cfcomponent>
