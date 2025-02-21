@@ -91,12 +91,15 @@ section {
   outline: none !important;
 }
 /* Category listing */
-
 .category-navigation {
   background: #db4444;
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+.category-page-title {
+  padding: 15px 0 !important;
+  text-align: center;
 }
 .category-list-btn {
   font-size: 16px !important;

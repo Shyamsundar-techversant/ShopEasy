@@ -227,4 +227,32 @@
         <cfreturn local.productFilterResult>
     </cffunction>
     
+    <!---    PRODUCT LIST  --->
+    <cffunction name = "getProuductsDetails" access = "public" returntype = "any">
+        <cfargument  name = "categoryId" type = "string" required = "false">
+        <cfargument name = 'subCategoryID' type = "string" required = "false">
+        <cfargument name = "productId" type = "string" required = "false">
+        <cfif structKeyExists(arguments,'categoryId')>
+            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
+                arguments.categoryId
+            )>
+        <cfelseif structKeyExists(arguments,'subCategoryID')>
+            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
+                arguments.subCategoryID
+            )>
+        <cfelseif structKeyExists(arguments,'productId')>
+            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
+                arguments.productId
+            )>
+        </cfif>
+        <cfset local.productDetails = application.productModObj.getProuductsDetails(
+            argumentCollection = arguments
+        )>
+        <cfif local.productDetails.recordCount GT 0>
+            <cfreturn local.productDetails>
+        <cfelse>
+            <cfreturn "No productExist">
+        </cfif>
+    </cffunction>
+
 </cfcomponent>

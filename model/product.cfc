@@ -661,5 +661,51 @@
         </cfcatch>
         </cftry>
     </cffunction>
-    
+
+    <!---    PRODUCTS --->
+    <cffunction name = "getProuductsDetails" access = "public" returntype = "any">
+        <cfargument  name = "categoryId" type = "numeric" required = "false">
+        <cfargument name = 'subCategoryID' type = "numeric" required = "false">
+        <cfargument name = "productId" type = "numeric" required = "false">
+        <cfargument name = "productOrder" type = "numeric" required = "false">
+        <cftry>
+            <cfquery name = "local.qryGetProuductsDetails" datasource = "#application.datasource#">
+                SELECT 
+                    P.fldProduct_ID AS idProduct,
+                    P.fldProductName,
+                    P.fldDescription,
+                    P.fldBrandId,
+                    SC.fldSubCategoryName,
+                    SC.fldSubCategory_ID,
+                    B.fldBrandName,
+                    P.fldPrice,
+                    P.fldTax,
+                    IMG.fldDefaultImage,
+                    IMG.fldImageFileName,
+                    C.fldCategory_ID,
+                    C.fldCategoryName
+                FROM
+                    tblProduct AS P
+                    INNER JOIN tblSubCategory AS SC ON SC.fldSubCategory_ID = P.fldSubCategoryId
+                    INNER JOIN tblCategory AS C ON C.fldCategory_ID = SC.fldCategoryId
+                    INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
+                    INNER JOIN tblProductImages AS IMG ON IMG.fldProductId = P.fldProduct_ID
+                WHERE
+                    P.fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    AND IMG.fldDefaultImage = <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">
+                    <cfif structKeyExists(arguments, 'categoryId')>
+                        AND C.fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "integer">
+                    <cfelseif structKeyExists(arguments, 'subCategoryID')>
+                        AND P.fldSubCategoryId = <cfqueryparam value = "#arguments.subCategoryID#" cfsqltype = "cf_sql_integer">
+                    <cfelseif structKeyExists(arguments, 'productId')>
+                        AND P.fldProduct_ID = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
+                    </cfif>   
+                ORDER BY SC.fldSubCategory_ID,idProduct           
+            </cfquery>
+            <cfreturn local.qryGetProuductsDetails>
+        <cfcatch type="exception">
+            <cfdump var = "#cfcatch#" >
+        </cfcatch>
+        </cftry>
+    </cffunction>
 </cfcomponent>

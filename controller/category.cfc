@@ -1,7 +1,21 @@
 <cfcomponent>
+    <!--- ENCRYPTION FUNCTION --->
+    <cffunction name = "ecryptionFunction" access = "public" returntype = "string">
+        <cfargument name = 'objectId' type = "numeric" required = "true">
+        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
+        <cfset local.encryptedId = encrypt(
+            arguments.objectId,
+            local.secretKey,
+            "AES",
+            "Hex"
+        )>
+        <cfreturn local.encryptedId>
+    </cffunction> 
+
     <!---  DECRYPTION FUNCTION    --->
     <cffunction name = "decryptionFunction" access = "public" returntype = "numeric">
         <cfargument name = "encryptedId" type = "string" required = "false">
+        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
         <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
                 arguments.encryptedId,
