@@ -237,11 +237,11 @@
                 arguments.categoryId
             )>
         <cfelseif structKeyExists(arguments,'subCategoryID')>
-            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
+            <cfset arguments.subCategoryID =  application.cateContObj.decryptionFunction(
                 arguments.subCategoryID
             )>
         <cfelseif structKeyExists(arguments,'productId')>
-            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
+            <cfset arguments.productId =  application.cateContObj.decryptionFunction(
                 arguments.productId
             )>
         </cfif>

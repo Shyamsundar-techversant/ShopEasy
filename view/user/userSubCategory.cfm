@@ -1,22 +1,20 @@
-
-<cfif structKeyExists(url,"subCategoryID")>
+<!---<cfif structKeyExists(url,"subCategoryID")>
     <cfif structKeyExists(form, "filterProduct")>
         <cfset variables.getProducts = application.productContObj.getFilteredProduct(
             subCategoryID = url.subCategoryID,
             minPrice = form.minPrice,
             maxPrice = form.maxPrice
         )>
-    <cfelseif NOT structKeyExists(url, "order")>
-        <cfset variables.getProducts = application.productContObj.getProductWithDefaultImage(
-            subCategoryID = url.subCategoryID
-        )>
-    <cfelseif structKeyExists(url, "order")>
+    <cfelseif  structKeyExists(url, "order")>
         <cfset variables.getProducts = application.productContObj.getProductWithDefaultImage(
             subCategoryID = url.subCategoryID,
             productOrder = url.order
-        )>       
+        )>    
     </cfif>
-</cfif>
+</cfif>--->
+<cfset variables.getProducts = application.productContObj.getProuductsDetails(
+    subCategoryID = url.subCategoryID
+)> 
 <cfif NOT isQuery(variables.getProducts) OR variables.getProducts.recordCount EQ 0>
     <cfoutput>
         <div class="alert alert-danger alertInfo" role="alert">

@@ -277,7 +277,8 @@
                     tblSubCategory AS SUB
                     INNER JOIN tblCategory AS CAT ON SUB.fldCategoryId = CAT.fldCategory_ID
                         AND CAT.fldActive = 1
-                        AND SUB.fldActive = 1                               
+                        AND SUB.fldActive = 1  
+                ORDER BY CAT.fldCategory_ID,SUB.fldSubCategory_ID
             </cfquery>
             <cfreturn local.qryGetCategoryAndSubCategory>
         <cfcatch type="exception">

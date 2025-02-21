@@ -1,9 +1,9 @@
 <cfif structKeyExists(url,"productId")>
-    <cfset variables.productData = application.productContObj.getProductWithDefaultImage(
+    <cfset variables.productData = application.productContObj.getProuductsDetails(
         productId = url.productId
     )>
 <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, 'productId')>
-    <cfset variables.productData = application.productContObj.getProductWithDefaultImage(
+    <cfset variables.productData = application.productContObj.getProuductsDetails(
         productId = session.productId
     )>
 </cfif>
