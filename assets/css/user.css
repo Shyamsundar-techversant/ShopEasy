@@ -91,6 +91,7 @@ section {
   outline: none !important;
 }
 /* Category listing */
+
 .category-navigation {
   background: #db4444;
   display: flex;
