@@ -14,8 +14,8 @@
 
     <!---  DECRYPTION FUNCTION    --->
     <cffunction name = "decryptionFunction" access = "public" returntype = "numeric">
-        <cfargument name = "encryptedId" type = "string" required = "false">
-        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
+        <cfargument name = "encryptedId" type = "any" required = "false">
+<!---         <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='> --->
         <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
                 arguments.encryptedId,

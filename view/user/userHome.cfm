@@ -23,7 +23,9 @@
         <div class = "container random-products-container">
             <h5 class = "product-section-head pb-2">Random Products</h5>
             <div class = "row">
-                <cfset randomProducts = application.productContObj.getRandomProducts()>
+                <cfset randomProducts = application.productContObj.getProductsDetails(
+                    isRandom = 1
+                )>
                 <cfoutput query = "randomProducts">
                     <cfset encryptedProductId = encrypt(
                         randomProducts.idProduct,

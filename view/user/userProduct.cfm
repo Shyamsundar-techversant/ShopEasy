@@ -1,15 +1,16 @@
+
 <cfif structKeyExists(url,"productId")>
-    <cfset variables.productData = application.productContObj.getProuductsDetails(
+    <cfset variables.productData = application.productContObj.getProductsDetails(
         productId = url.productId
     )>
 <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, 'productId')>
-    <cfset variables.productData = application.productContObj.getProuductsDetails(
+    <cfset variables.productData = application.productContObj.getProductsDetails(
         productId = session.productId
     )>
 </cfif>
 <cfif NOT isQuery(variables.productData)>
     <cfoutput>
-        <div class="alert alert-danger alertInfo" role="alert">
+        <div class="alert alert-danger alertInfo" role = "alert">
             No Product Exist.
         </div>
     </cfoutput>

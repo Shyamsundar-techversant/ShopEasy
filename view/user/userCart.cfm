@@ -12,11 +12,12 @@
 <cfinclude  template="header.cfm">
     <cfif NOT structKeyExists(variables, 'totalCartProducts')>
         <cfoutput>
-            <div class="alert alert-danger alertInfo" role="alert">
+            <div class="alert alert-danger alertInfo" role = "alert">
                 Cart is empty.
             </div>
         </cfoutput>
     </cfif>
+    <cfdump  var="#variables.totalCartProducts#">
 <!--- CART SECTION --->
     <section class = "cart-section">
         <div class = "container">
@@ -26,9 +27,6 @@
         </div>
         <div class = "container cart-container">
             <div class = "cart-product-add-section"> 
-                <cfset variables.totalActualPrice = 0>
-                <cfset variables.totalTax = 0>    
-                <cfset variables.totalCartProductsPrice = 0>   
                 <cfif structKeyExists(variables, 'totalCartProducts')>
                     <cfoutput query = "variables.totalCartProducts">
                         <cfset local.encryptedProductId = encrypt(
@@ -36,9 +34,7 @@
                             application.encryptionKey,
                             "AES",
                             "Hex"
-                        )>
-                        <cfset variables.totalActualPrice = variables.totalActualPrice + variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice)>
-                        <cfset variables.totalTax = (variables.totalTax +  variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax)/100)>                            
+                        )>                           
                         <div class = "row cart-products">
                             <div class = "col-md-2 p-2">
                                 <img src = "/uploadImg/#variables.totalCartProducts.fldImageFileName#" alt = "Product Image" class = "cart-product-image">
@@ -56,14 +52,13 @@
                                     </div>
                                 </div>
                                 <div class = "card-product-count">
-                                    <input type = "number" class = "card-product-count-input" value = "#variables.totalCartProducts.fldQuantity#" min = "1">
+                                    #variables.totalCartProducts.fldQuantity#
                                 </div>
                             </div>
                             <div class = "col-md-3 cart-prod-details">
                                 <div class = "total-prod-price">
-                                    $#variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))#
-                                </div>
-                                <cfset variables.totalCartProductsPrice = variables.totalCartProductsPrice + variables.totalCartProducts.fldQuantity*(variables.totalCartProducts.fldPrice+(variables.totalCartProducts.fldPrice*variables.totalCartProducts.fldTax/100))>  
+                                    $#variables.totalCartProducts.totalPrice#
+                                </div>  
                                 <div class = "cart-prod-tax">Tax : #variables.totalCartProducts.fldTax# %</div>
                                 <div class = "actual-price">Actual Price : $#variables.totalCartProducts.fldPrice#</div>
                                 <button 
@@ -83,9 +78,10 @@
                 <div class = "cart-total-price">
                     <cfoutput>
                         <div class = "totl-price-details">
+                        <!---
                             <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
                             <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
-                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>
+                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>--->
                         </div>
                     </cfoutput>
                     <button 

@@ -1,4 +1,4 @@
-<cfset variables.getSubCategoryData = application.productContObj.getProuductsDetails(
+<cfset variables.getSubCategoryData = application.productContObj.getProductsDetails(
     categoryId = url.categoryId
 )>
 <cfif NOT isQuery(variables.getSubCategoryData)>
@@ -9,7 +9,9 @@
 <cfinclude template = "header.cfm">
     <cfif structKeyExists(variables, "getSubCategoryData") AND isQuery(variables.getSubCategoryData)>
         <cfset count = 1>
-        <div class = "category-page-title product-section-head"><cfoutput>#variables.getSubCategoryData.fldCategoryName#</cfoutput></div>
+        <div class = "category-page-title product-section-head">
+            <cfoutput>#variables.getSubCategoryData.fldCategoryName#</cfoutput>
+        </div>
         <cfoutput query = "variables.getSubCategoryData" group = "fldSubCategory_ID">
             <cfset encryptedSubCategoryId = encrypt(
                 variables.getSubCategoryData.fldSubCategory_ID,

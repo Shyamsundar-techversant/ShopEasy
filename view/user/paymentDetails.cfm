@@ -2,7 +2,7 @@
     <cfset variables.selectedAddress = application.cartContObj.getAddresses(
         addressId = url.addressId
     )>
-    <cfset variables.selectedProduct = application.productContObj.getProductWithDefaultImage(
+    <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
         productId = url.productId
     )>
 <cfelseif structKeyExists(url,'addressId') AND NOT structKeyExists(url, 'productId')>

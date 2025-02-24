@@ -1,54 +1,83 @@
-<!---<cfif structKeyExists(url,"subCategoryID")>
-    <cfif structKeyExists(form, "filterProduct")>
-        <cfset variables.getProducts = application.productContObj.getFilteredProduct(
-            subCategoryID = url.subCategoryID,
-            minPrice = form.minPrice,
-            maxPrice = form.maxPrice
-        )>
-    <cfelseif  structKeyExists(url, "order")>
-        <cfset variables.getProducts = application.productContObj.getProductWithDefaultImage(
-            subCategoryID = url.subCategoryID,
-            productOrder = url.order
-        )>    
+<cfif structKeyExists(url, 'subCategoryID')>
+    <cfset variables.arguments = {}>
+    <cfif structKeyExists(form, 'filterProduct')>
+        <cfif structKeyExists(form, 'minPrice') AND structKeyExists(form, 'maxPrice')>         
+           <cfset variables.filterFormValidationResult = application.productContObj.validateFilterForm(
+                minPrice = form.minPrice,
+                maxPrice = form.maxPrice
+            )>
+            <cfif arrayLen(variables.filterFormValidationResult) GT 0>
+                <div class="alert alert-danger alertInfo" role="alert">
+                    <cfoutput>
+                        <cfloop array = "#variables.filterFormValidationResult#" index = "error">
+                            <span>#error#</span><br>
+                        </cfloop>
+                    </cfoutput>
+                </div>  
+            <cfelse>
+                <cfset variables.arguments = {
+                    subCategoryID : url.subCategoryID,
+                    minPrice : form.minPrice,
+                    maxPrice : form.maxPrice
+                }>
+            </cfif>
+        <cfelse>
+            <div class="alert alert-danger alertInfo" role = "alert">
+                Required values are missing...
+            </div>            
+        </cfif>
+    <cfelseif structKeyExists(url, 'asc')>
+        <cfset variables.arguments = {
+            subCategoryID : url.subCategoryID,
+            isAscending : 1
+        }>
+    <cfelseif structKeyExists(url, 'desc')>
+        <cfset variables.arguments = {
+            subCategoryID : url.subCategoryID,
+            isDescending : 1
+        }>
+    <cfelse>
+        <cfset variables.arguments = {
+            subCategoryID : url.subCategoryID
+        }>  
     </cfif>
-</cfif>--->
-<cfset variables.getProducts = application.productContObj.getProuductsDetails(
-    subCategoryID = url.subCategoryID
-)> 
-<cfif NOT isQuery(variables.getProducts) OR variables.getProducts.recordCount EQ 0>
-    <cfoutput>
-        <div class="alert alert-danger alertInfo" role="alert">
-            #variables.getProducts#
-        </div>
-    </cfoutput>
+    <cfset variables.getProducts = application.productContObj.getProductsDetails(
+        argumentCollection = variables.arguments
+    )> 
+</cfif>
+<cfif NOT structKeyExists(variables, 'getProducts') OR NOT isQuery(variables.getProducts)>
+    <div class="alert alert-danger alertInfo" role="alert">
+        NO product exist
+    </div> 
 </cfif>
 <cfinclude  template = "header.cfm">
-
     <section class = "subcategory-section">
         <div class = "container ">
             <div class = "row">            
+                <div class = "filter p-4">                        
+                    <button 
+                        class = "filter-btn" 
+                        onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&desc=1'"                     
+                    >                      
+                        High To Low
+                    </button>
+                    <button class = "filter-btn"
+                        onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&asc=1'"
+                    >
+                        Low To High
+                    </button>
+                    <button type="button" class="btn filter-btn" data-bs-toggle="modal" 
+                        data-bs-target="#filterModal"
+                    >
+                        Filter
+                    </button>
+                </div>
                 <cfif structKeyExists(variables, "getProducts") AND NOT structKeyExists(variables, 'searchResult')
                     AND isQuery(variables.getProducts)
-                >
-                    <div class = "filter p-4">
-                        
-                        <button 
-                            class = "filter-btn" 
-                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&order=1'"                     
-                        >                      
-                            High To Low
-                        </button>
-                        <button class = "filter-btn"
-                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&order=0'"
-                        >
-                            Low To High
-                        </button>
-                        <button type="button" class="btn filter-btn" data-bs-toggle="modal" 
-                                data-bs-target="#filterModal"
-                        >
-                            Filter
-                        </button>
-                    </div>                                       
+                >  
+                    <div class = "category-page-title product-section-head">
+                        <cfoutput>#variables.getProducts.fldSubCategoryName#</cfoutput>
+                    </div>                                     
                     <cfoutput query = "variables.getProducts">
                         <cfset encryptedProductId = encrypt(
                             variables.getProducts.idProduct,
@@ -56,7 +85,7 @@
                             "AES",
                             "Hex"
                         )>
-                        <div class = "col-md-3" data-aos="zoom-in-down">
+                        <div class = "col-md-3 mb-3" data-aos="zoom-in-down">
                             <div class = "product-card">
                                 <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
                                     <img src = "/uploadImg/#variables.getProducts.fldImageFileName#" alt = "ProductImage" 
@@ -90,15 +119,15 @@
                         <form class = "filter-form" method = "post">
                             <div class = "row mb-3">
                                 <div class ="col">
-                                    <input type = "number" class = "form-control" placeholder = "MIN"
-                                            id = "min-price" name = "minPrice" min = "0"
+                                    <input type = "text" class = "form-control" placeholder = "MIN"
+                                            id = "min-price" name = "minPrice" value = ""
                                     >
                                 </div>
                             </div>
                             <div class = "row mb-3">
                                 <div class ="col">
-                                    <input type = "number" class = "form-control" placeholder = "MAX"
-                                            id = "max-price" name = "maxPrice" min = "0"
+                                    <input type = "text" class = "form-control" placeholder = "MAX"
+                                            id = "max-price" name = "maxPrice"  value = ""
                                     >
                                 </div>
                             </div>
@@ -112,7 +141,7 @@
                                     <button type="button" class="filter-btn modal-close-btn" data-bs-dismiss="modal">
                                         Close
                                     </button>
-                                    <button type="submit" class="filter-btn" name = "filterProduct">
+                                    <button type="submit" class="filter-btn apply-filter" name = "filterProduct">
                                         Apply
                                     </button>
                                 </div>
