@@ -1,20 +1,19 @@
 <cfset variables.arguments = {}>
 <cfif structKeyExists(url, 'addressId') AND structKeyExists(url, 'productId')>
-    <cfset variables.selectedAddress = application.cartContObj.getAddresses(
     <cfset variables.arguments = {
         addressId : url.addressId
     }>
-    )>
     <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
         productId = url.productId
     )>
+    <cfdump  var="#variables.selectedProduct#">
 <cfelseif structKeyExists(url,'addressId') AND NOT structKeyExists(url, 'productId')>
     <cfset variables.arguments = {
         addressId : url.addressId
     }>
 </cfif>
 <cfset variables.selectedAddress = application.cartContObj.getAddresses(
-    argumentCollection = arguments
+    argumentCollection = variables.arguments
 )>
 <cfinclude  template="header.cfm">
     <section class = "product-section">

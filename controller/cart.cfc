@@ -138,7 +138,7 @@
         <cfreturn local.userDetails>
     </cffunction>
 
-    <!--- VALIDATE USER DETAILS --->
+    <!--- VALIDATE USER DETAILS AND UPDATE --->
     <cffunction name = "validateUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "userId" type = "string" required = "true">
         <cfargument name = "firstName" type = "string" required = "true">

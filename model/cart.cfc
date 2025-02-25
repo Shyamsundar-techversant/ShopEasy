@@ -279,7 +279,7 @@
         </cftry>
     </cffunction>
 
-    <!--- VALIDATE USER DETAILS --->
+    <!--- UPDATE USER DETAILS --->
     <cffunction name = "updateUserDetails" access = "remote" returntype = "any">
         <cfargument name = "firstName" type = "string" required = "true">
         <cfargument name = "lastName" type = "string" required = "true">
