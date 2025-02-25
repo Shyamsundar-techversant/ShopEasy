@@ -2,7 +2,7 @@
     <!---  CHECK PRODUCT ALREADY IN CART --->
     <cffunction  name = "checkProductExist" access = "private" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
-        <cfargument name = "userId" type = "integer" required = "true">
+        <cfargument name = "userId" type = "integer" required = "false">
         <cftry>
             <cfquery name = "local.qryCheckProductExist" datasource = "#application.datasource#">
                 SELECT 
@@ -33,7 +33,11 @@
             )>
             <cfif local.isProductExist.recordCount GT 0>
                 <cfif structKeyExists(arguments, 'isDecreaseQuantity') >
-                    <cfset local.updatedQuantity = local.isProductExist.fldQuantity - 1> 
+                    <cfif local.isProductExist.fldQuantity LE 1>
+                        <cfset local.updatedQuantity = local.isProductExist.fldQuantity>
+                    <cfelse>
+                        <cfset local.updatedQuantity = local.isProductExist.fldQuantity - 1> 
+                    </cfif>
                 <cfelseif structKeyExists(arguments, 'isIncreaseQuantity')>
                     <cfset local.updatedQuantity = local.isProductExist.fldQuantity + 1> 
                 <cfelseif structKeyExists(arguments, 'isRemoveProduct')>
@@ -102,7 +106,7 @@
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cftry>
             <cfquery name="local.qryGetCartProducts" datasource="#application.datasource#">
-                WITH cartDetails AS (
+                WITH CartDetails AS (
                     SELECT
                         TC.fldCart_ID,
                         TC.fldProductId,
@@ -129,27 +133,24 @@
                         AND TC.fldQuantity > 0
                 )
                 SELECT 
-                    TC.fldCart_ID,
-                    TC.fldProductId,
-                    P.fldProductName,
-                    B.fldBrandName,
-                    P.fldPrice,
-                    P.fldTax,
-                    TC.fldQuantity,
-                    IMG.fldImageFileName,
-                    totalPrice,
-                    totalTax,
-                    totalActualPrice, 
-                    totals.entireCartTotal
+                    CD.*, 
+                    Totals.entireCartTotal,
+                    Totals.entireCartTax,
+                    Totals.entireCartActualPrice
                 FROM 
-                    cartDetails 
+                    CartDetails CD
                 CROSS JOIN (
-                    SELECT ROUND(SUM(TC.fldQuantity * (P.fldPrice + (P.fldPrice * P.fldTax) / 100)), 2) AS entireCartTotal
-                    FROM tblCart AS TC
-                    INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
-                    WHERE TC.fldUserId = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">
-                    AND TC.fldQuantity > 0
-                ) totals
+                    SELECT 
+                        ROUND(SUM(TC.fldQuantity * (P.fldPrice + (P.fldPrice * P.fldTax) / 100)), 2) AS entireCartTotal,
+                        ROUND(SUM(TC.fldQuantity * ((P.fldPrice * P.fldTax) / 100)), 2) AS entireCartTax,
+                        ROUND(SUM(TC.fldQuantity * P.fldPrice), 2) AS entireCartActualPrice
+                    FROM 
+                        tblCart AS TC
+                        INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
+                    WHERE 
+                        TC.fldUserId = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">
+                        AND TC.fldQuantity > 0
+                ) Totals
             </cfquery>
             <cfreturn local.qryGetCartProducts>
         <cfcatch type="exception">

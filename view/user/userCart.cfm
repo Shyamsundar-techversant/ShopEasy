@@ -17,7 +17,6 @@
             </div>
         </cfoutput>
     </cfif>
-    <cfdump  var="#variables.totalCartProducts#">
 <!--- CART SECTION --->
     <section class = "cart-section">
         <div class = "container">
@@ -78,10 +77,9 @@
                 <div class = "cart-total-price">
                     <cfoutput>
                         <div class = "totl-price-details">
-                        <!---
-                            <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalActualPrice#</span></h6>
-                            <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalTax# </span></h6>
-                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProductsPrice#</span></h6>--->
+                            <h6 class = "cart-product-total">Actual Price : <span class = "total-value">$#variables.totalCartProducts.entireCartActualPrice#</span></h6>
+                            <h6 class = "cart-product-total">Total Tax : <span class = "total-value">$#variables.totalCartProducts.entireCartTax# </span></h6>
+                            <h6 class = "cart-product-total">Total Price : <span class = "total-value">$#variables.totalCartProducts.entireCartTotal#</span></h6>
                         </div>
                     </cfoutput>
                     <button 
