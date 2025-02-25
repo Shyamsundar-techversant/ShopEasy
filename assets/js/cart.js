@@ -216,54 +216,101 @@ $(document).ready(function () {
   });
 
   // ORDER SUMMARY
-
-  $(".qty-add-btn").on("click", function () {});
-  $(".qty-remove-btn").on("click", function () {});
-
+  let productQuantity = parseInt($('#orderQuantity').val(), 10) || 0;
+  let unitPrice = parseFloat($(".actual-order-price").text().replace("$", "").trim());
+  let unitTax = parseFloat($('.actual-order-tax').text());
+  let totalCalculatedAmount = (unitPrice )+(unitPrice*unitTax)/100;
+  let totalTax = (unitTax * unitPrice) / 100;
+  $('.qty-add-btn').on('click', function () {
+      productQuantity += 1;
+      $('#orderQuantity').val(productQuantity);
+      totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
+      $('.payable-order-price').text(totalCalculatedAmount);
+      totalTax = (productQuantity * unitPrice * unitTax) / 100;
+  });
+  $('.qty-remove-btn').on('click', function () {
+      if(productQuantity <= 1){
+        productQuantity = productQuantity
+      }
+      else{
+        productQuantity -= 1;
+      }
+      $('#orderQuantity').val(productQuantity);
+      productId = $(this).data('id');
+      totalCalculatedAmount = productQuantity * ((unitPrice )+(unitPrice*unitTax)/100);
+      totalTax = (productQuantity * unitTax * unitPrice) / 100;
+      $('.payable-order-price').text(totalCalculatedAmount);
+      if (productQuantity <= 0) {
+          window.location.href = `userProduct.cfm?productId=${productId}`;
+      }
+  });
   // ORDER PAYMENT
   $(".place-order-btn").on("click", function () {
     $("#order-place-form").trigger("reset");
     $(".form-error").empty();
   });
   $(".pay-btn").on("click", function () {
-    let formData = new FormData();
-    totalCalculatedAmount =
-      productQuantity * (unitPrice + (unitPrice * unitTax) / 100);
-    totalTax = (productQuantity * unitPrice * unitTax) / 100;
     productId = $(".selected-order-product").data("id");
     addressId = $(".order-address-summary").data("id");
-    formData.append("cardNumber", $("#card-number").val());
-    formData.append("cvv", $("#cvv").val());
-    formData.append("productId", productId);
-    formData.append("addressId", addressId);
-    formData.append("unitPrice", unitPrice);
-    formData.append("unitTax", unitTax);
-    formData.append("totalPrice", totalCalculatedAmount);
-    formData.append("totalTax", totalTax);
-    formData.append("quantity", productQuantity);
-    $.ajax({
-      url: "../../controller/order.cfc?method=validateCardAndOrder",
-      method: "POST",
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        let data = JSON.parse(response);
-        if (data === "Success") {
-          $("#orderPlaceModal").modal("hide");
-          Swal.fire({
-            title: "Payment Successful",
-            icon: "success",
-          }).then(() => {
-            window.location.href = "orderHistory.cfm";
-          });
-        } else {
-          addError(data);
-        }
-      },
-      error: function () {
-        alert("Request failed");
-      },
-    });
+      if(productId){
+        $.ajax({
+          url: "../../controller/order.cfc?method=validateCardAndOrder",
+          method: "POST",
+          data: {
+            productId : productId,
+            addressId : addressId,
+            quantity : productQuantity,
+            cardNumber : $('#card-number').val(),
+            cvv : $('#cvv').val()
+          },
+          success: function (response) {
+            let data = JSON.parse(response);
+            if (data === "Success") {
+              $("#orderPlaceModal").modal("hide");
+              Swal.fire({
+                title: "Payment Successful",
+                icon: "success",
+              }).then(() => {
+                window.location.href = "orderHistory.cfm";
+              });
+            } else {
+              addError(data);
+            }
+          },
+          error: function () {
+            alert("Request failed");
+          },
+        });
+      }
+      else{
+        $.ajax({
+          url: "../../controller/order.cfc?method=validateCardAndOrder",
+          method: "POST",
+          data: {
+            addressId : addressId,
+            cardNumber : $('#card-number').val(),
+            cvv : $('#cvv').val()
+          },
+          success: function (response) {
+            let data = JSON.parse(response);
+            if (data === "Success") {
+              $("#orderPlaceModal").modal("hide");
+              Swal.fire({
+                title: "Payment Successful",
+                icon: "success",
+              }).then(() => {
+                window.location.href = "orderHistory.cfm";
+              });
+            } else {
+              addError(data);
+            }
+          },
+          error: function () {
+            alert("Request failed");
+          },
+        });       
+      }
   });
 });
+
+

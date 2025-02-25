@@ -1,11 +1,11 @@
 <cfcomponent>
     <!--- ENCRYPTION FUNCTION --->
-    <cffunction name = "ecryptionFunction" access = "public" returntype = "string">
+    <cffunction name = "encryptionFunction" access = "public" returntype = "string">
         <cfargument name = 'objectId' type = "numeric" required = "true">
         <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
         <cfset local.encryptedId = encrypt(
             arguments.objectId,
-            local.secretKey,
+            application.encryptionKey,
             "AES",
             "Hex"
         )>

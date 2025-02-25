@@ -178,6 +178,7 @@
                 <cfset arrayAppend(local.errors, '*Email id already exists')>  
             </cfif>
         </cfif>
+        
         <!---    VALIDATE PHONE    --->    
         <cfif len(trim(arguments.phone)) EQ 0>
             <cfset arrayAppend(local.errors,"*Phone number is required")>

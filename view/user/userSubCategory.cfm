@@ -79,11 +79,8 @@
                         <cfoutput>#variables.getProducts.fldSubCategoryName#</cfoutput>
                     </div>                                     
                     <cfoutput query = "variables.getProducts">
-                        <cfset encryptedProductId = encrypt(
-                            variables.getProducts.idProduct,
-                            application.encryptionKey,
-                            "AES",
-                            "Hex"
+                        <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                            variables.getProducts.idProduct
                         )>
                         <div class = "col-md-3 mb-3" data-aos="zoom-in-down">
                             <div class = "product-card">

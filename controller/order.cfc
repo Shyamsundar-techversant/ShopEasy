@@ -4,11 +4,7 @@
         <cfargument name = "cvv" type = "string" required = "true">
         <cfargument name = "productId" type = "string" required = "false">
         <cfargument name = "addressId" type = "string" required = "true">
-        <cfargument name = "totalPrice" type = "float" required = "false">
-        <cfargument name = "totalTax" type = "float" required = "false">
-        <cfargument  name = "unitPrice" type = "float" required = "false">
-        <cfargument  name = "unitTax" type = "float" required = "false">
-        <cfargument  name = "quantity" type = "integer" required = "false">      
+        <cfargument  name = "quantity" type = "integer" required = "false">    
         <cfset local.errors = []>
         <!---    VALIDATE CARD NUMBER      --->
         <cfset local.cardNumber = 12345678901>
@@ -27,31 +23,27 @@
             <cfset arrayAppend(local.errors,"*Enter a valid cvv")>
         <cfelseif arguments.cvv NEQ local.cvv>
             <cfset arrayAppend(local.errors,"*Incorrect cvv")>
-        </cfif>
+        </cfif> 
         <cfif arrayLen(local.errors) GT 0>
             <cfreturn local.errors>
         <cfelse>          
-            <cfif arguments.productId NEQ 'undefined' AND structKeyExists(arguments, 'quantity')>
+            <cfif structKeyExists(arguments, 'productId')>
                 <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
-                <cfset local.orderResult = application.orderModObj.orderProduct( argumentCollection = arguments)>
+                <cfset local.orderResult = application.orderModObj.orderProduct( argumentCollection = arguments)>                 
                 <cfreturn 'Success'>
             <cfelse>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
-                <cfset arguments.totalPrice = 0>
-                <cfset arguments.totalTax = 0>
                 <cfset arguments['cartProducts'] = application.cartModObj.getCartProducts()>
-                <cfloop query = "arguments.cartProducts">
-                    <cfset arguments.totalPrice = arguments.totalPrice + arguments.cartProducts.totalPrice>
-                    <cfset arguments.totalTax = arguments.totalTax + arguments.cartProducts.totalTax>
-                </cfloop>
+                <cfset arguments.totalPrice = arguments.cartProducts.entireCartTotal>
+                <cfset arguments.totalTax = arguments.cartProducts.entireCartTax>
                 <cfset local.orderResult = application.orderModObj.orderProduct(argumentCollection = arguments)>
                 <cfreturn 'Success'>
             </cfif>
         </cfif>
     </cffunction>
 
-    <!--- GET ORDER DETAILS     --->
+    <!--- GET ORDER DETAILS --->
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "false">
         <cftry>

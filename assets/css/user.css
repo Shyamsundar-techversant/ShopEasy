@@ -8,9 +8,11 @@
   list-style-type: none;
   font-family: "Montserrat", serif;
 }
+
 body {
   height: 100vh !important;
 }
+
 button {
   border: none !important;
   box-shadow: none !important;

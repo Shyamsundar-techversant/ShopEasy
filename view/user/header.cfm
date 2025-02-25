@@ -91,11 +91,8 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
                             <cfif structKeyExists(variables, "getCategoryAndSubCategory")>
                                 <cfoutput query = "variables.getCategoryAndSubCategory" group = "fldCategory_ID">
-                                    <cfset encryptedCategoryId_1 = encrypt(
-                                        variables.getCategoryAndSubCategory.fldCategory_ID,
-                                        application.encryptionKey,
-                                        "AES",
-                                        "Hex"
+                                    <cfset encryptedCategoryId_1 = application.cateContObj.encryptionFunction(
+                                        variables.getCategoryAndSubCategory.fldCategory_ID
                                     )>
                                     <li>
                                         <a 
@@ -122,19 +119,13 @@
                                 >
                                     #variables.getCategoryAndSubCategory.fldCategoryName#
                                 </button>
-                                <cfset encryptedCategoryId = encrypt(
-                                    variables.getCategoryAndSubCategory.fldCategory_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
+                                <cfset encryptedCategoryId = application.cateContObj.encryptionFunction(
+                                    variables.getCategoryAndSubCategory.fldCategory_ID
                                 )>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <cfoutput>
-                                        <cfset encryptedSubCategoryId = encrypt(
-                                            variables.getCategoryAndSubCategory.fldSubCategory_ID,
-                                            application.encryptionKey,
-                                            "AES",
-                                            "Hex"
+                                        <cfset encryptedSubCategoryId = application.cateContObj.encryptionFunction(
+                                            variables.getCategoryAndSubCategory.fldSubCategory_ID
                                         )>
                                         <li>
                                             <a 

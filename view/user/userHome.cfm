@@ -27,11 +27,8 @@
                     isRandom = 1
                 )>
                 <cfoutput query = "randomProducts">
-                    <cfset encryptedProductId = encrypt(
-                        randomProducts.idProduct,
-                        application.encryptionKey,
-                        "AES",
-                        "Hex"
+                    <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                        randomProducts.idProduct
                     )>
                     <div class = "col-md-3" data-aos="zoom-in-down">
                         <div class = "product-card">

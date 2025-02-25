@@ -1,7 +1,8 @@
 <cfinclude  template="header.cfm">
-    <cfif structKeyExists(session,'orderId')>
+    <cfparam name = "form.searchOrder" default = "">
+    <cfif form.searchOrder NEQ "">
         <cfset variables.orderProduct = application.orderContObj.getOrderedProductsDetails(
-            orderId = session.orderId
+            orderId = trim(form.searchOrder)
         )>
     </cfif>
 <!---  ORDER HISTORY SECTION    --->

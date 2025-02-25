@@ -5,13 +5,22 @@
         <cfargument name = "cvv" type = "string" required = "true">
         <cfargument name = "productId" type = "string" required = "false">
         <cfargument name = "addressId" type = "string" required = "true">
-        <cfargument name = "totalPrice" type = "float" required = "true">
-        <cfargument name = "totalTax" type = "float" required = "true">
-        <cfargument  name = "unitPrice" type = "float" required = "true">
-        <cfargument  name = "unitTax" type = "float" required = "true">
         <cfargument  name = "quantity" type = "integer" required = "false">
         <cfargument name = "cartProducts" type = "any" required = "false">
+        <cfargument name = "totalPrice" type = "numeric" required = "false">
+        <cfargument name = "totalTax" type = "numeric" required = "false">     
         <cftry>
+            <cfif structKeyExists(arguments, 'productId')>
+                <cfset local.getProductDetails = application.productModObj.getProductsDetails(
+                    productId = arguments.productId
+                )>
+                <cfif local.getProductDetails.recordCount GT 0>
+                    <cfset arguments.unitPrice = local.getProductDetails.fldPrice>
+                    <cfset arguments.unitTax = local.getProductDetails.fldTax>
+                    <cfset arguments.totalPrice = arguments.quantity*(local.getProductDetails.fldPrice + (local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100)> 
+                    <cfset arguments.totalTax = arguments.quantity*(local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100 > 
+                </cfif>
+            </cfif>
             <cfset local.orderId  = createUUID()>
             <cfset local.cardPart = right(arguments.cardNumber, 4) >
             <cftransaction action = "begin">
@@ -34,7 +43,7 @@
                         <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_timestamp">
                     )      
                 </cfquery>
-                <cfset arguments['orderId'] = local.orderId>
+                <cfset arguments.orderId= local.orderId>
                 <cfif local.qryOrder.recordCount EQ 1>
                     <cfset local.orderItemResult = addOrderItems(
                         argumentCollection = arguments
@@ -55,10 +64,10 @@
         <cfargument name = "productId" type = "string" required = "false">
         <cfargument name = "cartProducts" type = "any" required = "false">
         <cfargument name = "quantity" type = "integer" required = "false">
-        <cfargument  name = "unitPrice" type = "float" required = "true">
-        <cfargument  name = "unitTax" type = "float" required = "true">
+        <cfargument name = "unitPrice" type = "float" required = "false">
+        <cfargument name = "unitTax" type = "float" required = "false">
         <cftry>
-            <cfif arguments.productId NEQ 'undefined'>
+            <cfif structKeyExists(arguments, 'productId')>
                 <cfquery result = "local.qryAddOrderItems" datasource = "#application.datasource#">               
                     INSERT INTO tblOrderItems(
                         fldOrderId,
@@ -125,11 +134,11 @@
         <cftry>
           <cfquery name = "local.qryGetOrderedProcutsDetails" datasource = "#application.datasource#">
                 SELECT 
+                    OI.fldOrderItem_ID,
                     OI.fldOrderId,
                     OI.fldProductId,
                     OI.fldQuantity,
                     OI.fldUnitPrice,
-                    OI.fldOrderId,
                     OI.fldUnitTax,
                     O.fldTotalPrice,
                     O.fldTotalTax,
@@ -161,6 +170,7 @@
                         1 = 1
                     </cfif>
                 GROUP BY
+                    OI.fldOrderItem_ID,
                     OI.fldOrderId,
                     OI.fldProductId,
                     OI.fldQuantity,
@@ -181,6 +191,8 @@
                     A.fldPhoneNumber,
                     PI.fldImageFileName,
                     B.fldBrandName
+                ORDER BY 
+                    O.fldOrderedDate DESC
             </cfquery>
             <cfreturn local.qryGetOrderedProcutsDetails>
         <cfcatch type="exception">

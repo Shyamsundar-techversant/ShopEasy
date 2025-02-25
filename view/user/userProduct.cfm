@@ -110,11 +110,8 @@
                         <cfif structKeyExists(variables,'existingAddresses')>
                             <cfset index = 1>
                             <cfoutput query = "variables.existingAddresses">
-                                <cfset encryptedAddressId = encrypt(
-                                    variables.existingAddresses.fldAddress_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
+                                <cfset encryptedAddressId = application.cateContObj.encryptionFunction(
+                                    variables.existingAddresses.fldAddress_ID
                                 )>
                                 <div class = "row user-addresses mb-3">
                                     <div class = "col user-saved-address">

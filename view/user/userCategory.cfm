@@ -13,11 +13,8 @@
             <cfoutput>#variables.getSubCategoryData.fldCategoryName#</cfoutput>
         </div>
         <cfoutput query = "variables.getSubCategoryData" group = "fldSubCategory_ID">
-            <cfset encryptedSubCategoryId = encrypt(
-                variables.getSubCategoryData.fldSubCategory_ID,
-                application.encryptionKey,
-                "AES",
-                "Hex"
+            <cfset encryptedSubCategoryId = application.cateContObj.encryptionFunction(
+                variables.getSubCategoryData.fldSubCategory_ID
             )>
             <section class = "category-app-section app-section-#count#">            
                 <div class = "container category-list-container">
@@ -26,11 +23,8 @@
                     </h5>
                     <div class = "row">
                         <cfoutput>
-                            <cfset encryptedProductId = encrypt(
-                                variables.getSubCategoryData.idProduct,
-                                application.encryptionKey,
-                                "AES",
-                                "Hex"
+                            <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                                variables.getSubCategoryData.idProduct
                             )>
                             <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
                                 <div class = "product-card">

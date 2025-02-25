@@ -6,7 +6,6 @@
     <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
         productId = url.productId
     )>
-    <cfdump  var="#variables.selectedProduct#">
 <cfelseif structKeyExists(url,'addressId') AND NOT structKeyExists(url, 'productId')>
     <cfset variables.arguments = {
         addressId : url.addressId

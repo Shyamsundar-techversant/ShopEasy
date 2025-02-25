@@ -18,7 +18,6 @@
         <cfset application.orderContObj = createObject("component","controller.order")>
         <cfset application.orderModObj = createObject("component","model.order")>
     </cffunction>
-
     <cffunction  name = "onRequestStart" returntype = "void">
         <cfif structKeyExists(url,"reload") AND url.reload EQ 1>
             <cfset onApplicationStart()>

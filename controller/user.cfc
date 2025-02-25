@@ -66,7 +66,7 @@
             argumentCollection = arguments
         )>
     </cffunction>
-
+    
     <!--- VALIDATE LOGIN FORM  --->
     <cffunction name = "validateLogInForm" access = "public" returntype = "array">
         <cfargument name = "userName" type = "string" required = "true">

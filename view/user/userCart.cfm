@@ -28,11 +28,8 @@
             <div class = "cart-product-add-section"> 
                 <cfif structKeyExists(variables, 'totalCartProducts')>
                     <cfoutput query = "variables.totalCartProducts">
-                        <cfset local.encryptedProductId = encrypt(
-                            variables.totalCartProducts.fldProductId,
-                            application.encryptionKey,
-                            "AES",
-                            "Hex"
+                        <cfset local.encryptedProductId = application.cateContObj.encryptionFunction(
+                            variables.totalCartProducts.fldProductId
                         )>                           
                         <div class = "row cart-products">
                             <div class = "col-md-2 p-2">
@@ -133,11 +130,8 @@
                         <cfif structKeyExists(variables,'existingAddresses')>
                             <cfset index = 1>
                             <cfoutput query = "variables.existingAddresses">
-                                <cfset encryptedAddressId = encrypt(
-                                    variables.existingAddresses.fldAddress_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
+                                <cfset encryptedAddressId = application.cateContObj.encryptionFunction(
+                                    variables.existingAddresses.fldAddress_ID
                                 )>
                                 <div class = "row user-addresses mb-3">
                                     <div class = "col user-saved-address">
