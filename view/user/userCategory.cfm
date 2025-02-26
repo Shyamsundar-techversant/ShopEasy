@@ -1,13 +1,17 @@
-<cfset variables.getSubCategoryData = application.productContObj.getProductsDetails(
-    categoryId = url.categoryId
-)>
-<cfif NOT isQuery(variables.getSubCategoryData)>
-    <div class="alert alert-danger alertInfo" role="alert">
-        No Product Exist.
-    </div>   
+<cfif structKeyExists(url, 'categoryId')>
+    <cfset variables.categoryId = application.cateContObj.decryptionFunction(url.categoryId)>
+    <cfif variables.categoryId>
+        <cfset variables.getSubCategoryData = application.productContObj.getProductsDetails(
+            categoryId = variables.categoryId
+        )> 
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role="alert">
+            No Product Exist.
+        </div>          
+    </cfif>
 </cfif>
 <cfinclude template = "header.cfm">
-    <cfif structKeyExists(variables, "getSubCategoryData") AND isQuery(variables.getSubCategoryData)>
+    <cfif structKeyExists(variables, "getSubCategoryData")>
         <cfset count = 1>
         <div class = "category-page-title product-section-head">
             <cfoutput>#variables.getSubCategoryData.fldCategoryName#</cfoutput>

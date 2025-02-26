@@ -5,7 +5,7 @@
         <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
         <cfset local.encryptedId = encrypt(
             arguments.objectId,
-            application.encryptionKey,
+            local.secretKey,
             "AES",
             "Hex"
         )>
@@ -15,15 +15,18 @@
     <!---  DECRYPTION FUNCTION    --->
     <cffunction name = "decryptionFunction" access = "public" returntype = "numeric">
         <cfargument name = "encryptedId" type = "any" required = "false">
-<!---         <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='> --->
+        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
         <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
                 arguments.encryptedId,
-                application.encryptionKey,
+                local.secretKey,
                 "AES",
                 "Hex"
             )>
-            <cfreturn local.decryptedId>
+            <cfif local.decryptedId>
+                <cfreturn local.decryptedId>
+            </cfif>
+            <cfreturn 0>
         <cfelse>
             <cfreturn 0>
         </cfif>

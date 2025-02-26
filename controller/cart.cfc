@@ -1,10 +1,9 @@
 <cfcomponent>
     <!---   ADD PRODUCT TO CART  --->
     <cffunction name = "addProductToCart" access = "public" returntype = "any">
-        <cfargument name="productId" type = "string" required = "true">
+        <cfargument name="productId" type = "numeric" required = "true">
         <cfargument name = "userId" type = "integer" required = "false">
         <cfargument name = "isLogIn" type = "integer" required = "false">
-        <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
         <cfset arguments['userId'] = session.userId>
         <cfset local.cartAddResult = application.cartModObj.addProductToCart(
             productId = arguments.productId,
@@ -104,9 +103,8 @@
 
     <!---   GET ADDRESS   --->
     <cffunction name = "getAddresses" access = "remote" returntype = "query" returnformat = "json">
-        <cfargument name = "addressId" type = "string" required = "false">
+        <cfargument name = "addressId" type = "numeric" required = "false">
         <cfif structKeyExists(arguments, 'addressId')>
-            <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
             <cfset local.userAddress = application.cartModObj.getUserAddress(
                 addressId = arguments.addressId
             )>

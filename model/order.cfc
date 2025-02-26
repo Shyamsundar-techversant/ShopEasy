@@ -201,26 +201,6 @@
         </cftry>
     </cffunction>
 
-    <!---GET UNIQUE ORDER ID  --->
-    <cffunction name = "getUniqueOrderId" access = "public" returntype = "query">
-        <cftry>
-            <cfquery name = "local.qryGetUniqueOrderId" datasource = "#application.datasource#">
-                SELECT 
-                    fldOrder_ID,
-                    fldTotalPrice
-                FROM 
-                    tblOrder 
-                WHERE 
-                    fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">
-                ORDER BY fldOrderedDate DESC
-            </cfquery>
-            <cfreturn local.qryGetUniqueOrderId>
-        <cfcatch type="exception">
-            <cfdump var = "#cfcatch#">
-        </cfcatch>
-        </cftry>
-    </cffunction>
-
     <!---   SEND MAIL TO USER   --->
     <cffunction name = "sendMailToUser" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "true">

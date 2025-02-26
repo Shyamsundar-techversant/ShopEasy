@@ -100,12 +100,14 @@
             <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
             <!--- IF USER REDIRECTED TO LOGIN WITHOUT LOGIN AND ADD PRODUCT FROM  'userProduct.cfm'  --->
             <cfif structKeyExists(session, "productId") AND NOT structKeyExists(session, 'setOrder')>
-                <cfset local.addProductToCart = application.cartContObj.addProductToCart(
-                    productId = session.productId,
-                    userId = session.userId              
-                )>
-                <cfif local.addProductToCart EQ 'Success'>
-                    <cflocation url = "user/userCart.cfm" addtoken = "false">
+                <cfset variables.productId = application.cateContObj.decryptionFunction(session.productId)>
+                <cfif variables.productId>
+                    <cfset local.addProductToCart = application.cartContObj.addProductToCart(
+                        productId = variables.productId            
+                    )>
+                    <cfif local.addProductToCart EQ 'Success'>
+                        <cflocation url = "user/userCart.cfm" addtoken = "false">
+                    </cfif>
                 </cfif> 
                 <!--- ORDER NOW WITHOUT LOGIN --->
             <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, "productId")>

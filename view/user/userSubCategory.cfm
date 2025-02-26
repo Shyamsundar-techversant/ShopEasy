@@ -1,54 +1,56 @@
 <cfif structKeyExists(url, 'subCategoryID')>
-    <cfset variables.arguments = {}>
-    <cfif structKeyExists(form, 'filterProduct')>
-        <cfif structKeyExists(form, 'minPrice') AND structKeyExists(form, 'maxPrice')>         
-           <cfset variables.filterFormValidationResult = application.productContObj.validateFilterForm(
-                minPrice = form.minPrice,
-                maxPrice = form.maxPrice
-            )>
-            <cfif arrayLen(variables.filterFormValidationResult) GT 0>
-                <div class="alert alert-danger alertInfo" role="alert">
-                    <cfoutput>
-                        <cfloop array = "#variables.filterFormValidationResult#" index = "error">
-                            <span>#error#</span><br>
-                        </cfloop>
-                    </cfoutput>
-                </div>  
+    <cfset variables.subCategoryID = application.cateContObj.decryptionFunction(url.subCategoryID)>
+    <cfif variables.subCategoryID>
+        <cfset variables.arguments = {}>
+        <cfif structKeyExists(form, 'filterProduct')>
+            <cfif structKeyExists(form, 'minPrice') AND structKeyExists(form, 'maxPrice')>         
+            <cfset variables.filterFormValidationResult = application.productContObj.validateFilterForm(
+                    minPrice = form.minPrice,
+                    maxPrice = form.maxPrice
+                )>
+                <cfif arrayLen(variables.filterFormValidationResult) GT 0>
+                    <div class="alert alert-danger alertInfo" role="alert">
+                        <cfoutput>
+                            <cfloop array = "#variables.filterFormValidationResult#" index = "error">
+                                <span>#error#</span><br>
+                            </cfloop>
+                        </cfoutput>
+                    </div>  
+                <cfelse>
+                    <cfset variables.arguments = {
+                        subCategoryID : variables.subCategoryID,
+                        minPrice : form.minPrice,
+                        maxPrice : form.maxPrice
+                    }>
+                </cfif>
             <cfelse>
-                <cfset variables.arguments = {
-                    subCategoryID : url.subCategoryID,
-                    minPrice : form.minPrice,
-                    maxPrice : form.maxPrice
-                }>
+                <div class="alert alert-danger alertInfo" role = "alert">
+                    Required values are missing...
+                </div>            
             </cfif>
+        <cfelseif structKeyExists(url, 'asc')>
+            <cfset variables.arguments = {
+                subCategoryID : variables.subCategoryID,
+                isAscending : 1
+            }>
+        <cfelseif structKeyExists(url, 'desc')>
+            <cfset variables.arguments = {
+                subCategoryID : variables.subCategoryID,
+                isDescending : 1
+            }>
         <cfelse>
-            <div class="alert alert-danger alertInfo" role = "alert">
-                Required values are missing...
-            </div>            
+            <cfset variables.arguments = {
+                subCategoryID : variables.subCategoryID
+            }>  
         </cfif>
-    <cfelseif structKeyExists(url, 'asc')>
-        <cfset variables.arguments = {
-            subCategoryID : url.subCategoryID,
-            isAscending : 1
-        }>
-    <cfelseif structKeyExists(url, 'desc')>
-        <cfset variables.arguments = {
-            subCategoryID : url.subCategoryID,
-            isDescending : 1
-        }>
+        <cfset variables.getProducts = application.productContObj.getProductsDetails(
+            argumentCollection = variables.arguments
+        )> 
     <cfelse>
-        <cfset variables.arguments = {
-            subCategoryID : url.subCategoryID
-        }>  
+        <div class="alert alert-danger alertInfo" role="alert">
+            NO product exist
+        </div>    
     </cfif>
-    <cfset variables.getProducts = application.productContObj.getProductsDetails(
-        argumentCollection = variables.arguments
-    )> 
-</cfif>
-<cfif NOT structKeyExists(variables, 'getProducts') OR NOT isQuery(variables.getProducts)>
-    <div class="alert alert-danger alertInfo" role="alert">
-        NO product exist
-    </div> 
 </cfif>
 <cfinclude  template = "header.cfm">
     <section class = "subcategory-section">
@@ -72,9 +74,7 @@
                         Filter
                     </button>
                 </div>
-                <cfif structKeyExists(variables, "getProducts") AND NOT structKeyExists(variables, 'searchResult')
-                    AND isQuery(variables.getProducts)
-                >  
+                <cfif structKeyExists(variables, "getProducts") >  
                     <div class = "category-page-title product-section-head">
                         <cfoutput>#variables.getProducts.fldSubCategoryName#</cfoutput>
                     </div>                                     

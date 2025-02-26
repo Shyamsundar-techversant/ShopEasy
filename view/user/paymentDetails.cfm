@@ -1,15 +1,30 @@
 <cfset variables.arguments = {}>
 <cfif structKeyExists(url, 'addressId') AND structKeyExists(url, 'productId')>
-    <cfset variables.arguments = {
-        addressId : url.addressId
-    }>
-    <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
-        productId = url.productId
-    )>
+    <cfset variables.addressId = application.cateContObj.decryptionFunction(url.addressId)>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(url.productId)>
+    <cfif variables.addressId AND variables.productId>
+        <cfset variables.arguments = {
+            addressId : variables.addressId
+        }>
+        <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
+            productId = variables.productId
+        )>
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role = "alert">
+            No product and address exist.
+        </div>        
+    </cfif>
 <cfelseif structKeyExists(url,'addressId') AND NOT structKeyExists(url, 'productId')>
-    <cfset variables.arguments = {
-        addressId : url.addressId
-    }>
+    <cfset variables.addressId = application.cateContObj.decryptionFunction(url.addressId)>
+    <cfif variables.addressId>
+        <cfset variables.arguments = {
+            addressId : variables.addressId
+        }>
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role = "alert">
+            No address exist.
+        </div>     
+    </cfif>
 </cfif>
 <cfset variables.selectedAddress = application.cartContObj.getAddresses(
     argumentCollection = variables.arguments

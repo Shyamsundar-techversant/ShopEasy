@@ -20,11 +20,8 @@
               <tbody>
                 <cfif structKeyExists(variables, "getCategory")>
                   <cfoutput query = "variables.getCategory">
-                    <cfset encryptedId = encrypt(
-                      getCategory.fldCategory_ID,
-                      application.encryptionKey,
-                      "AES",
-                      "Hex"
+                    <cfset encryptedId = application.cateContObj.encryptionFunction(
+                      getCategory.fldCategory_ID
                     )>
                     <tr class = "table-light">
                       <td>#variables.getCategory.fldCategoryName#</td>

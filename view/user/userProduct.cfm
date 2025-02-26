@@ -1,19 +1,16 @@
-
 <cfif structKeyExists(url,"productId")>
-    <cfset variables.productData = application.productContObj.getProductsDetails(
-        productId = url.productId
-    )>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(url.productId)>
 <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, 'productId')>
-    <cfset variables.productData = application.productContObj.getProductsDetails(
-        productId = session.productId
-    )>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(session.productId)>
 </cfif>
-<cfif NOT isQuery(variables.productData)>
-    <cfoutput>
-        <div class="alert alert-danger alertInfo" role = "alert">
-            No Product Exist.
-        </div>
-    </cfoutput>
+<cfif variables.productId>
+    <cfset variables.productData = application.productContObj.getProductsDetails(
+        productId = variables.productId
+    )>
+<cfelse>
+    <div class="alert alert-danger alertInfo" role = "alert">
+        No Product Exist.
+    </div>
 </cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>
@@ -27,7 +24,7 @@
 <cfinclude  template="header.cfm">
     <section class = "product-section">
         <div class = "container">
-            <cfif structKeyExists(variables, "productData") AND NOT structKeyExists(variables, 'searchResult') AND isQuery(variables.productData)>
+            <cfif structKeyExists(variables, "productData")>
                 <cfoutput query = "variables.productData">
                     <div class = "row justify-content-center align-items-center">
                         <div class = "col d-flex justify-content-center align-items-center">

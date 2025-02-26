@@ -208,27 +208,14 @@
 
     <!---    PRODUCT LIST  --->
     <cffunction name = "getProductsDetails" access = "public" returntype = "any">
-        <cfargument name = "categoryId" type = "string" required = "false">
-        <cfargument name = 'subCategoryID' type = "string" required = "false">
-        <cfargument name = "productId" type = "string" required = "false">
+        <cfargument name = "categoryId" type = "numeric" required = "false">
+        <cfargument name = 'subCategoryID' type = "numeric" required = "false">
+        <cfargument name = "productId" type = "numeric" required = "false">
         <cfargument name = "isRandom" type = "numeric" required = "false">
         <cfargument name = "minPrice" type = "numeric" required = "false">
         <cfargument name = "maxPrice" type = "numeric" required = "false">
         <cfargument name = "isAscending" type = "numeric" required = "false">
         <cfargument name = "isDescending" type = "numeric" required = "false">
-        <cfif structKeyExists(arguments,'categoryId')>
-            <cfset arguments.categoryId =  application.cateContObj.decryptionFunction(
-                arguments.categoryId
-            )>
-        <cfelseif structKeyExists(arguments,'subCategoryID')>
-            <cfset arguments.subCategoryID =  application.cateContObj.decryptionFunction(
-                arguments.subCategoryID
-            )>
-        <cfelseif structKeyExists(arguments,'productId')>
-            <cfset arguments.productId =  application.cateContObj.decryptionFunction(
-                arguments.productId
-            )>
-        </cfif>
         <cfset local.productDetails = application.productModObj.getProductsDetails(
             argumentCollection = arguments
         )>

@@ -1,8 +1,14 @@
 <cfif structKeyExists(url, 'productId')>
-    <cfset variables.addProductToCartResult = application.cartContObj.addProductToCart(
-        productId = url.productId,
-        userId = session.userId
-    )>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(url.productId)>
+    <cfif variables.productId>
+        <cfset variables.addProductToCartResult = application.cartContObj.addProductToCart(
+            productId = variables.productId
+        )>
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role = "alert">
+            No product Exist.
+        </div>        
+    </cfif>
 </cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>

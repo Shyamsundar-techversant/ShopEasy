@@ -38,11 +38,8 @@
               <tbody>
                 <cfif structKeyExists(variables, "getAllSubCategory")  AND isQuery(variables.getAllSubCategory)>
                   <cfoutput query = "variables.getAllSubCategory">
-                    <cfset encryptedId = encrypt(
-                      variables.getAllSubCategory.fldSubCategory_ID,
-                      application.encryptionKey,
-                      "AES",
-                      "Hex"
+                    <cfset encryptedId = application.cateContObj.encryptionFunction(
+                      variables.getAllSubCategory.fldSubCategory_ID
                     )>
                     <tr class = "table-light">
                       <td>#variables.getAllSubCategory.fldSubCategoryName#</td>
@@ -109,11 +106,8 @@
                   <cfset categoryValues = application.cateContObj.getCategory() >
                   <select class = "form-select" id = "categorySelect">
                     <cfoutput query = "categoryValues" >
-                      <cfset encryptCategID = encrypt(
-                        categoryValues.fldCategory_ID,
-                        application.encryptionKey,
-                        "AES",
-                        "Hex"
+                      <cfset encryptCategID = application.cateContObj.encryptionFunction(
+                        categoryValues.fldCategory_ID
                       )>
                       <option value = "#encryptCategID#"
                         <cfif categoryValues.fldCategory_ID EQ variables.getCategoryById.fldCategory_ID>
