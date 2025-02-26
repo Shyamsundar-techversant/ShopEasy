@@ -72,36 +72,33 @@
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
         <cfset local.errors = []>
-        <!---   CHECK USER EXIST --->
-        <cfset local.checkUserExistResult = application.userModObj.checkUserExist(
-            userName = arguments.userName
-        )>  
-        <!--- VALIDATE USERNAME --->
-        <cfif len(trim(arguments.userName)) EQ 0>
-            <cfset arrayAppend(local.errors,"*Enter your username")>
+        <!---    CHECK USERNAME AND PASSWORD EXIST      --->
+        <cfif len(trim(arguments.userName)) EQ 0 OR len(trim(arguments.password)) EQ 0>
+            <cfset arrayAppend(local.errors,"*Username or password required")>
+            <cfreturn local.errors>
+        <!--- VALIDATE USERNAME AND PASSWORD--->
         <cfelseif len(trim(arguments.userName)) GT 100>
             <cfset arrayAppend(local.errors,"*Length of username exceeds the maximum value")>
-        <cfelseif local.checkUserExistResult.recordCount NEQ 1>
-            <cfset arrayAppend(local.errors, '*Incorrect username or password')>
-        </cfif>
-        <!---    VALIDATE PASSWORD      --->
-        <cfif len(trim(arguments.password)) EQ 0>
-            <cfset arrayAppend(local.errors,"*Please enter the password")>
-        <cfelseif len(trim(arguments.password)) GT 256>   
-            <cfset arrayAppend(local.errors,"*Password length exceeds the maximum value")>
-        <cfelseif NOT reFindNoCase("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",arguments.password)>
-            <cfset arrayAppend(local.errors,"*Please enter a valid password")>
-        <cfelseif local.checkUserExistResult.recordCount EQ 1>
-            <cfset local.salt = local.checkUserExistResult.fldUserSaltString>
-            <cfset local.hashPass = application.userModObj.hashPassword(
-                password = arguments.password,
-                saltString = local.salt                      
-            )>
-            <cfif local.hashPass NEQ local.checkUserExistResult.fldHashedPassword>
+            <cfreturn local.errors>
+        <cfelse>
+            <!---   CHECK USER EXIST --->
+            <cfset local.checkUserExistResult = application.userModObj.checkUserExist(
+                userName = arguments.userName
+            )>  
+            <cfif local.checkUserExistResult.recordCount NEQ 1>
                 <cfset arrayAppend(local.errors, '*Incorrect username or password')>
+            <cfelseif local.checkUserExistResult.recordCount EQ 1>
+                <cfset local.salt = local.checkUserExistResult.fldUserSaltString>
+                <cfset local.hashPass = application.userModObj.hashPassword(
+                    password = arguments.password,
+                    saltString = local.salt                      
+                )>
+                <cfif local.hashPass NEQ local.checkUserExistResult.fldHashedPassword>
+                    <cfset arrayAppend(local.errors, '*Incorrect username or password')>
+                </cfif>            
             </cfif>
-        </cfif>  
-        <cfreturn local.errors>     
+            <cfreturn local.errors>
+        </cfif>    
     </cffunction>
     
     <!---  USER LOGIN    --->

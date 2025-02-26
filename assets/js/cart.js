@@ -23,7 +23,7 @@ $(document).ready(function () {
         isDecreaseQuantity: isDecreaseQuantity,
       },
       success: function (response) {
-        location.reload();
+         location.reload();
       },
       error: function () {
         alert("Request failed");

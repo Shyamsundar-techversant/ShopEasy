@@ -27,7 +27,6 @@
         <cfargument name = "isIncreaseQuantity" type = "integer" required = "false">
         <cfargument name = "isRemoveProduct" type = "integer" required = "false">
         <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
-        <cfset arguments['userId'] = session.userId>
         <cfset local.result = application.cartModObj.changeProductQuantity(
             argumentCollection = arguments
          )>

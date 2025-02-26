@@ -2,7 +2,6 @@
     <!---  CHECK PRODUCT ALREADY IN CART --->
     <cffunction  name = "checkProductExist" access = "private" returntype = "any">
         <cfargument name = "productId" type = "integer" required = "true">
-        <cfargument name = "userId" type = "integer" required = "false">
         <cftry>
             <cfquery name = "local.qryCheckProductExist" datasource = "#application.datasource#">
                 SELECT 
@@ -12,7 +11,7 @@
                     tblCart 
                 WHERE 
                     fldProductId = <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">
-                    AND fldUserId = <cfqueryparam value = "#arguments.userId#" cfsqltype = "cf_sql_integer">
+                    AND fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfreturn local.qryCheckProductExist>
         <cfcatch type="exception">
@@ -29,7 +28,7 @@
         <cfargument name = "isRemoveProduct" type = "integer" required = "false">
         <cftry>
             <cfset local.isProductExist = checkProductExist(
-                argumentCollection = arguments
+                productId = arguments.productId
             )>
             <cfif local.isProductExist.recordCount GT 0>
                 <cfif structKeyExists(arguments, 'isDecreaseQuantity') >
