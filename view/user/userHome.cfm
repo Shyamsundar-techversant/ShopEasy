@@ -24,7 +24,8 @@
             <h5 class = "product-section-head pb-2">Random Products</h5>
             <div class = "row">
                 <cfset randomProducts = application.productContObj.getProductsDetails(
-                    isRandom = 1
+                    isRandom = 1,
+                    limitCount = 4
                 )>
                 <cfoutput query = "randomProducts">
                     <cfset encryptedProductId = application.cateContObj.encryptionFunction(

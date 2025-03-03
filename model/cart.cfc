@@ -193,7 +193,7 @@
                     <cfqueryparam value = "#arguments.pincode#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                    <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    NOW()
                 )   
             </cfquery>
             <cfreturn 'Success'>
@@ -294,7 +294,7 @@
                     fldEmail = <cfqueryparam value = "#arguments.email#" cfsqltype = "cf_sql_varchar">,
                     fldPhone = <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar">,
                     fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                    fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    fldUpdatedDate = NOW()
                 WHERE 
                     fldUser_ID = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
             </cfquery>

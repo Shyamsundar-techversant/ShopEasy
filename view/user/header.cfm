@@ -123,7 +123,7 @@
                                     variables.getCategoryAndSubCategory.fldCategory_ID
                                 )>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <cfoutput>
+                                    <cfoutput >
                                         <cfset encryptedSubCategoryId = application.cateContObj.encryptionFunction(
                                             variables.getCategoryAndSubCategory.fldSubCategory_ID
                                         )>

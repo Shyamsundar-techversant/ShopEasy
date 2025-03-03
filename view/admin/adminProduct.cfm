@@ -1,9 +1,6 @@
 <cfif structKeyExists(url,'productId') AND structKeyExists(url, "subCategID")>
-    <cfset decryptedProductId = decrypt(
-        url.productId,
-        application.encryptionKey,
-        "AES",
-        "Hex"
+    <cfset decryptedProductId = application.cateContObj.decryptionFunction(
+        url.productId
     )>
     <cfset variables.getProductDataById = application.productContObj.getProduct(
         productId = decryptedProductId,

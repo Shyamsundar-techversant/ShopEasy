@@ -42,9 +42,12 @@
             OR (structKeyExists(session, 'roleId') AND session.roleId NEQ 1 AND arrayFindNoCase(local.adminPages, local.currentPage))
         >
             <cfif len(local.productId)>
-                <cfset session.productId = local.productId>
+                <cfoutput>
+                    <cflocation url = "../logIn.cfm?productId=#local.productId#" addToken = "false">
+                </cfoutput>
+            <cfelse>
+                <cflocation url = "../logIn.cfm" addToken = "false">
             </cfif>
-            <cflocation url = "../logIn.cfm" addToken = "false">
         </cfif>
     </cffunction>
 </cfcomponent>

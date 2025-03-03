@@ -23,8 +23,9 @@
             </cfif>
             <cfset local.orderId  = createUUID()>
             <cfset local.cardPart = right(arguments.cardNumber, 4) >
-            <cftransaction action = "begin">
-                <cfquery result = "local.qryOrder" datasource = "#application.datasource#">
+            <!--- Begin transaction --->
+            <cftransaction action="begin">
+                <cfquery result="local.qryOrder" datasource="#application.datasource#">
                     INSERT INTO tblOrder(
                         fldOrder_ID,
                         fldUserId,
@@ -33,33 +34,36 @@
                         fldTotalTax,
                         fldCardPart,
                         fldOrderedDate
-                    )VALUES(
-                        <cfqueryparam value = "#local.orderId#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#arguments.addressId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#arguments.totalPrice#" cfsqltype = "cf_sql_float">,
-                        <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "cf_sql_float">,
-                        <cfqueryparam value = "#local.cardPart#" cfsqltype = "cf_sql_varchar">,
-                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_timestamp">
-                    )      
+                    ) VALUES (
+                        <cfqueryparam value="#local.orderId#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#arguments.addressId#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#arguments.totalPrice#" cfsqltype="cf_sql_float">,
+                        <cfqueryparam value="#arguments.totalTax#" cfsqltype="cf_sql_float">,
+                        <cfqueryparam value="#local.cardPart#" cfsqltype="cf_sql_varchar">,
+                        NOW()
+                    )
                 </cfquery>
-                <cfset arguments.orderId= local.orderId>
-                <cfif local.qryOrder.recordCount EQ 1>
-                    <cfset local.orderItemResult = addOrderItems(
-                        argumentCollection = arguments
-                    )>
+                <cfset arguments.orderId = local.orderId>
+                <cfif structKeyExists(local.qryOrder, "generatedKey") OR local.qryOrder.recordCount GT 0>
+                    <cfset local.orderItemResult = addOrderItems(argumentCollection = arguments)>
                 </cfif>
-            <cftransaction action = "commit">
-        <cfcatch type="exception">
-            <cftransaction action = "rollback">
-            <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
-            <cflog file="payment_errors" type="error" text="#local.errorMessage#">
-        </cfcatch>
+                <!--- Commit transaction --->
+                <cftransaction action="commit">
+            </cftransaction>
+            <cfcatch type="any">
+                <!--- Rollback transaction on error --->
+                <cftransaction action="rollback">
+                <!--- Log the error --->
+                <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
+                <cflog file="payment_errors" type="error" text="#local.errorMessage#">
+            </cfcatch>
         </cftry>
+        <cfreturn local.orderItemResult>
     </cffunction>
 
     <!---  INSERT DETAILS INTO ORDER ITEMS    --->
-    <cffunction name = "addOrderItems" access = "public" returntype = "any">
+    <cffunction name = "addOrderItems" access = "public" returntype = "string">
         <cfargument name = "orderId" type = "string" required = "true">
         <cfargument name = "productId" type = "string" required = "false">
         <cfargument name = "cartProducts" type = "any" required = "false">
@@ -84,23 +88,27 @@
                     )
                 </cfquery>
             <cfelse>
-                <cfloop query = "arguments.cartProducts">
-                    <cfquery result = "local.qryCartOrderItems" datasource = "#application.datasource#">
-                        INSERT INTO tblOrderItems(
-                            fldOrderId,
-                            fldProductId,
-                            fldQuantity,
-                            fldUnitPrice,
-                            fldUnitTax
-                        )VALUES(
-                            <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">,
-                            <cfqueryparam value = "#arguments.cartProducts.fldProductId#" cfsqltype = "integer">,
-                            <cfqueryparam value = "#arguments.cartProducts.fldQuantity#" cfsqltype = "integer">,
-                            <cfqueryparam value = "#arguments.cartProducts.fldPrice#" cfsqltype = "decimal">,
-                            <cfqueryparam value = "#arguments.cartProducts.fldTax#" cfsqltype = "decimal"> 
-                        )
-                    </cfquery>
-                </cfloop>               
+                <cfquery result = "local.qryCartOrderItems" datasource = "#application.datasource#">
+                    INSERT INTO tblOrderItems(
+                        fldOrderId,
+                        fldProductId,
+                        fldQuantity,
+                        fldUnitPrice,
+                        fldUnitTax
+                    )
+                    SELECT 
+                        <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar"> AS fldOrderId,
+                        TC.fldProductId,
+                        TC.fldQuantity,
+                        P.fldPrice AS fldUnitPrice,
+                        P.fldTax AS fldUnitTax
+                    FROM
+                        tblCart AS TC
+                        INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
+                    WHERE
+                        TC.fldUserId = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">
+                        AND TC.fldQuantity > 0
+                </cfquery>     
             </cfif>
             <cfif structKeyExists(local,'qryAddOrderItems') >
                 <cfif local.qryAddOrderItems.recordCount GT 0>

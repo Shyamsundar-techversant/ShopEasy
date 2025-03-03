@@ -10,8 +10,9 @@
                     tblCategory
                 WHERE 
                     fldCategoryName = <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar" >
-                    AND fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer" >
+                    AND fldActive = 1
             </cfquery>
+            <cfreturn local.qryCheckCategory.recordCount GT 0 ? "true" : "false">
             <cfif local.qryCheckCategory.recordCount GT 0 >
                 <cfreturn "true">
             <cfelse>
@@ -42,7 +43,7 @@
                         <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                        NOW()
                     )
                 </cfquery>
                 <cfif local.qryAddCategory.recordCount EQ 1>
@@ -58,7 +59,7 @@
                     SET 
                         fldCategoryName = <cfqueryparam value = "#arguments.categoryName#" cfsqltype = "cf_sql_varchar">,
                         fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
-                        fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
+                        fldUpdatedDate = NOW()
                     WHERE 
                         fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
                         AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
@@ -87,7 +88,7 @@
                 FROM 
                     tblCategory
                 WHERE 
-                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">  
+                    fldActive = 1
                     <cfif structKeyExists(arguments, "categoryId")>
                         AND fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">              
                     </cfif>
@@ -108,9 +109,9 @@
                 UPDATE 
                     tblCategory
                 SET 
-                    fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
+                    fldActive = 0,
                     fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
-                    fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    fldUpdatedDate = NOW()
                 WHERE 
                     fldCategory_ID = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer" >
                     AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >
@@ -140,7 +141,7 @@
                     tblSubCategory
                 WHERE 
                     fldSubCategoryName = <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar" >
-                    AND fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer" >
+                    AND fldActive = 1
                     AND fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
             </cfquery>
             <cfif local.qryCheckSubCategory.recordCount GT 0 >
@@ -176,7 +177,7 @@
                         <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
-                        <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                        NOW()
                     )
                 </cfquery>
                 <cfif local.qryAddSubCategory.recordCount EQ 1>
@@ -193,7 +194,7 @@
                         fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">,
                         fldSubCategoryName = <cfqueryparam value = "#arguments.subCategoryName#" cfsqltype = "cf_sql_varchar">,
                         fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype ="cf_sql_integer" >,
-                        fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date" >
+                        fldUpdatedDate = NOW()
                     WHERE 
                         fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
                         AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
@@ -223,7 +224,7 @@
                 FROM 
                     tblSubCategory
                 WHERE
-                    fldActive = <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">
+                    fldActive = 1
                     AND fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">                
                     <cfif structKeyExists(arguments, "subCategoryId")>
                         AND fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">               
@@ -245,9 +246,9 @@
                 UPDATE 
                     tblSubCategory
                 SET 
-                    fldActive = <cfqueryparam value = "0" cfsqltype ="cf_sql_integer" >,
+                    fldActive = 0,
                     fldUpdatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar">,
-                    fldUpdatedDate = <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    fldUpdatedDate = NOW()
                 WHERE 
                     fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer" >
                     AND fldCreatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer" >

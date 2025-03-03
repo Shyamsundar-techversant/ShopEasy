@@ -9,7 +9,7 @@
     </cffunction>
 
     <!---   CHECK USER ALREADY EXIST   --->
-    <cffunction name = "checkUserExist" access = "public" returntype = "any">
+    <cffunction name = "checkUserExist" access = "public" returntype = "query">
         <cfargument name = "userEmail" type = "string" required = "false" >
         <cfargument name = "userName" type = "string" required = "false">
         <cfargument name = "phone" type = "string" required = "false" >       
@@ -41,7 +41,7 @@
     </cffunction>
 
     <!--- REGISTER USER --->
-    <cffunction name = "userRegister" access = "public" returntype = "any">
+    <cffunction name = "userRegister" access = "public" returntype = "string">
         <cfargument name = "firstName" type = "string" required = "true" >
         <cfargument name = "lastName" type = "string" required = "true" >
         <cfargument name = "userEmail" type = "string" required = "true" >
@@ -73,7 +73,7 @@
                     <cfqueryparam value = "#local.hashedPassword#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "#local.salt#" cfsqltype = "cf_sql_varchar">,
                     <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
-                    <cfqueryparam value = "#now()#" cfsqltype = "cf_sql_date">
+                    NOW()
                 )
             </cfquery>
             <cfif local.qryUserRegister.recordCount EQ 1>
@@ -89,7 +89,7 @@
     </cffunction>
     
     <!---   USER LOGIN  --->
-    <cffunction name = "userLogIn" access = "public" returntype = "any" >
+    <cffunction name = "userLogIn" access = "public" returntype = "void" >
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
         <cftry>

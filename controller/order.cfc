@@ -38,7 +38,7 @@
                 <cfset arguments.totalPrice = arguments.cartProducts.entireCartTotal>
                 <cfset arguments.totalTax = arguments.cartProducts.entireCartTax>
                 <cfset local.orderResult = application.orderModObj.orderProduct(argumentCollection = arguments)>
-                <cfreturn 'Success'>
+                <cfreturn local.orderResult>
             </cfif>
         </cfif>
     </cffunction>

@@ -89,15 +89,7 @@
             <cfset local.productAddEditResult = application.productModObj.productAddEdit(
                 argumentCollection = arguments
             )> 
-            <cfif isArray(local.productAddEditResult)>
-                <cfreturn local.productAddEditResult>
-            <cfelseif local.productAddEditResult EQ "Success">
-                <cfset local.result = "Success">
-                <cfreturn local.result>
-            <cfelse>
-                <cfset arrayAppend(local.errors,local.productAddEditResult) >
-                <cfreturn local.errors >
-            </cfif> 
+            <cfreturn local.productAddEditResult>
         </cfif> 
     </cffunction>
 

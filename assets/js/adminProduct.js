@@ -76,6 +76,7 @@ $(document).ready(function () {
     //PRODUCT EDIT
     $('.product-edit-btn').on('click', function () {
         $('#img-list').empty();
+        $('.error').text('');
         $('#productTitle').text('Edit Product');
         $('#productAddForm').trigger('reset');
         $('#productAddBtn').hide();
@@ -163,7 +164,6 @@ $(document).ready(function () {
     //CHANGE DEFAULT
     $(document).on('change', '.default-image-radio', function () {
         let defaultImageId = $(this).val();
-        console.log(previousSelectedImageId);
         let formData = new FormData();
         formData.append('defaultImageId', defaultImageId);
         formData.append('previousSelectedImageId', previousSelectedImageId);
@@ -216,6 +216,10 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("product-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
@@ -243,6 +247,10 @@ $(document).ready(function () {
                 }
                 else {
                     addError(data);
+                    let errorDiv = document.getElementById("product-validation-error");
+                    if (errorDiv) {
+                        errorDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                 }
             },
             error: function () {
