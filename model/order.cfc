@@ -140,7 +140,7 @@
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "false">
         <cftry>
-          <cfquery name = "local.qryGetOrderedProcutsDetails" datasource = "#application.datasource#">
+            <cfquery name = "local.qryGetOrderedProcutsDetails" datasource = "#application.datasource#">
                 SELECT 
                     OI.fldOrderItem_ID,
                     OI.fldOrderId,
@@ -169,7 +169,7 @@
                     INNER JOIN tblProduct AS P ON OI.fldProductId = P.fldProduct_ID
                     INNER JOIN tblAddress AS A ON O.fldAddressId = A.fldAddress_ID
                     INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID 
-                        AND PI.fldDefaultImage = 1
+                        AND PI.fldDefaultImage = 1 
                     INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
                 WHERE         
                     O.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">     

@@ -267,6 +267,8 @@
 
     <!---  GET CATEGORY AND SUBCATEGORY    --->
     <cffunction  name = "getCategoryAndSubCategory" access = "public" returntype = "any">
+        <cfargument name ="subCategoryId" type = "integer" required = "false">
+        <cfargument name = "categoryId" type = "integer" required = "false">
         <cftry>
             <cfquery name = "local.qryGetCategoryAndSubCategory" datasource = "#application.datasource#">
                 SELECT
@@ -279,6 +281,16 @@
                     INNER JOIN tblCategory AS CAT ON SUB.fldCategoryId = CAT.fldCategory_ID
                         AND CAT.fldActive = 1
                         AND SUB.fldActive = 1  
+                <cfif structKeyExists(arguments, 'categoryId') OR structKeyExists(arguments, 'subCategoryId')>
+                    WHERE 
+                        1 = 1
+                        <cfif structKeyExists(arguments, 'categoryId')>
+                            AND SUB.fldCategoryId = <cfqueryparam value = "#arguments.categoryId#" cfsqltype = "cf_sql_integer">
+                        </cfif>
+                        <cfif structKeyExists(arguments, 'subCategoryId')>
+                            AND SUB.fldSubCategory_ID = <cfqueryparam value = "#arguments.subCategoryId#" cfsqltype = "cf_sql_integer">
+                        </cfif>
+                </cfif>
                 ORDER BY CAT.fldCategory_ID,SUB.fldSubCategory_ID
             </cfquery>
             <cfreturn local.qryGetCategoryAndSubCategory>

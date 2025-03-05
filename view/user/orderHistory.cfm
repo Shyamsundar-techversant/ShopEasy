@@ -1,5 +1,6 @@
 <cfinclude template = "header.cfm">
 <cfset variables.orderDetails = application.orderContObj.getOrderedProductsDetails()>
+<cfdump  var="#variables.orderDetails#">
 <!---  ORDER HISTORY SECTION    --->
     <section class = "order-history-section">
         <div class = "container order-history-container">

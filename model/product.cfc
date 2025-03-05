@@ -394,7 +394,7 @@
         <cfargument  name="imageId" type = "integer" required = "true">
         <cfargument  name="productId" type = "integer" required = "true">
         <cftry>
-            <cfset local.productImageCount  = getProductImageCount(productId = arguments.productId) >
+            <cfset local.productImageCount  = getProductImageCount(productId = arguments.productId)>
             <cfif local.productImageCount LE 3 >
                 <cfreturn "*Atleast 3 Images required" >
             <cfelse>
@@ -477,7 +477,6 @@
                         tblProductImages 
                     SET 
                         fldActive = 0 ,
-                        fldDefaultImage = 0,
                         fldDeactivatedById = <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                         fldDeactivatedDate = NOW()
                     WHERE 
