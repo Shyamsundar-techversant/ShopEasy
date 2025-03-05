@@ -171,11 +171,12 @@
                     INNER JOIN tblProductImages AS PI ON PI.fldProductId = P.fldProduct_ID 
                         AND PI.fldDefaultImage = 1
                     INNER JOIN tblBrands AS B ON B.fldBrand_ID = P.fldBrandId
-                WHERE              
+                WHERE         
+                    O.fldUserId = <cfqueryparam value = "#session.userId#" cfsqltype = "integer">     
                     <cfif structKeyExists(arguments, 'orderId')>
-                        OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
+                        AND OI.fldOrderId = <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">
                     <cfelse>
-                        1 = 1
+                        AND 1 = 1
                     </cfif>
                 GROUP BY
                     OI.fldOrderItem_ID,

@@ -2,32 +2,41 @@
     <cfset variables.subCategoryID = application.cateContObj.decryptionFunction(url.subCategoryID)>
     <cfif variables.subCategoryID>
         <cfset variables.arguments = {}>
-        <cfif structKeyExists(form, 'filterProduct')>
-            <cfif structKeyExists(form, 'minPrice') AND structKeyExists(form, 'maxPrice')>         
+        <cfif structKeyExists(url, 'minPrice') AND structKeyExists(url, 'maxPrice')>         
             <cfset variables.filterFormValidationResult = application.productContObj.validateFilterForm(
-                    minPrice = form.minPrice,
-                    maxPrice = form.maxPrice
-                )>
-                <cfif arrayLen(variables.filterFormValidationResult) GT 0>
-                    <div class="alert alert-danger alertInfo" role="alert">
-                        <cfoutput>
-                            <cfloop array = "#variables.filterFormValidationResult#" index = "error">
-                                <span>#error#</span><br>
-                            </cfloop>
-                        </cfoutput>
-                    </div>  
-                <cfelse>
+                minPrice = url.minPrice,
+                maxPrice = url.maxPrice
+            )>
+            <cfif arrayLen(variables.filterFormValidationResult) GT 0>
+                <div class="alert alert-danger alertInfo" role = "alert">
+                    <cfoutput>
+                        <cfloop array = "#variables.filterFormValidationResult#" index = "error">
+                            <span>#error#</span><br>
+                        </cfloop>
+                    </cfoutput>
+                </div>  
+            <cfelse>
+                <cfset variables.arguments = {
+                    subCategoryID : variables.subCategoryID,
+                    minPrice : url.minPrice,
+                    maxPrice : url.maxPrice                
+                }>
+                <cfif structKeyExists(url, 'asc')>
                     <cfset variables.arguments = {
                         subCategoryID : variables.subCategoryID,
-                        minPrice : form.minPrice,
-                        maxPrice : form.maxPrice
+                        minPrice : url.minPrice,
+                        maxPrice : url.maxPrice,
+                        isAscending : 1
                     }>
+                <cfelseif structKeyExists(url, 'desc')>
+                    <cfset variables.arguments = {
+                        subCategoryID : variables.subCategoryID,
+                        minPrice : url.minPrice,
+                        maxPrice : url.maxPrice,
+                        isDescending : 1
+                    }>  
                 </cfif>
-            <cfelse>
-                <div class="alert alert-danger alertInfo" role = "alert">
-                    Required values are missing...
-                </div>            
-            </cfif>
+            </cfif>            
         <cfelseif structKeyExists(url, 'asc')>
             <cfset variables.arguments = {
                 subCategoryID : variables.subCategoryID,
@@ -54,25 +63,27 @@
 </cfif>
 <cfinclude  template = "header.cfm">
     <section class = "subcategory-section">
-        <div class = "container ">
+        <div class = "container">
             <div class = "row">            
-                <div class = "filter p-4">                        
-                    <button 
-                        class = "filter-btn" 
-                        onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&desc=1'"                     
-                    >                      
-                        High To Low
-                    </button>
-                    <button class = "filter-btn"
-                        onclick = "window.location.href='userSubCategory.cfm?subCategoryID=<cfoutput>#url.subCategoryID#</cfoutput>&asc=1'"
-                    >
-                        Low To High
-                    </button>
-                    <button type="button" class="btn filter-btn" data-bs-toggle="modal" 
-                        data-bs-target="#filterModal"
-                    >
-                        Filter
-                    </button>
+                <div class = "filter p-4">   
+                    <cfoutput>                     
+                        <button 
+                            class = "filter-btn" 
+                            onclick ="window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&desc=1<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"                     
+                        >                      
+                            High To Low
+                        </button>                    
+                        <button class = "filter-btn"
+                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&asc=1<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"
+                        >
+                            Low To High
+                        </button>
+                        <button type="button" class="btn filter-btn" data-bs-toggle="modal" 
+                            data-bs-target="##filterModal"
+                        >
+                            Filter
+                        </button>
+                    </cfoutput>
                 </div>
                 <cfif structKeyExists(variables, "getProducts") >  
                     <div class = "category-page-title product-section-head">
@@ -113,37 +124,40 @@
                 </div>
                 <div class="modal-body">
                     <div class = "filter-container">
-                        <form class = "filter-form" method = "post">
-                            <div class = "row mb-3">
-                                <div class ="col">
-                                    <input type = "text" class = "form-control" placeholder = "MIN"
-                                            id = "min-price" name = "minPrice" value = ""
-                                    >
+                        <cfoutput>
+                            <form class = "filter-form" method = "get" action = "userSubCategory.cfm">
+                                <div class = "row mb-3">
+                                    <div class ="col">
+                                        <input type = "hidden" name = "subCategoryID" value = "#url.subCategoryID#">
+                                        <input type = "text" class = "form-control" placeholder = "MIN"
+                                                id = "min-price" name = "minPrice" value = ""
+                                        >
+                                    </div>
                                 </div>
-                            </div>
-                            <div class = "row mb-3">
-                                <div class ="col">
-                                    <input type = "text" class = "form-control" placeholder = "MAX"
-                                            id = "max-price" name = "maxPrice"  value = ""
-                                    >
+                                <div class = "row mb-3">
+                                    <div class ="col">
+                                        <input type = "text" class = "form-control" placeholder = "MAX"
+                                                id = "max-price" name = "maxPrice"  value = ""
+                                        >
+                                    </div>
                                 </div>
-                            </div>
-                            <div class = "row mb-3">
-                                <div class ="error">
+                                <div class = "row mb-3">
+                                    <div class ="error">
 
+                                    </div>
                                 </div>
-                            </div>
-                            <div class = "row">
-                                <div class = "col d-flex gap-2">
-                                    <button type="button" class="filter-btn modal-close-btn" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="filter-btn apply-filter" name = "filterProduct">
-                                        Apply
-                                    </button>
+                                <div class = "row">
+                                    <div class = "col d-flex gap-2">
+                                        <button type="button" class="filter-btn modal-close-btn" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="submit" class="filter-btn apply-filter">
+                                            Apply
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </cfoutput>
                     </div>  
                 </div>
             </div>

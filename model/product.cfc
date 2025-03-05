@@ -218,7 +218,7 @@
                         )VALUES(
                             <cfqueryparam value = "#arguments.productId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#image#" cfsqltype = "cf_sql_varchar">,
-                            <cfif #i# EQ 1 AND local.productImageCount LT 3>
+                            <cfif i EQ 1 AND local.productImageCount LT 3>
                                 <cfqueryparam value = "1" cfsqltype = "cf_sql_tinyint">,
                             <cfelse>
                                 <cfqueryparam value = "0" cfsqltype = "cf_sql_tinyint">,
@@ -382,10 +382,6 @@
                 WHERE
                     fldProductImage_ID = <cfqueryparam value = "#arguments.imageId#" cfsqltype = "cf_sql_integer">
             </cfquery>
-            <cffile  
-                action="delete" 
-                file = "#application.imageSavePath#\#local.qryGetProductImageName.fldImageFileName#"
-            >
             <cfreturn local.qryImageDelete.recordCount >      
         <cfcatch type="exception">
             <cfdump var = "#cfcatch#" >
