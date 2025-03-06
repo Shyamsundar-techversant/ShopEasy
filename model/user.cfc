@@ -92,6 +92,7 @@
     <cffunction name = "userLogIn" access = "public" returntype = "void" >
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
+        <cfargument name = "productId" type = "integer" required = "false">
         <cftry>
             <cfset local.checkUserExistResult = checkUserExist(
                 userName = arguments.userName
@@ -99,11 +100,11 @@
             <cfset session['roleId'] = local.checkUserExistResult.fldRoleId>                 
             <cfset session['userId'] = local.checkUserExistResult.fldUser_ID >
             <!--- IF USER REDIRECTED TO LOGIN WITHOUT LOGIN AND ADD PRODUCT FROM  'userProduct.cfm'  --->
-            <cfif structKeyExists(session, "productId") AND NOT structKeyExists(session, 'setOrder')>
-                <cfset variables.productId = application.cateContObj.decryptionFunction(session.productId)>
-                <cfif variables.productId>
+            <cfif structKeyExists(arguments, "productId") AND NOT structKeyExists(session, 'setOrder')>
+                <cfif arguments.productId>
                     <cfset local.addProductToCart = application.cartContObj.addProductToCart(
-                        productId = variables.productId            
+                        productId = arguments.productId,
+                        isLogIn = 1            
                     )>
                     <cfif local.addProductToCart EQ 'Success'>
                         <cflocation url = "user/userCart.cfm" addtoken = "false">

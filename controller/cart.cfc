@@ -10,7 +10,7 @@
             userId = arguments.userId
         )>
         <cfif local.cartAddResult EQ "Success">
-            <cfif NOT structKeyExists(session, 'productId')>
+            <cfif NOT structKeyExists(arguments, 'isLogIn')>
                 <cflocation url = "userCart.cfm" addToken = "false">
             <cfelse>
                 <cfreturn 'Success'>

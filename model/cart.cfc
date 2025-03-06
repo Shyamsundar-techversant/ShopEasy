@@ -63,7 +63,7 @@
 
     <!--- ADD PRODUCT TO CART --->
     <cffunction name = "addProductToCart" access = "public" returntype = "any">
-        <cfargument  name="productId" type = "integer" required = "true">
+        <cfargument  name = "productId" type = "integer" required = "true">
         <cfargument name = "userId" type = "integer" required = "false">
         <cftry>
             <cfset local.isProductExist = checkProductExist(

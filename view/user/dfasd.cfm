@@ -33,7 +33,8 @@
     <cfif structKeyExists(variables, 'logInResult')>
       <cfif arrayLen(variables.logInResult) EQ 0>
         <cfset variables.userLogInResult = application.userModObj.userLogIn(
-          argumentCollection = variables.arguments
+          userName = form.userName,
+          password = form.userPassword
         )>
       <cfelse>
         <cfset variables.userName = form.userName>

@@ -71,6 +71,7 @@
     <cffunction name = "validateLogInForm" access = "public" returntype = "array">
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
+        <cfargument  name = "productId" type = "integer" required = "false">
         <cfset local.errors = []>
         <!---    CHECK USERNAME AND PASSWORD EXIST      --->
         <cfif len(trim(arguments.userName)) EQ 0 OR len(trim(arguments.password)) EQ 0>
@@ -101,6 +102,7 @@
     <cffunction name = "userLogIn" type = "string" required = "true" returntype = "void">
         <cfargument name = "userName" type = "string" required = "true">
         <cfargument name = "password" type = "string" required = "true">
+        <cfargument  name = "productId" type = "integer" required = "false">
         <cfset local.userLogInResult = application.userModObj.userLogIn(
             argumentCollection = arguments
         )> 
