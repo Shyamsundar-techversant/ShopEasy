@@ -34,9 +34,9 @@
                 <cfreturn 'Success'>
             <cfelse>
                 <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
-                <cfset arguments['cartProducts'] = application.cartModObj.getCartProducts()>
-                <cfset arguments.totalPrice = arguments.cartProducts.entireCartTotal>
-                <cfset arguments.totalTax = arguments.cartProducts.entireCartTax>
+                <cfset local.cartProducts = application.cartModObj.getCartProducts()>
+                <cfset arguments.totalPrice = local.cartProducts.entireCartTotal>
+                <cfset arguments.totalTax = local.cartProducts.entireCartTax>
                 <cfset local.orderResult = application.orderModObj.orderProduct(argumentCollection = arguments)>
                 <cfreturn local.orderResult>
             </cfif>

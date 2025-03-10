@@ -3,10 +3,65 @@
     <cffunction name = "orderProduct" access = "remote" returntype = "any">
         <cfargument name = "cardNumber" type = "string" required = "true">
         <cfargument name = "cvv" type = "string" required = "true">
+        <cfargument name = "productId" type = "numeric" required = "false">
+        <cfargument name = "addressId" type = "numeric" required = "true">
+        <cfargument  name = "quantity" type = "integer" required = "false">
+        <cfargument name = "totalPrice" type = "numeric" required = "false">
+        <cfargument name = "totalTax" type = "numeric" required = "false">     
+        <cftry>
+            <cfif structKeyExists(arguments, 'productId')>
+                <cfset local.getProductDetails = application.productModObj.getProductsDetails(
+                    productId = arguments.productId
+                )>
+                <cfif local.getProductDetails.recordCount GT 0>
+                    <cfset arguments.unitPrice = local.getProductDetails.fldPrice>
+                    <cfset arguments.unitTax = local.getProductDetails.fldTax>
+                    <cfset arguments.totalPrice = arguments.quantity*(local.getProductDetails.fldPrice + (local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100)> 
+                    <cfset arguments.totalTax = arguments.quantity*(local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100 > 
+                </cfif>
+                <cfset arguments.cartOrder = FALSE>
+            <cfelse>
+                <cfset arguments.cartOrder = TRUE>
+                <cfset arguments.productId = -1 >
+                <cfset arguments.quantity = -1 >
+                <cfset arguments.unitPrice = -1>
+                <cfset arguments.unitTax = -1>
+            </cfif>
+            <cfset local.orderId  = createUUID()>
+            <cfset local.cardPart = right(arguments.cardNumber, 4) >
+            <cfdump  var="#arguments#" abort>
+            <cfquery result="local.qryPlaceOrder" datasource="#application.datasource#">
+                CALL spPlaceOrder(
+                    <cfqueryparam value = "#local.orderId#" cfsqltype = "varchar">,
+                    <cfqueryparam value = "#session.userId#" cfsqltype = "integer">,
+                    <cfqueryparam value = "#arguments.addressId#" cfsqltype = "integer">,
+                    <cfqueryparam value = "#local.cardPart#" cfsqltype = "varchar">,
+                    <cfqueryparam value = "#arguments.totalPrice#" cfsqltype = "decimal">,
+                    <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "decimal">,
+                    <cfqueryparam value = "#arguments.productId#" cfsqltype = "integer">,
+                    <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">,
+                    <cfqueryparam value = "#arguments.cartOrder#" cfsqltype = "boolean">,
+                    <cfqueryparam value = "#arguments.unitPrice#" cfsqltype = "decimal">,
+                    <cfqueryparam value = "#arguments.unitTax#" cfsqltype = "decimal">
+                )
+            </cfquery>
+            <cfcatch type="any">
+                <!--- Rollback transaction on error --->
+                <cftransaction action="rollback">
+                <!--- Log the error --->
+                <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
+                <cflog file="payment_errors" type="error" text="#local.errorMessage#">
+            </cfcatch>
+        </cftry>
+        <cfreturn local.orderItemResult>
+    </cffunction>
+    <!---
+    <cffunction name = "orderProduct" access = "remote" returntype = "any">
+        <cfargument name = "cardNumber" type = "string" required = "true">
+        <cfargument name = "cvv" type = "string" required = "true">
         <cfargument name = "productId" type = "string" required = "false">
         <cfargument name = "addressId" type = "string" required = "true">
         <cfargument  name = "quantity" type = "integer" required = "false">
-        <cfargument name = "cartProducts" type = "any" required = "false">
         <cfargument name = "totalPrice" type = "numeric" required = "false">
         <cfargument name = "totalTax" type = "numeric" required = "false">     
         <cftry>
@@ -61,12 +116,12 @@
         </cftry>
         <cfreturn local.orderItemResult>
     </cffunction>
+    --->
 
     <!---  INSERT DETAILS INTO ORDER ITEMS    --->
     <cffunction name = "addOrderItems" access = "public" returntype = "string">
         <cfargument name = "orderId" type = "string" required = "true">
         <cfargument name = "productId" type = "string" required = "false">
-        <cfargument name = "cartProducts" type = "any" required = "false">
         <cfargument name = "quantity" type = "integer" required = "false">
         <cfargument name = "unitPrice" type = "float" required = "false">
         <cfargument name = "unitTax" type = "float" required = "false">
