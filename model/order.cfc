@@ -1,6 +1,6 @@
 <cfcomponent>
     <!--- ORDER PRODUCT --->
-    <cffunction name = "orderProduct" access = "remote" returntype = "any">
+    <cffunction name = "orderProduct" access = "remote" returntype = "string">
         <cfargument name = "cardNumber" type = "string" required = "true">
         <cfargument name = "cvv" type = "string" required = "true">
         <cfargument name = "productId" type = "numeric" required = "false">
@@ -19,9 +19,9 @@
                     <cfset arguments.totalPrice = arguments.quantity*(local.getProductDetails.fldPrice + (local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100)> 
                     <cfset arguments.totalTax = arguments.quantity*(local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100 > 
                 </cfif>
-                <cfset arguments.cartOrder = FALSE>
+                <cfset arguments.cartOrder = 0>
             <cfelse>
-                <cfset arguments.cartOrder = TRUE>
+                <cfset arguments.cartOrder = 1>
                 <cfset arguments.productId = -1 >
                 <cfset arguments.quantity = -1 >
                 <cfset arguments.unitPrice = -1>
@@ -29,7 +29,6 @@
             </cfif>
             <cfset local.orderId  = createUUID()>
             <cfset local.cardPart = right(arguments.cardNumber, 4) >
-            <cfdump  var="#arguments#" abort>
             <cfquery result="local.qryPlaceOrder" datasource="#application.datasource#">
                 CALL spPlaceOrder(
                     <cfqueryparam value = "#local.orderId#" cfsqltype = "varchar">,
@@ -40,157 +39,20 @@
                     <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "decimal">,
                     <cfqueryparam value = "#arguments.productId#" cfsqltype = "integer">,
                     <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">,
-                    <cfqueryparam value = "#arguments.cartOrder#" cfsqltype = "boolean">,
+                    <cfqueryparam value = "#arguments.cartOrder#" cfsqltype = "tinyint">,
                     <cfqueryparam value = "#arguments.unitPrice#" cfsqltype = "decimal">,
                     <cfqueryparam value = "#arguments.unitTax#" cfsqltype = "decimal">
                 )
             </cfquery>
-            <cfcatch type="any">
-                <!--- Rollback transaction on error --->
-                <cftransaction action="rollback">
+            <cfreturn 'Success'>
+            <cfcatch type = "any">
                 <!--- Log the error --->
                 <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
                 <cflog file="payment_errors" type="error" text="#local.errorMessage#">
             </cfcatch>
         </cftry>
-        <cfreturn local.orderItemResult>
     </cffunction>
-    <!---
-    <cffunction name = "orderProduct" access = "remote" returntype = "any">
-        <cfargument name = "cardNumber" type = "string" required = "true">
-        <cfargument name = "cvv" type = "string" required = "true">
-        <cfargument name = "productId" type = "string" required = "false">
-        <cfargument name = "addressId" type = "string" required = "true">
-        <cfargument  name = "quantity" type = "integer" required = "false">
-        <cfargument name = "totalPrice" type = "numeric" required = "false">
-        <cfargument name = "totalTax" type = "numeric" required = "false">     
-        <cftry>
-            <cfif structKeyExists(arguments, 'productId')>
-                <cfset local.getProductDetails = application.productModObj.getProductsDetails(
-                    productId = arguments.productId
-                )>
-                <cfif local.getProductDetails.recordCount GT 0>
-                    <cfset arguments.unitPrice = local.getProductDetails.fldPrice>
-                    <cfset arguments.unitTax = local.getProductDetails.fldTax>
-                    <cfset arguments.totalPrice = arguments.quantity*(local.getProductDetails.fldPrice + (local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100)> 
-                    <cfset arguments.totalTax = arguments.quantity*(local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100 > 
-                </cfif>
-            </cfif>
-            <cfset local.orderId  = createUUID()>
-            <cfset local.cardPart = right(arguments.cardNumber, 4) >
-            <!--- Begin transaction --->
-            <cftransaction action="begin">
-                <cfquery result="local.qryOrder" datasource="#application.datasource#">
-                    INSERT INTO tblOrder(
-                        fldOrder_ID,
-                        fldUserId,
-                        fldAddressId,
-                        fldTotalPrice,
-                        fldTotalTax,
-                        fldCardPart,
-                        fldOrderedDate
-                    ) VALUES (
-                        <cfqueryparam value="#local.orderId#" cfsqltype="cf_sql_varchar">,
-                        <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">,
-                        <cfqueryparam value="#arguments.addressId#" cfsqltype="cf_sql_integer">,
-                        <cfqueryparam value="#arguments.totalPrice#" cfsqltype="cf_sql_float">,
-                        <cfqueryparam value="#arguments.totalTax#" cfsqltype="cf_sql_float">,
-                        <cfqueryparam value="#local.cardPart#" cfsqltype="cf_sql_varchar">,
-                        NOW()
-                    )
-                </cfquery>
-                <cfset arguments.orderId = local.orderId>
-                <cfif structKeyExists(local.qryOrder, "generatedKey") OR local.qryOrder.recordCount GT 0>
-                    <cfset local.orderItemResult = addOrderItems(argumentCollection = arguments)>
-                </cfif>
-                <!--- Commit transaction --->
-                <cftransaction action="commit">
-            </cftransaction>
-            <cfcatch type="any">
-                <!--- Rollback transaction on error --->
-                <cftransaction action="rollback">
-                <!--- Log the error --->
-                <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
-                <cflog file="payment_errors" type="error" text="#local.errorMessage#">
-            </cfcatch>
-        </cftry>
-        <cfreturn local.orderItemResult>
-    </cffunction>
-    --->
-
-    <!---  INSERT DETAILS INTO ORDER ITEMS    --->
-    <cffunction name = "addOrderItems" access = "public" returntype = "string">
-        <cfargument name = "orderId" type = "string" required = "true">
-        <cfargument name = "productId" type = "string" required = "false">
-        <cfargument name = "quantity" type = "integer" required = "false">
-        <cfargument name = "unitPrice" type = "float" required = "false">
-        <cfargument name = "unitTax" type = "float" required = "false">
-        <cftry>
-            <cfif structKeyExists(arguments, 'productId')>
-                <cfquery result = "local.qryAddOrderItems" datasource = "#application.datasource#">               
-                    INSERT INTO tblOrderItems(
-                        fldOrderId,
-                        fldProductId,
-                        fldQuantity,
-                        fldUnitPrice,
-                        fldUnitTax
-                    )VALUES(
-                        <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar">,
-                        <cfqueryparam value = "#arguments.productId#" cfsqltype = "integer">,
-                        <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">,
-                        <cfqueryparam value = "#arguments.unitPrice#" cfsqltype = "decimal">,
-                        <cfqueryparam value = "#arguments.unitTax#" cfsqltype = "decimal"> 
-                    )
-                </cfquery>
-            <cfelse>
-                <cfquery result = "local.qryCartOrderItems" datasource = "#application.datasource#">
-                    INSERT INTO tblOrderItems(
-                        fldOrderId,
-                        fldProductId,
-                        fldQuantity,
-                        fldUnitPrice,
-                        fldUnitTax
-                    )
-                    SELECT 
-                        <cfqueryparam value = "#arguments.orderId#" cfsqltype = "varchar"> AS fldOrderId,
-                        TC.fldProductId,
-                        TC.fldQuantity,
-                        P.fldPrice AS fldUnitPrice,
-                        P.fldTax AS fldUnitTax
-                    FROM
-                        tblCart AS TC
-                        INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
-                    WHERE
-                        TC.fldUserId = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_integer">
-                        AND TC.fldQuantity > 0
-                </cfquery>     
-            </cfif>
-            <cfif structKeyExists(local,'qryAddOrderItems') >
-                <cfif local.qryAddOrderItems.recordCount GT 0>
-                    <cfset local.sendMail = sendMailToUser(
-                        orderId = arguments.orderId
-                    )>
-                    <cfreturn 'Success'>
-                </cfif>
-            <cfelseif structKeyExists(local,'qryCartOrderItems') >
-                <cfif local.qryCartOrderItems.recordCount GT 0>
-                    <cfset local.sendMail = sendMailToUser(
-                        orderId = arguments.orderId
-                    )>
-                    <cfquery result = "local.qryDeleteCartItems" datasource = "#application.datasource#">
-                        CALL spDeleteCartProduct(
-                            <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">
-                        )
-                    </cfquery>
-                    <cfreturn 'Success'>
-                </cfif>
-            </cfif>
-        <cfcatch type="exception">
-            <cfdump var = "#cfcatch#">
-        </cfcatch>
-        </cftry>
-    </cffunction>
-
+    
     <!---  GET ORDER DETAILS    --->
     <cffunction name = "getOrderedProductsDetails" access = "public" returntype = "any">
         <cfargument name = "orderId" type = "string" required = "false">
