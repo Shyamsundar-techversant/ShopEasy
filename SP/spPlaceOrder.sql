@@ -5,52 +5,58 @@ USE shoppingcart $$
 DROP PROCEDURE IF EXISTS spPlaceOrder $$
 
 CREATE PROCEDURE spPlaceOrder(
-    orderId VARCHAR(64),
 	userId INT,
     addressId INT,
     cardPart VARCHAR(4),
-    totalPrice DECIMAL(10,2),
-    totalTax DECIMAL(10,2),
     productId INT,
-    quantity INT,
-    cartOrder TINYINT,
-    unitPrice DECIMAL(10,2),
-    unitTax DECIMAL(10,2)
+    quantity INT
 )
 BEGIN
+	DECLARE orderId VARCHAR(64);
+    DECLARE totalPrice DECIMAL(10,2);
+    DECLARE totalTax DECIMAL(10,2);
+    DECLARE unitPrice DECIMAL(10,2);
+    DECLARE unitTax DECIMAL(10,2);
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN 
+    ROLLBACK;
+	END;
+    
 	START TRANSACTION;
-	INSERT INTO tblOrder(
-		fldOrder_ID,
-		fldUserId,
-		fldAddressId,
-		fldTotalPrice,
-		fldTotalTax,
-		fldCardPart,
-		fldOrderedDate
-	)VALUES(
-		orderId,
-        userId,
-        addressId,
-        totalPrice,
-        totalTax,
-        cardPart,
-        NOW()
-	);
-	IF cartOrder = 0 THEN
-		INSERT INTO tblOrderItems(
-			fldOrderId,
-			fldProductId,
-			fldQuantity,
-			fldUnitPrice,
-			fldUnitTax
+	SET orderId = UUID();
+    IF productId IS NULL THEN
+		SELECT
+			ROUND(SUM(TC.fldQuantity * (P.fldPrice + (P.fldPrice * P.fldTax) / 100)), 2) ,
+			ROUND(SUM(TC.fldQuantity * ((P.fldPrice * P.fldTax) / 100)), 2)
+		INTO 
+			totalPrice,
+            totalTax
+		FROM
+			tblCart AS TC
+			INNER JOIN tblProduct AS P ON TC.fldProductId = P.fldProduct_ID
+		WHERE
+			TC.fldUserId = userId
+			AND TC.fldQuantity > 0;
+        
+		INSERT INTO tblOrder(
+			fldOrder_ID,
+			fldUserId,
+			fldAddressId,
+			fldTotalPrice,
+			fldTotalTax,
+			fldCardPart,
+			fldOrderedDate
 		)VALUES(
 			orderId,
-			productId,
-			quantity,
-			unitPrice,
-			unitTax
+			userId,
+			addressId,
+			totalPrice,
+			totalTax,
+			cardPart,
+			NOW()
 		);
-	ELSE 
+
 		INSERT INTO tblOrderItems(
 			fldOrderId,
 			fldProductId,
@@ -70,7 +76,53 @@ BEGIN
 		WHERE
 			TC.fldUserId = userId
 			AND TC.fldQuantity > 0 ;
-		DELETE FROM tblCart WHERE fldUserId = userId;
+		DELETE FROM tblCart WHERE fldUserId = userId;    
+    ELSE 
+		SELECT 
+			fldPrice,
+            fldTax,
+            (quantity)*(fldPrice+(fldPrice*fldTax)/100) AS totalPrice,
+            (quantity)*(fldPrice*fldTax)/100 AS totalTax
+		INTO 
+			unitPrice,
+            unitTax,
+            totalPrice,
+            totalTax
+		FROM 
+			tblProduct
+		WHERE 
+			fldProduct_ID = productId ;
+		INSERT INTO tblOrder(
+			fldOrder_ID,
+			fldUserId,
+			fldAddressId,
+			fldTotalPrice,
+			fldTotalTax,
+			fldCardPart,
+			fldOrderedDate
+		)VALUES(
+			orderId,
+			userId,
+			addressId,
+			totalPrice,
+			totalTax,
+			cardPart,
+			NOW()
+		);
+        
+		INSERT INTO tblOrderItems(
+			fldOrderId,
+			fldProductId,
+			fldQuantity,
+			fldUnitPrice,
+			fldUnitTax
+		)VALUES(
+			orderId,
+			productId,
+			quantity,
+			unitPrice,
+			unitTax
+		);
 	END IF ;
     COMMIT ;
 END $$

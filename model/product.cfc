@@ -83,7 +83,7 @@
                             <cfqueryparam value = "#arguments.productDescription#" cfsqltype = "cf_sql_varchar">,
                             <cfqueryparam value = "#arguments.productPrice#" cfsqltype = "cf_sql_decimal">,
                             <cfqueryparam value = "#arguments.productTax#" cfsqltype = "cf_sql_decimal">,
-                            <cfqueryparam value = "1" cfsqltype = "cf_sql_integer">,
+                            1,
                             <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_integer">,
                             NOW()
@@ -100,7 +100,6 @@
                     </cfif>                  
                 </cftransaction>
             <cfcatch type="any">
-                <cftransaction action = "rollback">
                 <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
                 <cflog file = "product_errors" type = "error" text = "#local.errorMessage#">
             </cfcatch>

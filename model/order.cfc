@@ -9,39 +9,18 @@
         <cfargument name = "totalPrice" type = "numeric" required = "false">
         <cfargument name = "totalTax" type = "numeric" required = "false">     
         <cftry>
-            <cfif structKeyExists(arguments, 'productId')>
-                <cfset local.getProductDetails = application.productModObj.getProductsDetails(
-                    productId = arguments.productId
-                )>
-                <cfif local.getProductDetails.recordCount GT 0>
-                    <cfset arguments.unitPrice = local.getProductDetails.fldPrice>
-                    <cfset arguments.unitTax = local.getProductDetails.fldTax>
-                    <cfset arguments.totalPrice = arguments.quantity*(local.getProductDetails.fldPrice + (local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100)> 
-                    <cfset arguments.totalTax = arguments.quantity*(local.getProductDetails.fldPrice*local.getProductDetails.fldTax)/100 > 
-                </cfif>
-                <cfset arguments.cartOrder = 0>
-            <cfelse>
-                <cfset arguments.cartOrder = 1>
-                <cfset arguments.productId = -1 >
-                <cfset arguments.quantity = -1 >
-                <cfset arguments.unitPrice = -1>
-                <cfset arguments.unitTax = -1>
+            <cfif NOT structKeyExists(arguments, 'productId')>
+                <cfset arguments.productId = NULL>
+                <cfset arguments.quantity = NULL>
             </cfif>
-            <cfset local.orderId  = createUUID()>
             <cfset local.cardPart = right(arguments.cardNumber, 4) >
             <cfquery result="local.qryPlaceOrder" datasource="#application.datasource#">
                 CALL spPlaceOrder(
-                    <cfqueryparam value = "#local.orderId#" cfsqltype = "varchar">,
                     <cfqueryparam value = "#session.userId#" cfsqltype = "integer">,
                     <cfqueryparam value = "#arguments.addressId#" cfsqltype = "integer">,
                     <cfqueryparam value = "#local.cardPart#" cfsqltype = "varchar">,
-                    <cfqueryparam value = "#arguments.totalPrice#" cfsqltype = "decimal">,
-                    <cfqueryparam value = "#arguments.totalTax#" cfsqltype = "decimal">,
                     <cfqueryparam value = "#arguments.productId#" cfsqltype = "integer">,
-                    <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">,
-                    <cfqueryparam value = "#arguments.cartOrder#" cfsqltype = "tinyint">,
-                    <cfqueryparam value = "#arguments.unitPrice#" cfsqltype = "decimal">,
-                    <cfqueryparam value = "#arguments.unitTax#" cfsqltype = "decimal">
+                    <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">
                 )
             </cfquery>
             <cfreturn 'Success'>
