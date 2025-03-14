@@ -25,7 +25,7 @@ BEGIN
     
 	START TRANSACTION;
 	SET orderId = UUID();
-    IF productId IS NULL THEN
+    IF productId = -1 THEN
 		SELECT
 			ROUND(SUM(TC.fldQuantity * (P.fldPrice + (P.fldPrice * P.fldTax) / 100)), 2) ,
 			ROUND(SUM(TC.fldQuantity * ((P.fldPrice * P.fldTax) / 100)), 2)
@@ -109,7 +109,6 @@ BEGIN
 			cardPart,
 			NOW()
 		);
-        
 		INSERT INTO tblOrderItems(
 			fldOrderId,
 			fldProductId,
@@ -125,6 +124,7 @@ BEGIN
 		);
 	END IF ;
     COMMIT ;
+    SELECT orderId AS OrderId;
 END $$
 DELIMITER ;
 

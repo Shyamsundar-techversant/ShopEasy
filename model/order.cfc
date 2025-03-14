@@ -6,15 +6,13 @@
         <cfargument name = "productId" type = "numeric" required = "false">
         <cfargument name = "addressId" type = "numeric" required = "true">
         <cfargument  name = "quantity" type = "integer" required = "false">
-        <cfargument name = "totalPrice" type = "numeric" required = "false">
-        <cfargument name = "totalTax" type = "numeric" required = "false">     
         <cftry>
             <cfif NOT structKeyExists(arguments, 'productId')>
-                <cfset arguments.productId = NULL>
-                <cfset arguments.quantity = NULL>
+                <cfset arguments.productId = -1>
+                <cfset arguments.quantity = -1>
             </cfif>
             <cfset local.cardPart = right(arguments.cardNumber, 4) >
-            <cfquery result="local.qryPlaceOrder" datasource="#application.datasource#">
+            <cfquery name = "local.qryPlaceOrder" datasource="#application.datasource#">
                 CALL spPlaceOrder(
                     <cfqueryparam value = "#session.userId#" cfsqltype = "integer">,
                     <cfqueryparam value = "#arguments.addressId#" cfsqltype = "integer">,
@@ -23,7 +21,12 @@
                     <cfqueryparam value = "#arguments.quantity#" cfsqltype = "integer">
                 )
             </cfquery>
-            <cfreturn 'Success'>
+            <cfif local.qryPlaceOrder.recordCount GT 0 AND len(local.qryPlaceOrder.OrderId) GT 0>
+                <cfset local.sendMail = sendMailToUser(local.qryPlaceOrder.OrderId)>
+                <cfreturn 'Success'>
+            <cfelse>
+                <cfreturn 'Failed'>
+            </cfif>
             <cfcatch type = "any">
                 <!--- Log the error --->
                 <cfset local.errorMessage = "Error occurred: " & cfcatch.message>
@@ -170,7 +173,7 @@
             </cfif>
             <cfreturn 'Success'>
         <cfcatch type="exception">
-            <cfdump var = "#arguments#">
+            <cfdump var = "#cfcatch#">
         </cfcatch>
         </cftry>
     </cffunction>

@@ -1,66 +1,36 @@
+<cfset variables.minPrice = "">
+<cfset variables.maxPrice = "">
+<cfset variables.sort = "">
+<cfif structKeyExists(url, "minPrice") AND isNumeric(url.minPrice)>
+    <cfset variables.minPrice = url.minPrice>
+</cfif>
+<cfif structKeyExists(url, "maxPrice") AND isNumeric(url.maxPrice)>
+    <cfset variables.maxPrice = url.maxPrice>
+</cfif>
+<cfif structKeyExists(url, "sort") AND isNumeric(url.sort) AND listFind("1,2", url.sort)>
+    <cfset variables.sort = url.sort>
+</cfif>
 <cfif structKeyExists(url, 'subCategoryID')>
     <cfset variables.subCategoryID = application.cateContObj.decryptionFunction(url.subCategoryID)>
     <cfif variables.subCategoryID>
-        <cfset variables.arguments = {}>
-        <cfif structKeyExists(url, 'minPrice') AND structKeyExists(url, 'maxPrice')>         
-            <cfset variables.filterFormValidationResult = application.productContObj.validateFilterForm(
-                minPrice = url.minPrice,
-                maxPrice = url.maxPrice
-            )>
-            <cfif arrayLen(variables.filterFormValidationResult) GT 0>
-                <div class="alert alert-danger alertInfo" role = "alert">
-                    <cfoutput>
-                        <cfloop array = "#variables.filterFormValidationResult#" index = "error">
-                            <span>#error#</span><br>
-                        </cfloop>
-                    </cfoutput>
-                </div>  
-            <cfelse>
-                <cfset variables.arguments = {
-                    subCategoryID : variables.subCategoryID,
-                    minPrice : url.minPrice,
-                    maxPrice : url.maxPrice                
-                }>
-                <cfif structKeyExists(url, 'asc')>
-                    <cfset variables.arguments = {
-                        subCategoryID : variables.subCategoryID,
-                        minPrice : url.minPrice,
-                        maxPrice : url.maxPrice,
-                        isAscending : 1
-                    }>
-                <cfelseif structKeyExists(url, 'desc')>
-                    <cfset variables.arguments = {
-                        subCategoryID : variables.subCategoryID,
-                        minPrice : url.minPrice,
-                        maxPrice : url.maxPrice,
-                        isDescending : 1
-                    }>  
-                </cfif>
-            </cfif>            
-        <cfelseif structKeyExists(url, 'asc')>
-            <cfset variables.arguments = {
-                subCategoryID : variables.subCategoryID,
-                isAscending : 1
-            }>
-        <cfelseif structKeyExists(url, 'desc')>
-            <cfset variables.arguments = {
-                subCategoryID : variables.subCategoryID,
-                isDescending : 1
-            }>
-        <cfelse>
-            <cfset variables.arguments = {
-                subCategoryID : variables.subCategoryID
-            }>  
-        </cfif>
         <cfset variables.getProducts = application.productContObj.getProductsDetails(
-            argumentCollection = variables.arguments
+            minPrice = variables.minPrice,
+            maxPrice = variables.maxPrice,
+            sort = variables.sort,
+            subCategoryID = variables.subCategoryID
         )> 
     <cfelse>
         <div class="alert alert-danger alertInfo" role="alert">
             NO product exist
-        </div>    
+        </div>
     </cfif>
+<cfelse>
+    <div class="alert alert-danger alertInfo" role="alert">
+        NO product exist
+    </div>
 </cfif>
+
+
 <cfinclude  template = "header.cfm">
     <section class = "subcategory-section">
         <div class = "container">
@@ -69,12 +39,12 @@
                     <cfoutput>                     
                         <button 
                             class = "filter-btn" 
-                            onclick ="window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&desc=1<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"                     
+                            onclick ="window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&sort=1<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"                     
                         >                      
                             High To Low
                         </button>                    
                         <button class = "filter-btn"
-                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&asc=1<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"
+                            onclick = "window.location.href='userSubCategory.cfm?subCategoryID=#url.subCategoryID#&sort=2<cfif structKeyExists(url,'minPrice') AND structKeyExists(url,'maxPrice')>&minPrice=#url.minPrice#&maxPrice=#url.maxPrice#</cfif>'"
                         >
                             Low To High
                         </button>
@@ -85,7 +55,7 @@
                         </button>
                     </cfoutput>
                 </div>
-                <cfif structKeyExists(variables, "getProducts") >  
+                <cfif structKeyExists(variables, "getProducts") AND isQuery(variables.getProducts)>  
                     <div class = "category-page-title product-section-head">
                         <cfoutput>#variables.getProducts.fldSubCategoryName#</cfoutput>
                     </div>                                     
@@ -109,6 +79,10 @@
                             </div>
                         </div>
                     </cfoutput>
+                <cfelse>
+                    <div class="alert alert-danger alertInfo" role="alert">
+                        NO product exist
+                    </div> 
                 </cfif>
             </div>
         </div>
@@ -130,14 +104,21 @@
                                     <div class ="col">
                                         <input type = "hidden" name = "subCategoryID" value = "#url.subCategoryID#">
                                         <input type = "text" class = "form-control" placeholder = "MIN"
-                                                id = "min-price" name = "minPrice" value = ""
+                                                id = "min-price" name = "minPrice" value = "#variables.minPrice#"
                                         >
+                                        <cfif structKeyExists(url, 'sort')>
+                                            <cfif url.sort EQ 1>
+                                                <input type = "hidden" name = "sort" value = "1">
+                                            <cfelseif url.sort EQ 2>
+                                                <input type = "hidden" name = "sort" value = "2">
+                                            </cfif>                                           
+                                        </cfif>
                                     </div>
                                 </div>
                                 <div class = "row mb-3">
                                     <div class ="col">
                                         <input type = "text" class = "form-control" placeholder = "MAX"
-                                                id = "max-price" name = "maxPrice"  value = ""
+                                                id = "max-price" name = "maxPrice"  value = "#variables.maxPrice#"
                                         >
                                     </div>
                                 </div>

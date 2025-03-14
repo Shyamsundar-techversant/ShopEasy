@@ -204,10 +204,9 @@
         <cfargument name = 'subCategoryID' type = "numeric" required = "false">
         <cfargument name = "productId" type = "numeric" required = "false">
         <cfargument name = "isRandom" type = "numeric" required = "false">
-        <cfargument name = "minPrice" type = "numeric" required = "false">
-        <cfargument name = "maxPrice" type = "numeric" required = "false">
-        <cfargument name = "isAscending" type = "numeric" required = "false">
-        <cfargument name = "isDescending" type = "numeric" required = "false">
+        <cfargument name = "minPrice" type = "any" required = "false">
+        <cfargument name = "maxPrice" type = "any" required = "false">
+        <cfargument name = "sort" type = "any" required = "false">
         <cfset local.productDetails = application.productModObj.getProductsDetails(
             argumentCollection = arguments
         )>
@@ -217,5 +216,5 @@
             <cfreturn "No productExist">
         </cfif>
     </cffunction>
-
+    
 </cfcomponent>

@@ -212,7 +212,7 @@ $(document).ready(function () {
                 console.log(data);
                 if (data === "Success") {
                     $('#productAddEditModal').modal('hide');
-                    location.reload();
+                    //location.reload();
                 }
                 else {
                     addError(data);
