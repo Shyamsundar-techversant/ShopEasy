@@ -10,6 +10,7 @@
             <cfreturn local.brands >           
         </cfif>
     </cffunction>
+
     <!---  PRODUCT VALIDATION    --->
     <cffunction  name = "validateProduct" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "numeric" required = "true" >
@@ -88,17 +89,10 @@
             <cfset local.productAddEditResult = application.productModObj.productAddEdit(
                 argumentCollection = arguments
             )> 
-            <cfif isArray(local.productAddEditResult)>
-                <cfreturn local.productAddEditResult>
-            <cfelseif local.productAddEditResult EQ "Success">
-                <cfset local.result = "Success">
-                <cfreturn local.result>
-            <cfelse>
-                <cfset arrayAppend(local.errors,local.productAddEditResult) >
-                <cfreturn local.errors >
-            </cfif> 
+            <cfreturn local.productAddEditResult>
         </cfif> 
     </cffunction>
+
     <!--- GET PRODUCTS     --->
     <cffunction name = "getProduct" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">
@@ -117,6 +111,7 @@
             <cfreturn local.productData> 
         </cfif>
     </cffunction>
+
     <!--- CHANGE DEFAULT IMAGE --->
     <cffunction name = "changeDefaultImage" access = "remote" returntype = "any">
         <cfargument name = "defaultImageId" type = "integer" required = "true">
@@ -128,6 +123,7 @@
             <cfreturn "Success">
         </cfif>
     </cffunction>
+
     <!---  DELETE IMAGE    --->
     <cffunction  name = "deleteImage" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "imageId" type = "integer" required = "true">
@@ -144,6 +140,7 @@
             <cfreturn local.errors>
         </cfif>
     </cffunction>
+
     <!--- DELETE PRODUCT --->
     <cffunction  name="deleteProduct" access = "remote" returntype = "string" returnformat = "json">
         <cfargument name = "productId" type = "integer" required = "true">
@@ -156,36 +153,7 @@
             <cfreturn "Failed">
         </cfif>
     </cffunction>
-    <!--- GET RANDOM PRODUCTS   --->
-    <cffunction name = "getRandomProducts" access = "public" returntype = "any">
-        <cfset local.randomProducts = application.productModObj.getRandomProducts()>
-        <cfreturn local.randomProducts >
-    </cffunction>
-    <!---  GET PRODUCT WITH DEFAULT IMAGE    --->
-    <cffunction name = "getProductWithDefaultImage" access = "public" returntype = "any">
-        <cfargument name = 'subCategoryID' type = "string" required = "false">
-        <cfargument name = "productId" type = "string" requird = "false">
-        <cfargument name = "productOrder" type = "integer" required = "false">
-        <cfif structKeyExists(arguments,'subCategoryID')>
-            <cfset arguments.subCategoryID = application.cateContObj.decryptionFunction(arguments.subCategoryID)>
-            <cfif NOT structKeyExists(arguments, 'productOrder')>
-                <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
-                    subCategoryID = arguments.subCategoryID
-                )>
-            <cfelse>
-                <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
-                    subCategoryID = arguments.subCategoryID,
-                    productOrder = arguments.productOrder
-                )>
-            </cfif>
-        <cfelseif structKeyExists(arguments,"productId")>
-            <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
-            <cfset local.getProduct = application.productModObj.getProductWithDefaultImage(
-                productId = arguments.productId
-            )>           
-        </cfif>
-        <cfreturn local.getProduct>
-    </cffunction>
+
     <!--- PRODUCT SEARCH    --->
     <cffunction name = "getSearchedProduct" access = "public">
         <cfargument name = "searchText" type = "string" required = "true">
@@ -199,22 +167,54 @@
             <cfreturn "No product Exist">
         </cfif>
     </cffunction>
-    <!---   FILTER PRODUCTS  --->
-    <cffunction name = "getFilteredProduct" access = "public" returntype = "any">
-        <cfargument name = 'subCategoryID' type = "string" required = "true">
-        <cfargument name = "minPrice" type = "integer" required = "true">
-        <cfargument name = "maxPrice" type = "integer" required = "true">
-        <cfset arguments.subCategoryID = application.cateContObj.decryptionFunction(arguments.subCategoryID)>
-        <cfif arguments.maxPrice LT arguments.minPrice>
-            <cfreturn "Max price must be greater than Min price">
-        <cfelseif arguments.maxPrice LT 0 OR arguments.minPrice LT 0>
-            <cfreturn "Max and Min price must not equal to zero">
+    
+    <!---  VALIDATE FILTER FORM    --->
+    <cffunction  name = "validateFilterForm" access = "public" returntype = "array">
+        <cfargument  name = "minPrice" type = "string" required = "true" default = "">
+        <cfargument  name = "maxPrice" type = "string" required = "true" default = "">
+        <cfset local.errors = []>
+        <!--- VALIDATE MIN PRICE  --->
+        <cfif len(trim(arguments.minPrice)) EQ 0>
+            <cfset arrayAppend(local.errors,'Please enter the minimum price')>
+        <cfelseif NOT isNumeric(trim(arguments.minPrice))>
+            <cfset arrayAppend(local.errors, 'Minimum price must be an integer')>
+        <cfelseif arguments.minPrice LT 0>
+            <cfset arrayAppend(local.errors, 'Minimum price must be greater than 0')>
         </cfif>
-        <cfset local.productFilterResult = application.productModObj.getFilteredProduct(
-            subCategoryID = arguments.subCategoryID,
-            minPrice = arguments.minPrice,
-            maxPrice = arguments.maxPrice
-        )>
-        <cfreturn local.productFilterResult>
+        <!--- VALIDATE MAX PRICE  --->
+        <cfif len(trim(arguments.maxPrice)) EQ 0>
+            <cfset arrayAppend(local.errors,'Please enter the maximum price')>
+        <cfelseif NOT isNumeric(trim(arguments.maxPrice))>
+            <cfset arrayAppend(local.errors, 'Maximum price must be an integer')>
+        <cfelseif arguments.maxPrice LT 0>
+            <cfset arrayAppend(local.errors, 'Maximum price must be greater than 0')>
+        </cfif>
+        <!---  MAX AND MIN COMPARISON  --->
+        <cfif isNumeric(trim(arguments.minPrice)) AND isNumeric(trim(arguments.maxPrice))>
+            <cfif arguments.minPrice GT arguments.maxPrice>
+                <cfset arrayAppend(local.errors, 'Minimum price must be less than maximum price')>
+            </cfif>
+        </cfif>
+        <cfreturn local.errors>
     </cffunction>
+
+    <!---    PRODUCT LIST  --->
+    <cffunction name = "getProductsDetails" access = "public" returntype = "any">
+        <cfargument name = "categoryId" type = "numeric" required = "false">
+        <cfargument name = 'subCategoryID' type = "numeric" required = "false">
+        <cfargument name = "productId" type = "numeric" required = "false">
+        <cfargument name = "isRandom" type = "numeric" required = "false">
+        <cfargument name = "minPrice" type = "any" required = "false">
+        <cfargument name = "maxPrice" type = "any" required = "false">
+        <cfargument name = "sort" type = "any" required = "false">
+        <cfset local.productDetails = application.productModObj.getProductsDetails(
+            argumentCollection = arguments
+        )>
+        <cfif local.productDetails.recordCount GT 0>
+            <cfreturn local.productDetails>
+        <cfelse>
+            <cfreturn "No productExist">
+        </cfif>
+    </cffunction>
+    
 </cfcomponent>

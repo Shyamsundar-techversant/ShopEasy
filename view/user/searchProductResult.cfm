@@ -21,11 +21,8 @@
                 <cfif structKeyExists(variables, "searchResult") AND isQuery(variables.searchResult) >
                     <cfoutput query = "variables.searchResult">
                         <cfif variables.searchResult.fldDefaultImage EQ 1>
-                            <cfset encryptedProductId = encrypt(
-                                variables.searchResult.idProduct,
-                                application.encryptionKey,
-                                "AES",
-                                "Hex"
+                            <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                                variables.searchResult.idProduct
                             )>
                             <div class = "col-md-3 pb-3" data-aos="zoom-in-down">  
                                 <div class = "product-card">

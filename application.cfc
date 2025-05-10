@@ -2,6 +2,7 @@
     <cfset this.name = "ShoppingCart" >
     <cfset this.sessionManagement = "true" >
     <cfset this.sessionTimeOut = createTimespan(0, 0, 30, 0) >
+    <cfset this.applicationTimeOut = createTimespan(1, 0, 0, 0)>
     <cffunction  name = "onApplicationStart" returntype = "void">
         <cfset application.datasource = "shoppingcart">
         <cfset application.encryptionKey = generateSecretKey('AES') >
@@ -25,7 +26,7 @@
             "adminDashboard.cfm", "adminCategory.cfm", "adminSubCategory.cfm","adminProduct.cfm"
         ]>
         <cfset local.userPages = [
-            'userCart.cfm','userOrder.cfm','userProfile.cfm','userOrder.cfm','paymentDetails.cfm','orderHistory.cfm'
+            'userCart.cfm','userProfile.cfm','paymentDetails.cfm','orderHistory.cfm','orderPdf.cfm'
         ]>
         <cfset local.currentPage = listLast(CGI.SCRIPT_NAME, '/')>
         <cfset local.productId = structKeyExists(url,"productId") ? url.productId : "">
@@ -41,9 +42,12 @@
             OR (structKeyExists(session, 'roleId') AND session.roleId NEQ 1 AND arrayFindNoCase(local.adminPages, local.currentPage))
         >
             <cfif len(local.productId)>
-                <cfset session.productId = local.productId>
+                <cfoutput>
+                    <cflocation url = "../logIn.cfm?productId=#local.productId#" addToken = "false">
+                </cfoutput>
+            <cfelse>
+                <cflocation url = "../logIn.cfm" addToken = "false">
             </cfif>
-            <cflocation url = "../logIn.cfm" addToken = "false">
         </cfif>
     </cffunction>
 </cfcomponent>

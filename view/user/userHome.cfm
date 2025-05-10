@@ -23,13 +23,13 @@
         <div class = "container random-products-container">
             <h5 class = "product-section-head pb-2">Random Products</h5>
             <div class = "row">
-                <cfset randomProducts = application.productContObj.getRandomProducts()>
+                <cfset randomProducts = application.productContObj.getProductsDetails(
+                    isRandom = 1,
+                    limitCount = 4
+                )>
                 <cfoutput query = "randomProducts">
-                    <cfset encryptedProductId = encrypt(
-                        randomProducts.idProduct,
-                        application.encryptionKey,
-                        "AES",
-                        "Hex"
+                    <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                        randomProducts.idProduct
                     )>
                     <div class = "col-md-3" data-aos="zoom-in-down">
                         <div class = "product-card">

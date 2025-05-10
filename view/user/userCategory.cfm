@@ -1,54 +1,53 @@
-<cfif structKeyExists(url,"categoryID")>
-    <cfset variables.getSubCategoryByCategoryId = application.cateContObj.getSubCategory(
-        categoryId = url.categoryID 
-    )>
+<cfif structKeyExists(url, 'categoryId')>
+    <cfset variables.categoryId = application.cateContObj.decryptionFunction(url.categoryId)>
+    <cfif variables.categoryId>
+        <cfset variables.getSubCategoryData = application.productContObj.getProductsDetails(
+            categoryId = variables.categoryId
+        )> 
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role="alert">
+            No Product Exist.
+        </div>          
+    </cfif>
 </cfif>
 <cfinclude template = "header.cfm">
-    <cfif structKeyExists(variables, "getSubCategoryByCategoryId")>
+    <cfif structKeyExists(variables, "getSubCategoryData")>
         <cfset count = 1>
-        <cfoutput query = "variables.getSubCategoryByCategoryId">
-            <cfset encryptedSubCategoryId = encrypt(
-                variables.getSubCategoryByCategoryId.fldSubCategory_ID,
-                application.encryptionKey,
-                "AES",
-                "Hex"
+        <div class = "category-page-title product-section-head">
+            <cfoutput>#variables.getSubCategoryData.fldCategoryName#</cfoutput>
+        </div>
+        <cfoutput query = "variables.getSubCategoryData" group = "fldSubCategory_ID">
+            <cfset encryptedSubCategoryId = application.cateContObj.encryptionFunction(
+                variables.getSubCategoryData.fldSubCategory_ID
             )>
             <section class = "category-app-section app-section-#count#">            
                 <div class = "container category-list-container">
                     <h5 class = "product-section-head">
-                        #variables.getSubCategoryByCategoryId.fldSubCategoryName#
+                        #variables.getSubCategoryData.fldSubCategoryName#
                     </h5>
                     <div class = "row">
-                        <cfset variables.getProductsBySubCategoryId = application.productContObj.getProductWithDefaultImage(
-                            subCategoryID = encryptedSubCategoryId
-                        )>
-                        <cfif structKeyExists(variables, 'getProductsBySubCategoryId')>
-                            <cfloop query = "variables.getProductsBySubCategoryId" >
-                                <cfset encryptedProductId = encrypt(
-                                    variables.getProductsBySubCategoryId.idProduct,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
-                                )>
-                                <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
-                                    <div class = "product-card">
-                                        <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                            <img 
-                                                src = "/uploadImg/#variables.getProductsBySubCategoryId.fldImageFileName#" 
-                                                alt = "ProductImage" 
-                                                class = "product-image-default"
-                                            >
-                                        </a>
-                                        <a class = "product-names" href = "userProduct.cfm?productId=#encryptedProductId#">
-                                            #variables.getProductsBySubCategoryId.fldProductName#
-                                        </a>
-                                        <a href = "userProduct.cfm?productId=#encryptedProductId#" class = "product-price">
-                                            <h6>$#variables.getProductsBySubCategoryId.fldPrice#</h6>
-                                        </a>
-                                    </div>
+                        <cfoutput>
+                            <cfset encryptedProductId = application.cateContObj.encryptionFunction(
+                                variables.getSubCategoryData.idProduct
+                            )>
+                            <div class = "col-md-3 mb-4" data-aos="zoom-in-down">
+                                <div class = "product-card">
+                                    <a class = "product-default-img" href = "userProduct.cfm?productId=#encryptedProductId#">
+                                        <img 
+                                            src = "/uploadImg/#variables.getSubCategoryData.fldImageFileName#" 
+                                            alt = "ProductImage" 
+                                            class = "product-image-default"
+                                        >
+                                    </a>
+                                    <a class = "product-names" href = "userProduct.cfm?productId=#encryptedProductId#">
+                                        #variables.getSubCategoryData.fldProductName#
+                                    </a>
+                                    <a href = "userProduct.cfm?productId=#encryptedProductId#" class = "product-price">
+                                        <h6>$#variables.getSubCategoryData.fldPrice#</h6>
+                                    </a>
                                 </div>
-                            </cfloop>
-                        </cfif>
+                            </div>
+                        </cfoutput>
                     </div>
                 </div>
             </section>

@@ -1,7 +1,8 @@
 <cfinclude  template="header.cfm">
-    <cfif structKeyExists(session,'orderId')>
+    <cfparam name = "form.searchOrder" default = "">
+    <cfif form.searchOrder NEQ "">
         <cfset variables.orderProduct = application.orderContObj.getOrderedProductsDetails(
-            orderId = session.orderId
+            orderId = trim(form.searchOrder)
         )>
     </cfif>
 <!---  ORDER HISTORY SECTION    --->
@@ -15,11 +16,6 @@
                                 orderId : #variables.orderProduct.fldOrderId#
                             </div>
                             <div class = "col d-flex justify-content-end align-items-center gap-3">
-                                <div class = "order-pdf">
-                                    <button class = "order-history-btn" title = "Download Pdf">
-                                        PDF
-                                    <button>
-                                </div>
                                 <div class = "order-date">Ordered In : #variables.orderProduct.fldOrderedDate#</div>
                             </div>
                         </div>
@@ -40,7 +36,7 @@
                         </div>
                         <div class = "d-flex align-items-center order-data-footer p-3">
                             <div class = "final-price col">
-                                Total Price : <span class = "order-total-price-value">$#variables.orderProduct.fldTotalPrice#</span>
+                                Total Price : <span class = "order-total-price-value">$#variables.orderProduct.totalPrice#</span>
                             </div>
                             <div class = "ship-adress col">
                                 <h6>Shipping Address</h6> 

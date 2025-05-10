@@ -1,15 +1,34 @@
+<cfset variables.arguments = {}>
 <cfif structKeyExists(url, 'addressId') AND structKeyExists(url, 'productId')>
-    <cfset variables.selectedAddress = application.cartContObj.getAddresses(
-        addressId = url.addressId
-    )>
-    <cfset variables.selectedProduct = application.productContObj.getProductWithDefaultImage(
-        productId = url.productId
-    )>
+    <cfset variables.addressId = application.cateContObj.decryptionFunction(url.addressId)>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(url.productId)>
+    <cfif variables.addressId AND variables.productId>
+        <cfset variables.arguments = {
+            addressId : variables.addressId
+        }>
+        <cfset variables.selectedProduct = application.productContObj.getProductsDetails(
+            productId = variables.productId
+        )>
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role = "alert">
+            No product and address exist.
+        </div>        
+    </cfif>
 <cfelseif structKeyExists(url,'addressId') AND NOT structKeyExists(url, 'productId')>
-    <cfset variables.selectedAddress = application.cartContObj.getAddresses(
-        addressId = url.addressId
-    )>
+    <cfset variables.addressId = application.cateContObj.decryptionFunction(url.addressId)>
+    <cfif variables.addressId>
+        <cfset variables.arguments = {
+            addressId : variables.addressId
+        }>
+    <cfelse>
+        <div class="alert alert-danger alertInfo" role = "alert">
+            No address exist.
+        </div>     
+    </cfif>
 </cfif>
+<cfset variables.selectedAddress = application.cartContObj.getAddresses(
+    argumentCollection = variables.arguments
+)>
 <cfinclude  template="header.cfm">
     <section class = "product-section">
         <div class = "container order-summary-container">
@@ -21,7 +40,7 @@
                     <div class = "summary-card-body">
                         <div class = "order-address-summary p-2" data-id = "#url.addressId#">
                             <h6 class = "select-address-title">Selected Address</h6>
-                            <cfif structKeyExists(variables, 'selectedAddress')>
+                            <cfif structKeyExists(variables, 'selectedAddress') AND variables.selectedAddress.recordCount GT 0>
                                 <span class = "pb-2 order-user-name">#variables.selectedAddress.fldFirstName&variables.selectedAddress.fldLastName#</span><br>
                                 <span class = "order-user-address">#variables.selectedAddress.fldPhoneNumber#</span><br>
                                 <span class = "order-user-address">#variables.selectedAddress.fldAddressLine1#</span>,
@@ -29,11 +48,15 @@
                                 <span class = "order-user-address">#variables.selectedAddress.fldCity#</span>,
                                 <span class = "order-user-address">#variables.selectedAddress.fldPincode#</span>,
                                 <span class = "order-user-address">#variables.selectedAddress.fldState#</span>
+                            <cfelse>
+                                <div class="alert alert-danger alertInfo" role="alert">
+                                    No Address Exists.
+                                </div>                             
                             </cfif>
                         </div>
                         <div class = "order-product-summary p-2">
                             <h6 class = "pb-1 product-details-title">Product Details</h6>
-                            <cfif structKeyExists(variables, 'selectedProduct')>
+                            <cfif structKeyExists(variables, 'selectedProduct') AND isQuery(variables.selectedProduct)>
                                 <cfloop query = "variables.selectedProduct">
                                     <div class = "row selected-order-product" data-id = "#url.productId#">
                                         <div class = "order-product-img">
@@ -64,6 +87,19 @@
                                         </div>
                                     </div>
                                 </cfloop>
+                                <div class = "pt-3 d-flex align-items-end justify-content-end">
+                                    <button 
+                                        class = "p-2 order-place-btn place-order-btn"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="##orderPlaceModal"
+                                    >
+                                        Place Order
+                                    </button>
+                                </div>
+                            <cfelseif structKeyExists(variables, 'selectedProduct') AND NOT isQuery(variables.selectedProduct)>
+                                <div class="alert alert-danger alertInfo" role="alert">
+                                    No Product Exists.
+                                </div>                          
                             <cfelse>
                                 <cfloop query = "variables.totalCartProducts">
                                     <div class = "row selected-order-product mb-2 p-1">
@@ -92,16 +128,16 @@
                                         </div>
                                     </div>
                                 </cfloop>
+                                <div class = "pt-3 d-flex align-items-end justify-content-end">
+                                    <button 
+                                        class = "p-2 order-place-btn place-order-btn"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="##orderPlaceModal"
+                                    >
+                                        Place Order
+                                    </button>
+                                </div>
                             </cfif>
-                            <div class = "pt-3 d-flex align-items-end justify-content-end">
-                                <button 
-                                    class = "p-2 order-place-btn place-order-btn"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="##orderPlaceModal"
-                                >
-                                    Place Order
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </cfoutput>

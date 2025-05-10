@@ -1,19 +1,37 @@
 <cfcomponent>
+    <!--- ENCRYPTION FUNCTION --->
+    <cffunction name = "encryptionFunction" access = "public" returntype = "string">
+        <cfargument name = 'objectId' type = "numeric" required = "true">
+        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
+        <cfset local.encryptedId = encrypt(
+            arguments.objectId,
+            local.secretKey,
+            "AES",
+            "Hex"
+        )>
+        <cfreturn local.encryptedId>
+    </cffunction> 
+
     <!---  DECRYPTION FUNCTION    --->
     <cffunction name = "decryptionFunction" access = "public" returntype = "numeric">
-        <cfargument name = "encryptedId" type = "string" required = "false">
+        <cfargument name = "encryptedId" type = "any" required = "false">
+        <cfset local.secretKey = 'JeMW98F14GHPkpOV47jhaw=='>
         <cfif arguments.encryptedId NEQ "" AND len(arguments.encryptedId) MOD 16 EQ 0>
             <cfset local.decryptedId = decrypt(
                 arguments.encryptedId,
-                application.encryptionKey,
+                local.secretKey,
                 "AES",
                 "Hex"
             )>
-            <cfreturn local.decryptedId>
+            <cfif local.decryptedId>
+                <cfreturn local.decryptedId>
+            </cfif>
+            <cfreturn 0>
         <cfelse>
             <cfreturn 0>
         </cfif>
     </cffunction>
+
     <!---  VALIDATE CATEGORY  --->
     <cffunction  name="validateCategoryName" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryName" type = "string" required = "true">
@@ -56,6 +74,7 @@
                 </cfif>
             </cfif>
     </cffunction>
+
     <!---  GET CATEGORY  --->
     <cffunction name = "getCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "false">
@@ -79,6 +98,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---  DELETE CATEGORY    --->
     <cffunction name = "categoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "categoryId" type = "string" required = "true">
@@ -94,6 +114,7 @@
         </cfif>
         <cfreturn local.result>
     </cffunction>
+
     <!---  SUBCATEGORY VALIDATION   --->
     <cffunction  name="validateSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryName" type = "string" required = "true">
@@ -151,6 +172,7 @@
             </cfif>
         </cfif>
     </cffunction>
+
     <!---  GET SUBCATEGORY    --->
     <cffunction name = "getSubCategory" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "false" >
@@ -179,6 +201,7 @@
         </cfcatch>
         </cftry>
     </cffunction>
+
     <!---   DELETE SUBCATEGORY   --->
     <cffunction name = "subCategoryDelete" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "subCategoryId" type = "string" required = "true">
@@ -193,5 +216,16 @@
             <cfset local.result = "Failed">
         </cfif>
         <cfreturn local.result>
-    </cffunction>     
+    </cffunction>    
+
+    <!---  GET CATEGORY AND SUBCATEGORY    --->
+    <cffunction  name = "getCategoryAndSubCategory" access = "public" returntype = "any">
+        <cfset local.getCategoryAndSubCategory = application.categModObj.getCategoryAndSubCategory()>  
+        <cfif local.getCategoryAndSubCategory.recordCount GT 0>
+            <cfreturn local.getCategoryAndSubCategory>
+        <cfelse>
+            <cfreturn "No category exist">
+        </cfif>
+    </cffunction>
+    
 </cfcomponent>

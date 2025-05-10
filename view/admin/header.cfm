@@ -21,6 +21,7 @@
             <div class = "brand-name">ShopEasy</div>
             <div class = "sign-buttons">
               <cfif structKeyExists(session, 'userId')>
+                <button class = "reg-btn btn" onclick = "window.location.href = '../../view/user/userHome.cfm'">Home</button>
                 <button class = "reg-btn btn" onclick = "window.location.href = '../../view/logIn.cfm?logOut=1' ">LogOut</button>
               <cfelse>
                 <button class = "reg-btn btn" onclick = "window.location.href = '../../view/logIn.cfm?logOut=1' ">LogIn</button>

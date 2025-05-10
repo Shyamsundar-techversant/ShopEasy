@@ -1,4 +1,6 @@
-<cfset variables.getCategory = application.cateContObj.getCategory()>
+<!--- GET THE DETAILS OF CATEGORY AND SUBCATEGORY --->
+<cfset variables.getCategoryAndSubCategory = application.cateContObj.getCategoryAndSubCategory()>
+<!--- CHECK USER LOGGED OR NOT  --->
 <cfif structKeyExists(session, 'userId')>
     <cfset variables.totalCartProducts = application.cartContObj.getCartProducts()>
 </cfif>
@@ -18,7 +20,7 @@
         <link href = "https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">  
     </head>
     <body>
-    <!-- Header -->
+    <!-- Header -->       
         <section class = "header-section">
             <header class = "header">
                 <div class = "container">
@@ -60,6 +62,9 @@
                                 </cfif>
                             </div>
                             <div class = "sign-buttons">
+                                <cfif structKeyExists(session, 'roleId') AND session.roleId EQ 1>
+                                    <button class = "reg-btn btn" onclick = "window.location.href = '../../view/admin/adminDashboard.cfm'">Admin</button>
+                                </cfif>
                                 <cfif structKeyExists(session, 'userId')>
                                     <button class = "reg-btn btn" onclick = "window.location.href = '../logIn.cfm?logOut=1' ">LogOut</button>
                                 <cfelse>
@@ -70,8 +75,7 @@
                     </div>
                 </div>
             </header>
-        </section>
-
+        </section>        
         <section class = "app-section category-navigation-section">
             <div class = "container">
                 <nav class = "category-navigation">
@@ -85,21 +89,17 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
-                            <cfif structKeyExists(variables, "getCategory")>
-                                <cfoutput query = "variables.getCategory">
-                                    <cfset encryptedCategoryId_1 = encrypt(
-                                                                            variables.getCategory.fldCategory_ID,
-                                                                            application.encryptionKey,
-                                                                            "AES",
-                                                                            "Hex"
-                                                                        )
-                                    >
+                            <cfif structKeyExists(variables, "getCategoryAndSubCategory")>
+                                <cfoutput query = "variables.getCategoryAndSubCategory" group = "fldCategory_ID">
+                                    <cfset encryptedCategoryId_1 = application.cateContObj.encryptionFunction(
+                                        variables.getCategoryAndSubCategory.fldCategory_ID
+                                    )>
                                     <li>
                                         <a 
                                             class="dropdown-item subcategory-link" 
                                             href="userCategory.cfm?categoryID=#encryptedCategoryId_1#"
                                         >
-                                            #variables.getCategory.fldCategoryName#
+                                            #variables.getCategoryAndSubCategory.fldCategoryName#
                                         </a>                                   
                                     </li>                               
                                 </cfoutput>
@@ -107,44 +107,35 @@
                         </ul>
                     </div>
                     <cfset count = 1>
-                    <cfif structKeyExists(variables, "getCategory")>
-                        <cfoutput query = "variables.getCategory">
+                    <cfif structKeyExists(variables, "getCategoryAndSubCategory")>
+                        <cfoutput query = "variables.getCategoryAndSubCategory" group = "fldCategory_ID">
                             <div class="dropdown">
                                 <button 
                                     class="btn category-list-btn dropdown-toggle" 
                                     type="button" 
                                     id="dropdownMenuButton#count#"
                                     data-bs-toggle="dropdown" aria-expanded="false" 
-                                    data-id = "#variables.getCategory.fldCategory_ID#"
+                                    data-id = "#variables.getCategoryAndSubCategory.fldCategory_ID#"
                                 >
-                                    #variables.getCategory.fldCategoryName#
+                                    #variables.getCategoryAndSubCategory.fldCategoryName#
                                 </button>
-                                <cfset encryptedCategoryId = encrypt(
-                                    variables.getCategory.fldCategory_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
+                                <cfset encryptedCategoryId = application.cateContObj.encryptionFunction(
+                                    variables.getCategoryAndSubCategory.fldCategory_ID
                                 )>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <cfset variables.getSubCategory = application.cateContObj.getSubCategory(categoryId = encryptedCategoryId )>
-                                    <cfif structKeyExists(variables,"getSubCategory")>
-                                        <cfloop query = "variables.getSubCategory">
-                                            <cfset encryptedSubCategoryId = encrypt(
-                                                variables.getSubCategory.fldSubCategory_ID,
-                                                application.encryptionKey,
-                                                "AES",
-                                                "Hex"
-                                            )>
-                                            <li>
-                                                <a 
-                                                    class="dropdown-item subcategory-link" 
-                                                    href="userSubCategory.cfm?subCategoryID=#encryptedSubCategoryId#"
-                                                >
-                                                    #variables.getSubCategory.fldSubCategoryName#
-                                                </a>
-                                            </li>
-                                        </cfloop>
-                                    </cfif>
+                                    <cfoutput >
+                                        <cfset encryptedSubCategoryId = application.cateContObj.encryptionFunction(
+                                            variables.getCategoryAndSubCategory.fldSubCategory_ID
+                                        )>
+                                        <li>
+                                            <a 
+                                                class="dropdown-item subcategory-link" 
+                                                 href="userSubCategory.cfm?subCategoryID=#encryptedSubCategoryId#"
+                                            >
+                                                #variables.getCategoryAndSubCategory.fldSubCategoryName#
+                                            </a>
+                                        </li>
+                                    </cfoutput>
                                 </ul>
                             </div> 
                             <cfset count  = count + 1 >
@@ -153,3 +144,4 @@
                 </nav>
             </div>
         </section>
+        

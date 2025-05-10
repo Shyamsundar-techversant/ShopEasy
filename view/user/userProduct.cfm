@@ -1,11 +1,16 @@
 <cfif structKeyExists(url,"productId")>
-    <cfset variables.productData = application.productContObj.getProductWithDefaultImage(
-        productId = url.productId
-    )>
+    <cfset variables.productId = application.cateContObj.decryptionFunction(url.productId)>
 <cfelseif structKeyExists(session, 'setOrder') AND structKeyExists(session, 'productId')>
-    <cfset variables.productData = application.productContObj.getProductWithDefaultImage(
-        productId = session.productId
+    <cfset variables.productId = application.cateContObj.decryptionFunction(session.productId)>
+</cfif>
+<cfif variables.productId>
+    <cfset variables.productData = application.productContObj.getProductsDetails(
+        productId = variables.productId
     )>
+<cfelse>
+    <div class="alert alert-danger alertInfo" role = "alert">
+        No Product Exist.
+    </div>
 </cfif>
 <cfif structKeyExists(form,'paymentDetailsForm')>
     <cfoutput>
@@ -19,7 +24,7 @@
 <cfinclude  template="header.cfm">
     <section class = "product-section">
         <div class = "container">
-            <cfif structKeyExists(variables, "productData") AND NOT structKeyExists(variables, 'searchResult') AND isQuery(variables.productData)>
+            <cfif structKeyExists(variables, "productData")>
                 <cfoutput query = "variables.productData">
                     <div class = "row justify-content-center align-items-center">
                         <div class = "col d-flex justify-content-center align-items-center">
@@ -49,7 +54,7 @@
                                         <button 
                                             class = "order-product"
                                             id = "order-now-btn"
-                                            onclick = "window.location.href='userOrder.cfm'"    
+                                            onclick = "window.location.href='paymentDetails.cfm'"    
                                             data-id = "#url.productId#"                                  
                                         >
                                             Order Now
@@ -102,11 +107,8 @@
                         <cfif structKeyExists(variables,'existingAddresses')>
                             <cfset index = 1>
                             <cfoutput query = "variables.existingAddresses">
-                                <cfset encryptedAddressId = encrypt(
-                                    variables.existingAddresses.fldAddress_ID,
-                                    application.encryptionKey,
-                                    "AES",
-                                    "Hex"
+                                <cfset encryptedAddressId = application.cateContObj.encryptionFunction(
+                                    variables.existingAddresses.fldAddress_ID
                                 )>
                                 <div class = "row user-addresses mb-3">
                                     <div class = "col user-saved-address">

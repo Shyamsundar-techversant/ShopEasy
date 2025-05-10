@@ -7,11 +7,8 @@
                     <i class="fa-regular fa-user"></i>
                 </button>
             </div>
-            <cfset variables.encryptedUserId = encrypt(
-                session.userId,
-                application.encryptionKey,
-                "AES",
-                "Hex"
+            <cfset variables.encryptedUserId = application.cateContObj.encryptionFunction(
+                session.userId
             )>
             <cfset variables.userData = application.cartContObj.getUserDetails(
                 userId = variables.encryptedUserId
@@ -53,11 +50,8 @@
                 <cfset variables.existingAddresses = application.cartContObj.getAddresses()>
                 <cfif structKeyExists(variables,'existingAddresses')>
                     <cfoutput query = "variables.existingAddresses">
-                        <cfset encryptedAddressId = encrypt(
-                            variables.existingAddresses.fldAddress_ID,
-                            application.encryptionKey,
-                            "AES",
-                            "Hex"
+                        <cfset encryptedAddressId = application.cateContObj.encryptionFunction(
+                            variables.existingAddresses.fldAddress_ID
                         )>
                         <div class = "row user-addresses">
                             <div class = "col">

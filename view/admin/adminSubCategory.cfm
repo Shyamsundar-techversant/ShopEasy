@@ -42,11 +42,8 @@
               <tbody>
                 <cfif structKeyExists(variables, 'allProducts') AND isQuery(variables.allProducts)>
                   <cfoutput query = "variables.allProducts">
-                    <cfset encryptedId = encrypt(
-                      variables.allProducts.fldProduct_ID,
-                      application.encryptionKey,
-                      "AES",
-                      "Hex"
+                    <cfset encryptedId = application.cateContObj.encryptionFunction(
+                      variables.allProducts.fldProduct_ID
                     )>
                     <tr class = "table-light">
                       <td>

@@ -1,17 +1,16 @@
 <cfcomponent>
     <!---   ADD PRODUCT TO CART  --->
     <cffunction name = "addProductToCart" access = "public" returntype = "any">
-        <cfargument name="productId" type = "string" required = "true">
+        <cfargument name="productId" type = "numeric" required = "true">
         <cfargument name = "userId" type = "integer" required = "false">
         <cfargument name = "isLogIn" type = "integer" required = "false">
-        <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
         <cfset arguments['userId'] = session.userId>
         <cfset local.cartAddResult = application.cartModObj.addProductToCart(
             productId = arguments.productId,
             userId = arguments.userId
         )>
         <cfif local.cartAddResult EQ "Success">
-            <cfif NOT structKeyExists(session, 'productId')>
+            <cfif NOT structKeyExists(arguments, 'isLogIn')>
                 <cflocation url = "userCart.cfm" addToken = "false">
             <cfelse>
                 <cfreturn 'Success'>
@@ -20,6 +19,7 @@
             <cfreturn local.cartAddResult>
         </cfif>
     </cffunction>
+
     <!---  CHANGE PRODUCT QUANTITY    --->
     <cffunction name = "changeProductQuantity" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name="productId" type = "string" required = "true">
@@ -27,17 +27,18 @@
         <cfargument name = "isIncreaseQuantity" type = "integer" required = "false">
         <cfargument name = "isRemoveProduct" type = "integer" required = "false">
         <cfset arguments.productId = application.cateContObj.decryptionFunction(arguments.productId)>
-        <cfset arguments['userId'] = session.userId>
         <cfset local.result = application.cartModObj.changeProductQuantity(
             argumentCollection = arguments
          )>
         <cfreturn local.result>
     </cffunction>
+
     <!---   GET CART PRODUCTS   --->
     <cffunction name = "getCartProducts" access = "public" returntype = "any">
         <cfset local.getCartProductResult = application.cartModObj.getCartProducts()>
         <cfreturn local.getCartProductResult>
     </cffunction>
+
     <!---   USER ADDRESS ADD      --->
     <cffunction name = "addUserAddress" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "firstName" type = "string" required = "true">
@@ -98,11 +99,11 @@
             <cfreturn local.addressAddResult>
         </cfif>
     </cffunction>
+
     <!---   GET ADDRESS   --->
     <cffunction name = "getAddresses" access = "remote" returntype = "query" returnformat = "json">
-        <cfargument name = "addressId" type = "string" required = "false">
+        <cfargument name = "addressId" type = "numeric" required = "false">
         <cfif structKeyExists(arguments, 'addressId')>
-            <cfset arguments.addressId = application.cateContObj.decryptionFunction(arguments.addressId)>
             <cfset local.userAddress = application.cartModObj.getUserAddress(
                 addressId = arguments.addressId
             )>
@@ -111,6 +112,7 @@
         </cfif>
         <cfreturn local.userAddress>
     </cffunction>
+
     <!---   REMOVE ADDRESS   --->
     <cffunction name = "removeUserAddress" access = "remote" returntype = "string" returnformat = "json">
         <cfargument name = "addressId" type = "string" required = "true">
@@ -122,6 +124,7 @@
             <cfreturn local.addressRemoveResult>
         </cfif>
     </cffunction>
+
     <!---  GET USER DETAILS   --->
     <cffunction  name="getUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name="userId" type = "string" required = "true">
@@ -131,7 +134,8 @@
         )>
         <cfreturn local.userDetails>
     </cffunction>
-    <!--- VALIDATE USER DETAILS --->
+
+    <!--- VALIDATE USER DETAILS AND UPDATE --->
     <cffunction name = "validateUserDetails" access = "remote" returntype = "any" returnformat = "json">
         <cfargument name = "userId" type = "string" required = "true">
         <cfargument name = "firstName" type = "string" required = "true">
@@ -171,6 +175,7 @@
                 <cfset arrayAppend(local.errors, '*Email id already exists')>  
             </cfif>
         </cfif>
+        
         <!---    VALIDATE PHONE    --->    
         <cfif len(trim(arguments.phone)) EQ 0>
             <cfset arrayAppend(local.errors,"*Phone number is required")>
@@ -190,6 +195,7 @@
             </cfif>
         </cfif>
     </cffunction>
+
     <!--- SET SESSION VALUE  --->
     <cffunction  name = "setSessionValue" access = "remote" returntype = "any" returnformat = "json">
         <cfargument  name = "setOrder" type = "numeric" required = "true">
@@ -201,4 +207,5 @@
             <cfset session.productId = arguments.productId>
         </cfif>
     </cffunction>
+    
 </cfcomponent>
